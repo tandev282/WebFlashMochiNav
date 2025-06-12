@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Firmware Flasher</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">⚡</div>
+                    <h1>ESP32 Flasher</h1>
+                </div>
+                <div class="header-controls">
+                    <button class="theme-toggle" id="themeToggle">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chip Selection -->
+            <section class="chip-selection">
+                <h2>Select Your ESP32 Chip</h2>
+                <div class="chip-grid">
+                    <div class="chip-card" data-chip="esp32">
+                        <div class="chip-icon">🔧</div>
+                        <h3>ESP32</h3>
+                        <p>Standard ESP32 with dual-core processor</p>
+                        <div class="chip-specs">
+                            <span>240MHz</span>
+                            <span>WiFi + BT</span>
+                            <span>520KB RAM</span>
+                        </div>
+                    </div>
+                    <div class="chip-card" data-chip="esp32c3">
+                        <div class="chip-icon">⚡</div>
+                        <h3>ESP32-C3</h3>
+                        <p>RISC-V based ESP32 with WiFi</p>
+                        <div class="chip-specs">
+                            <span>160MHz</span>
+                            <span>WiFi + BLE</span>
+                            <span>400KB RAM</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Flash Section -->
+            <section class="flash-section" id="flashSection" style="display: none;">
+                <div class="flash-card">
+                    <div class="flash-header">
+                        <h2>Flash Firmware</h2>
+                        <div class="selected-info" id="selectedInfo">
+                            <!-- Selected chip and firmware info -->
+                        </div>
+                    </div>
+                    
+                    <div class="flash-instructions">
+                        <div class="instruction-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Connect Your Device</h4>
+                                <p>Connect your ESP32 to your computer via USB cable</p>
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Enter Flash Mode</h4>
+                                <p>Hold BOOT button and press RESET, then release RESET first</p>
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Click Install</h4>
+                                <p>Click the install button below and select your device port</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flash-controls">
+                        <div id="espWebToolsContainer">
+                            <esp-web-install-button class="invisible" id="installButton"></esp-web-install-button>
+                        </div>
+                        <button class="btn btn-secondary" id="backButton">
+                            ← Back to Selection
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Status Section -->
+            <section class="status-section" id="statusSection" style="display: none;">
+                <div class="status-card">
+                    <div class="status-icon" id="statusIcon">⏳</div>
+                    <h3 id="statusTitle">Preparing...</h3>
+                    <p id="statusMessage">Getting ready to flash firmware</p>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>ESP32 Firmware Flasher - Flash your ESP32 devices with ease</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Support</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
