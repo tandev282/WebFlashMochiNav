@@ -58,9 +58,9 @@ function setupEspWebToolsWithManifest(chipType) {
   installButton.setAttribute("erase-first", "")
   installButton.classList.remove("invisible")
 
-  installButton.innerHTML = `
+ installButton.innerHTML = `
     <button slot="activate" class="btn btn-primary">
-      Install Firmware for ${chipType.toUpperCase()}
+      Flash
     </button>
   `
 

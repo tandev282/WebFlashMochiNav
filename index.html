@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 Firmware Flasher</title>
+    <title>MochiNav - TanDev | Công cụ nạp firmware ESP32</title>
     <script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,111 +13,405 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo">
-                    <div class="logo-icon">⚡</div>
-                    <h1>ESP32 Flasher</h1>
-                </div>
-                <div class="header-controls">
-                    <button class="theme-toggle" id="themeToggle">
-                        <span class="theme-icon">🌙</span>
-                    </button>
+                    <h1>MochiNav - TanDev</h1>
                 </div>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Chip Selection -->
-            <section class="chip-selection">
-                <h2>Select Your ESP32 Chip</h2>
-                <div class="chip-grid">
-                    <div class="chip-card" data-chip="esp32">
-                        <div class="chip-icon">🔧</div>
-                        <h3>ESP32</h3>
-                        <p>Standard ESP32 with dual-core processor</p>
-                        <div class="chip-specs">
-                            <span>240MHz</span>
-                            <span>WiFi + BT</span>
-                            <span>520KB RAM</span>
+            <div class="content-grid">
+                <!-- Left Panel - 30% -->
+                <div class="left-panel">
+                    <!-- Chip Selection -->
+                    <section class="chip-selection">
+                        <h2>Chọn Chip ESP32</h2>
+                        <div class="chip-grid">
+                            <div class="chip-card" data-chip="esp32">
+                                 <img src="./img/esp32.png" class="chip-icon"></img>
+                                <h3>ESP32</h3>
+                            </div>
+                            <div class="chip-card" data-chip="esp32c3">
+                                <img src="./img/esp32c3.png" class="chip-icon"></img>
+                                <h3>ESP32-C3</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="chip-card" data-chip="esp32c3">
-                        <div class="chip-icon">⚡</div>
-                        <h3>ESP32-C3</h3>
-                        <p>RISC-V based ESP32 with WiFi</p>
-                        <div class="chip-specs">
-                            <span>160MHz</span>
-                            <span>WiFi + BLE</span>
-                            <span>400KB RAM</span>
+                    </section>
+
+                    <!-- Flash Section -->
+                    <section class="flash-section" id="flashSection" style="display: none;">
+                        <div class="flash-card">
+                            <div class="flash-controls">
+                                <div id="espWebToolsContainer">
+                                    <esp-web-install-button class="invisible" id="installButton"></esp-web-install-button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Status Section -->
+                    <section class="status-section" id="statusSection" style="display: none;">
+                        <div class="status-card">
+                            <div class="status-icon" id="statusIcon">⏳</div>
+                            <h3 id="statusTitle">Đang chuẩn bị...</h3>
+                            <p id="statusMessage">Đang chuẩn bị nạp firmware</p>
+                            <div class="progress-bar" id="progressBar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Key Purchase Section -->
+                    <section class="key-section">
+                        <div class="key-card">
+                            <p class="key-text">Bạn chưa có key?</p>
+                            <a href="https://zalo.me/your-zalo-link" class="btn btn-key" target="_blank">
+                                💬 Mua Key
+                            </a>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Panel - 70% -->
+                <div class="right-panel">
+                    <div class="guide-section">
+                        <h2>Hướng Dẫn Đấu Nối ESP32</h2>
+                        
+                        <!-- Tab Navigation -->
+                        <div class="tab-navigation">
+                            <button class="tab-btn active" data-tab="tab1">Đấu Nối Thiết Bị</button>
+                            <button class="tab-btn" data-tab="tab2">Kích Hoạt Chương Trình</button>
+                            <button class="tab-btn" data-tab="tab3">Cài Đặt App</button>
+                        </div>
+                        
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Tab 1: Đấu Nối Thiết Bị -->
+                            <div class="tab-pane active" id="tab1">
+                                <div class="wiring-section">
+                                    <div class="wiring-card">
+                                        <h3>Sơ Đồ Đấu Nối ESP32-C3 Super Mini</h3>
+                                        
+                                        <!-- Hình ảnh sơ đồ -->
+                                        <div class="diagram-container">
+                                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/s%C6%A1-%C4%91%E1%BB%93-1yCwhEqYSC0Ww6ksWWb2NWCbZbbpEq.png" alt="Sơ đồ đấu nối ESP32" class="wiring-diagram">
+                                        </div>
+                                        
+                                        <!-- Bảng đấu nối -->
+                                        <div class="connection-table">
+                                            <h4>Bảng Đấu Nối Chi Tiết</h4>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>ESP32-C3</th>
+                                                        <th>Thiết Bị</th>
+                                                        <th>Màu Dây</th>
+                                                        <th>Chức Năng</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>3V3</td>
+                                                        <td>OLED VCC</td>
+                                                        <td class="wire-red">Đỏ</td>
+                                                        <td>Nguồn dương</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>GND</td>
+                                                        <td>OLED GND</td>
+                                                        <td class="wire-black">Đen</td>
+                                                        <td>Nguồn âm</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>GPIO4</td>
+                                                        <td>OLED SDA</td>
+                                                        <td class="wire-blue">Xanh dương</td>
+                                                        <td>Dữ liệu I2C</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>GPIO5</td>
+                                                        <td>OLED SCL</td>
+                                                        <td class="wire-yellow">Vàng</td>
+                                                        <td>Xung nhịp I2C</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>GPIO10</td>
+                                                        <td>Cảm biến âm thanh</td>
+                                                        <td class="wire-purple">Tím</td>
+                                                        <td>Đọc tín hiệu âm thanh</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>GPIO0</td>
+                                                        <td>Nút nhấn</td>
+                                                        <td class="wire-gray">Xám</td>
+                                                        <td>Nút boot/reset</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>5V</td>
+                                                        <td>Pin Lithium (+)</td>
+                                                        <td class="wire-red">Đỏ</td>
+                                                        <td>Nguồn pin</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>GND</td>
+                                                        <td>Pin Lithium (-)</td>
+                                                        <td class="wire-black">Đen</td>
+                                                        <td>Nguồn âm pin</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Lưu ý quan trọng -->
+                                        <div class="important-notes">
+                                            <h4>⚠️ Lưu Ý Quan Trọng</h4>
+                                            <ul>
+                                                <li><strong>Pin Lithium:</strong> Sử dụng pin 3.7V với mạch sạc tích hợp</li>
+                                                <li><strong>Điện trở:</strong> Sử dụng điện trở 10kΩ cho các chân pull-up</li>
+                                                <li><strong>Màn hình OLED:</strong> Sử dụng loại 0.96" I2C (địa chỉ 0x3C)</li>
+                                                <li><strong>Cảm biến âm thanh:</strong> Module MAX9814 hoặc tương đương</li>
+                                                <li><strong>Nút nhấn:</strong> Kết nối với GPIO0 để vào chế độ flash</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tab 2: Kích Hoạt Chương Trình -->
+                            <div class="tab-pane" id="tab2">
+                                <div class="activation-section">
+                                    <div class="activation-card">
+                                        <h3>Hướng Dẫn Kích Hoạt Chương Trình</h3>
+                                        
+                                        <!-- Bước 9 -->
+                                        <div class="step-container">
+                                            <div class="step-number">9</div>
+                                            <div class="step-content">
+                                                <h4>Kết Nối WiFi</h4>
+                                                <p>ESP32 sẽ hiển thị tên WiFi và địa chỉ IP trên màn hình OLED như hình dưới đây. Kết nối với mạng WiFi mà không cần mật khẩu.</p>
+                                                
+                                                <div class="image-placeholder">
+                                                    <div class="placeholder-text">Hình: Kết Nối WiFi</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Bước 10 -->
+                                        <div class="step-container">
+                                            <div class="step-number">10</div>
+                                            <div class="step-content">
+                                                <h4>Truy Cập Địa Chỉ IP trong Trình Duyệt</h4>
+                                                <p>Mở trình duyệt và nhập địa chỉ IP được hiển thị trên màn hình OLED.</p>
+                                                
+                                                <div class="code-block">192.168.4.1</div>
+                                                
+                                                <div class="image-placeholder">
+                                                    <div class="placeholder-text">Hình: Nhập Địa Chỉ IP Vào Trình Duyệt</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Bước 11 -->
+                                        <div class="step-container">
+                                            <div class="step-number">11</div>
+                                            <div class="step-content">
+                                                <h4>Nhập Thông Tin WiFi và Kích Hoạt</h4>
+                                                <p>Bạn sẽ được yêu cầu nhập:</p>
+                                                <ul>
+                                                    <li><strong>Chọn WiFi:</strong> Nhấn quét WiFi để tìm WiFi</li>
+                                                    <li><strong>Mật khẩu:</strong> Nhập mật khẩu WiFi</li>
+                                                    <li><strong>Mã kích hoạt:</strong> Nhập key kích hoạt mà bạn đã được cấp</li>
+                                                </ul>
+                                                
+                                                <p>Sau khi nhập xong, nhấn Activate.</p>
+                                                
+                                                <div class="image-placeholder">
+                                                    <div class="placeholder-text">Hình: Nhập Thông Tin WiFi và Kích Hoạt</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Bước 12 -->
+                                        <div class="step-container">
+                                            <div class="step-number">12</div>
+                                            <div class="step-content">
+                                                <h4>Sau Khi Nhấn "Activate"</h4>
+                                                <p>Khi bạn nhấn Activate, hệ thống sẽ bắt đầu quá trình kết nối với WiFi và xác minh key đã nhập. Trên trình duyệt, bạn sẽ thấy thông báo như sau:</p>
+                                                
+                                                <div class="image-placeholder">
+                                                    <div class="placeholder-text">Hình: Thông Báo Quá Trình Kết Nối và Xác Minh Key</div>
+                                                </div>
+                                                
+                                                <p>Lúc này, ESP32 sẽ kết nối với WiFi và xác minh key đã nhập.</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Trường hợp key sai -->
+                                        <div class="result-container error">
+                                            <h4>Trường Hợp Key Sai</h4>
+                                            <p>Nếu key bạn nhập sai, ESP32 sẽ hiển thị lỗi và yêu cầu nhập lại key. Màn hình sẽ hiển thị thông báo lỗi và yêu cầu bạn nhập lại key.</p>
+                                            
+                                            <div class="image-placeholder">
+                                                <div class="placeholder-text">Hình 11.1: Thông Báo Key Sai và Quá Trình Khởi Động Lại</div>
+                                            </div>
+                                            
+                                            <p>Sau khi nhận ra lỗi, ESP32 sẽ khởi động lại và yêu cầu bạn thực hiện lại bước Kết Nối WiFi (bước 9).</p>
+                                        </div>
+                                        
+                                        <!-- Trường hợp key đúng -->
+                                        <div class="result-container success">
+                                            <h4>Trường Hợp Key Đúng</h4>
+                                            <p>Nếu key bạn nhập là đúng, hệ thống sẽ hoàn tất quá trình xác minh và tiếp tục vào chương trình chính. Màn hình sẽ hiển thị thông báo thành công.</p>
+                                            
+                                            <div class="image-placeholder">
+                                                <div class="placeholder-text">Hình 11.2: Thông Báo Thành Công và Chuyển Sang Chương Trình Chính</div>
+                                            </div>
+                                            
+                                            <p>ESP32 sẽ tự động khởi động lại và chuyển sang chế độ hoạt động chính.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tab 3: Cài Đặt App -->
+                            <div class="tab-pane" id="tab3">
+                                <div class="app-section">
+                                    <div class="app-card">
+                                        <h3>Cài Đặt và Cấu Hình App</h3>
+                                        
+                                        <!-- Tải App -->
+                                        <div class="app-download">
+                                            <h4>Tải App MochiNav</h4>
+                                            <div class="app-stores">
+                                                <a href="#" class="app-store-btn">
+                                                    <span class="app-store-icon">📱</span>
+                                                    <span class="app-store-text">Google Play</span>
+                                                </a>
+                                                <a href="#" class="app-store-btn">
+                                                    <span class="app-store-icon">🍎</span>
+                                                    <span class="app-store-text">App Store</span>
+                                                </a>
+                                            </div>
+                                            <p>Hoặc quét mã QR bên dưới để tải app:</p>
+                                            <div class="qr-placeholder">
+                                                <div class="placeholder-text">Mã QR Tải App</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Cấu hình App -->
+                                        <div class="app-setup">
+                                            <h4>Cấu Hình App</h4>
+                                            <ol class="setup-steps">
+                                                <li>
+                                                    <strong>Mở App và Đăng Nhập</strong>
+                                                    <p>Mở app MochiNav và đăng nhập bằng tài khoản đã đăng ký.</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Thêm Thiết Bị Mới</strong>
+                                                    <p>Nhấn vào nút "+" để thêm thiết bị mới.</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Quét Mạng</strong>
+                                                    <p>App sẽ tự động quét và tìm thiết bị ESP32 đã kích hoạt trong mạng.</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Kết Nối Thiết Bị</strong>
+                                                    <p>Chọn thiết bị ESP32 của bạn từ danh sách và nhấn "Kết nối".</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Đặt Tên Thiết Bị</strong>
+                                                    <p>Đặt tên cho thiết bị để dễ dàng nhận biết.</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Cấu Hình Thiết Bị</strong>
+                                                    <p>Tùy chỉnh các thông số hoạt động theo nhu cầu của bạn.</p>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                        
+                                        <!-- Giao diện App -->
+                                        <div class="app-interface">
+                                            <h4>Giao Diện App</h4>
+                                            <div class="interface-grid">
+                                                <div class="interface-item">
+                                                    <div class="interface-placeholder">
+                                                        <div class="placeholder-text">Màn hình chính</div>
+                                                    </div>
+                                                    <p>Màn hình chính hiển thị tất cả thiết bị đã kết nối</p>
+                                                </div>
+                                                <div class="interface-item">
+                                                    <div class="interface-placeholder">
+                                                        <div class="placeholder-text">Màn hình điều khiển</div>
+                                                    </div>
+                                                    <p>Điều khiển thiết bị và xem trạng thái hoạt động</p>
+                                                </div>
+                                                <div class="interface-item">
+                                                    <div class="interface-placeholder">
+                                                        <div class="placeholder-text">Màn hình cài đặt</div>
+                                                    </div>
+                                                    <p>Tùy chỉnh các thông số và cấu hình thiết bị</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Xử lý sự cố App -->
+                                        <div class="app-troubleshooting">
+                                            <h4>Xử Lý Sự Cố App</h4>
+                                            <div class="trouble-grid">
+                                                <div class="trouble-item">
+                                                    <h5>Không tìm thấy thiết bị</h5>
+                                                    <ul>
+                                                        <li>Đảm bảo ESP32 và điện thoại cùng mạng WiFi</li>
+                                                        <li>Khởi động lại ESP32 và app</li>
+                                                        <li>Kiểm tra kết nối mạng của điện thoại</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="trouble-item">
+                                                    <h5>Mất kết nối với thiết bị</h5>
+                                                    <ul>
+                                                        <li>Kiểm tra nguồn điện của ESP32</li>
+                                                        <li>Đảm bảo ESP32 vẫn kết nối với WiFi</li>
+                                                        <li>Thử kết nối lại từ app</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="trouble-item">
+                                                    <h5>App bị treo hoặc lỗi</h5>
+                                                    <ul>
+                                                        <li>Đóng và mở lại app</li>
+                                                        <li>Cập nhật lên phiên bản mới nhất</li>
+                                                        <li>Gỡ và cài đặt lại app</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Flash Section -->
-            <section class="flash-section" id="flashSection" style="display: none;">
-                <div class="flash-card">
-                    <div class="flash-header">
-                        <h2>Flash Firmware</h2>
-                        <div class="selected-info" id="selectedInfo">
-                            <!-- Selected chip and firmware info -->
-                        </div>
-                    </div>
-                    
-                    <div class="flash-instructions">
-                        <div class="instruction-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h4>Connect Your Device</h4>
-                                <p>Connect your ESP32 to your computer via USB cable</p>
-                            </div>
-                        </div>
-                        <div class="instruction-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h4>Enter Flash Mode</h4>
-                                <p>Hold BOOT button and press RESET, then release RESET first</p>
-                            </div>
-                        </div>
-                        <div class="instruction-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h4>Click Install</h4>
-                                <p>Click the install button below and select your device port</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flash-controls">
-                        <div id="espWebToolsContainer">
-                            <esp-web-install-button class="invisible" id="installButton"></esp-web-install-button>
-                        </div>
-                        <button class="btn btn-secondary" id="backButton">
-                            ← Back to Selection
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Status Section -->
-            <section class="status-section" id="statusSection" style="display: none;">
-                <div class="status-card">
-                    <div class="status-icon" id="statusIcon">⏳</div>
-                    <h3 id="statusTitle">Preparing...</h3>
-                    <p id="statusMessage">Getting ready to flash firmware</p>
-                    <div class="progress-bar" id="progressBar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
 
         <!-- Footer -->
         <footer class="footer">
-            <p>ESP32 Firmware Flasher - Flash your ESP32 devices with ease</p>
-            <div class="footer-links">
-                <a href="#" class="footer-link">Documentation</a>
-                <a href="#" class="footer-link">GitHub</a>
-                <a href="#" class="footer-link">Support</a>
+            <div class="footer-content">
+                <h3>Liên Hệ</h3>
+                <div class="footer-links">
+                    <a href="https://zalo.me/your-zalo-link" class="footer-link" target="_blank">
+                        <span class="footer-icon">💬</span>
+                        Zalo
+                    </a>
+                    <a href="#" class="footer-link" target="_blank">
+                        <span class="footer-icon">🎵</span>
+                        TikTok
+                    </a>
+                    <a href="#" class="footer-link" target="_blank">
+                        <span class="footer-icon">📘</span>
+                        Facebook
+                    </a>
+                </div>
+                <p class="footer-text">© 2024 MochiNav - TanDev | Công cụ nạp firmware ESP32 dễ sử dụng</p>
             </div>
         </footer>
     </div>
