@@ -1,4 +1,3 @@
-// DOM Elements
 const chipCards = document.querySelectorAll(".chip-card")
 const flashSection = document.getElementById("flashSection")
 const statusSection = document.getElementById("statusSection")
@@ -7,16 +6,11 @@ const themeToggle = document.getElementById("themeToggle")
 const backButton = document.getElementById("backButton")
 const installButton = document.getElementById("installButton")
 
-// State
 let selectedChip = null
 
-// Initialize the application
 function initializeApp() {
   try {
-    // Initialize theme
     initializeTheme()
-
-    // Set up event listeners
     setupEventListeners()
 
     console.log("App initialized successfully")
@@ -26,11 +20,9 @@ function initializeApp() {
   }
 }
 
-// Select chip and go directly to flash section
 function selectChip(chipType) {
   selectedChip = chipType
 
-  // Update chip card selection
   chipCards.forEach((card) => {
     card.classList.remove("selected")
     if (card.dataset.chip === chipType) {
@@ -38,16 +30,13 @@ function selectChip(chipType) {
     }
   })
 
-  // Show flash section directly
   showFlashSection(chipType)
 }
 
-// Show flash section with selected chip
 function showFlashSection(chipType) {
   flashSection.style.display = "block"
   statusSection.style.display = "none"
 
-  // Update selected info
   selectedInfo.innerHTML = `
     <div style="display: flex; align-items: center; gap: 1rem;">
       <div>
@@ -57,35 +46,27 @@ function showFlashSection(chipType) {
       </div>
     </div>
   `
-
-  // Setup ESP Web Tools with manifest file
   setupEspWebToolsWithManifest(chipType)
 
-  // Smooth scroll to flash section
   flashSection.scrollIntoView({ behavior: "smooth" })
 }
 
-// Setup ESP Web Tools with manifest file
 function setupEspWebToolsWithManifest(chipType) {
-  // Set the manifest path based on chip
   const manifestPath = `./firmware/${chipType}/manifest.json`
 
-  // Configure the install button
   installButton.manifest = manifestPath
+  installButton.setAttribute("erase-first", "")
   installButton.classList.remove("invisible")
 
-  // Update button text
   installButton.innerHTML = `
     <button slot="activate" class="btn btn-primary">
       Install Firmware for ${chipType.toUpperCase()}
     </button>
   `
 
-  // Add event listeners for flash state changes
   installButton.addEventListener("state-changed", handleFlashStateChange)
 }
 
-// Handle flash state changes
 function handleFlashStateChange(event) {
   const state = event.detail.state
   const statusIcon = document.getElementById("statusIcon")
@@ -140,7 +121,7 @@ function handleFlashStateChange(event) {
   }
 }
 
-// Show status section
+
 function showStatusSection() {
   statusSection.style.display = "block"
   statusSection.classList.add("fade-in")
