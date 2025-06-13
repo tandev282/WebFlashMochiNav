@@ -4,6 +4,9 @@ const statusSection = document.getElementById("statusSection")
 const installButton = document.getElementById("installButton")
 const tabBtns = document.querySelectorAll(".tab-btn")
 const tabPanes = document.querySelectorAll(".tab-pane")
+const chipTabBtns = document.querySelectorAll(".chip-tab-btn")
+const chipTabContents = document.querySelectorAll(".chip-tab-content")
+const progressFill = document.getElementById("progressFill") // Declare progressFill variable
 
 let selectedChip = null
 
@@ -44,9 +47,10 @@ function setupEspWebToolsWithManifest(chipType) {
   installButton.setAttribute("erase-first", "")
   installButton.classList.remove("invisible")
 
+ 
   installButton.innerHTML = `
-    <button slot="activate" class="btn btn-primary">
-      Flash
+    <button slot="activate" class="btn btn-primary" style="margin: 0 auto; display: block;">
+      Kêt nối
     </button>
   `
 
@@ -58,7 +62,6 @@ function handleFlashStateChange(event) {
   const statusIcon = document.getElementById("statusIcon")
   const statusTitle = document.getElementById("statusTitle")
   const statusMessage = document.getElementById("statusMessage")
-  const progressFill = document.getElementById("progressFill")
 
   switch (state) {
     case "preparing":
@@ -136,6 +139,25 @@ function switchTab(tabId) {
   })
 }
 
+function switchChipTab(chipTabId) {
+  // Hide all chip tab contents
+  chipTabContents.forEach((content) => {
+    content.classList.remove("active")
+  })
+
+  // Show the selected chip tab content
+  document.getElementById(chipTabId + "-content").classList.add("active")
+
+  // Update active state of chip tab buttons
+  chipTabBtns.forEach((btn) => {
+    if (btn.dataset.chipTab === chipTabId) {
+      btn.classList.add("active")
+    } else {
+      btn.classList.remove("active")
+    }
+  })
+}
+
 function setupEventListeners() {
   // Chip selection
   chipCards.forEach((card) => {
@@ -148,6 +170,13 @@ function setupEventListeners() {
   tabBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       switchTab(btn.dataset.tab)
+    })
+  })
+
+  // Chip tab navigation
+  chipTabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      switchChipTab(btn.dataset.chipTab)
     })
   })
 }
