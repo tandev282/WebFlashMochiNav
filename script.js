@@ -7,7 +7,6 @@ const tabPanes = document.querySelectorAll(".tab-pane")
 const chipTabBtns = document.querySelectorAll(".chip-tab-btn")
 const chipTabContents = document.querySelectorAll(".chip-tab-content")
 const progressFill = document.getElementById("progressFill")
-const buyKeyBtn = document.getElementById("buyKeyBtn")
 
 let selectedChip = null
 
@@ -183,13 +182,6 @@ function setupEventListeners() {
       switchChipTab(btn.dataset.chipTab)
     })
   })
-
-  // Buy Key button in flash section
-  if (buyKeyBtn) {
-    buyKeyBtn.addEventListener("click", () => {
-      activateKeyTab()
-    })
-  }
 }
 
 function showError(message) {
