@@ -16,7 +16,7 @@
             <div class="header-content">
                 <div class="logo">
                     <img src="./img/logo.png"></img>
-                    <h1>MochiNav - TanDev</h1>
+                    <h1>MochiNav - V3.5 by TanDev</h1>
                 </div>
             </div>
         </header>
@@ -48,6 +48,12 @@
                                 <div id="espWebToolsContainer" class="centered-button">
                                     <esp-web-install-button class="invisible"
                                         id="installButton"></esp-web-install-button>
+                                </div>
+                                <!-- Mua Key Button -->
+                                <div class="centered-button" style="margin-top: 1rem;">
+                                    <button class="btn btn-key" id="buyKeyBtn">
+                                        🔑 Mua Key
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -89,13 +95,15 @@
                 <!-- Right Panel - 70% -->
                 <div class="right-panel">
                     <div class="guide-section">
-                        <h2>Hướng Dẫn Đấu Nối ESP32</h2>
+                        <h2>Hướng Dẫn Sử Dụng MochiNav</h2>
 
                         <!-- Tab Navigation -->
                         <div class="tab-navigation">
-                            <button class="tab-btn active" data-tab="tab1">Đấu Nối Thiết Bị</button>
-                            <button class="tab-btn" data-tab="tab2">Kích Hoạt Chương Trình</button>
-                            <button class="tab-btn" data-tab="tab3">Cài Đặt App</button>
+                            <button class="tab-btn active" data-tab="tab1">Sơ Đồ</button>
+                            <button class="tab-btn" data-tab="tab2">Key</button>
+                            <button class="tab-btn" data-tab="tab3">Chức Năng</button>
+                            <button class="tab-btn" data-tab="tab4">Kích Hoạt Chương Trình</button>
+                            <button class="tab-btn" data-tab="tab5">Hướng Dẫn Sử Dụng</button>
                         </div>
 
                         <!-- Tab Content -->
@@ -194,8 +202,6 @@
                                         <div class="important-notes">
                                             <h4>⚠️ Lưu Ý</h4>
                                             <ul>
-                                                <li><strong>Đo điện áp (có thể làm hoặc không, không ảnh hưởng
-                                                        gì):</strong> Sử dụng 2 điện trở 10kΩ </li>
                                                 <li><strong>Màn hình OLED:</strong> Sử dụng loại 0.96" SSD1306 I2C (địa
                                                     chỉ 0x3C)</li>
                                                 <li><strong>Nút nhấn (có thể làm hoặc không, không ảnh hưởng
@@ -289,8 +295,6 @@
                                         <div class="important-notes">
                                             <h4>⚠️ Lưu Ý</h4>
                                             <ul>
-                                                <li><strong>Đo điện áp (có thể làm hoặc không, không ảnh hưởng
-                                                        gì):</strong> Sử dụng 2 điện trở 10kΩ </li>
                                                 <li><strong>Màn hình OLED:</strong> Sử dụng loại 0.96" SSD1306 I2C (địa
                                                     chỉ 0x3C)</li>
                                                 <li><strong>Nút nhấn (có thể làm hoặc không, không ảnh hưởng
@@ -301,13 +305,152 @@
                                 </div>
                             </div>
 
-                            <!-- Tab 2: Kích Hoạt Chương Trình -->
+                            <!-- Tab 2: Mô tả Key -->
                             <div class="tab-pane" id="tab2">
+                                <div class="key-description-section">
+                                    <div class="key-description-card">
+                                        <h3>Chính Sách Mua Key</h3>
+                                        
+                                        <div class="key-policy">
+                                            <h4>📋 Thông Tin Cơ Bản</h4>
+                                            <ul>
+                                                <li>Khi mua, người dùng nhận được <strong>01 key kích hoạt</strong></li>
+                                                <li>Mỗi key chỉ sử dụng được trên <strong>01 thiết bị ESP32</strong></li>
+                                                <li>Có thể sử dụng key <strong>nhiều lần</strong> trên cùng 1 thiết bị</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="key-policy">
+                                            <h4>🆓 Key Được Cấp Miễn Phí Khi</h4>
+                                            <ul>
+                                                <li>Người dùng thay bo mạch ESP32 do <strong>lỗi phần cứng</strong></li>
+                                                <li>Làm thêm thiết bị với <strong>mục đích cá nhân</strong> (không thương mại)</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="key-policy">
+                                            <h4>💼 Chính Sách Cấp Key Bổ Sung</h4>
+                                            <p>Nếu sử dụng để tạo thêm nhiều sản phẩm hoặc triển khai thương mại, người dùng cần:</p>
+                                             <br>
+                                            <ul>
+                                                <li><strong>Mua key bổ sung</strong> theo số lượng thiết bị</li>
+                                                <li><strong>Liên hệ trực tiếp</strong> để được báo giá và hỗ trợ</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="pricing-section">
+                                            <h4>💰 Giá Bán</h4>
+                                            <div class="price-card">
+                                                <div class="price-item">
+                                                    <span class="price-label">1 Key:</span>
+                                                    <span class="price-value">50.000đ</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="purchase-section">
+                                            <h4>🛒 Mua Key Ngay</h4>
+                                            <p>Liên hệ qua Zalo để được hỗ trợ mua key và tư vấn:</p>
+                                            <div class="centered-button">
+                                                <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="btn btn-primary" target="_blank">
+                                                    💬 Mua Key qua Zalo
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <!-- Lưu ý quan trọng -->
+                                        <div class="important-notes">
+                                            <h4>⚠️ Lưu Ý</h4>
+                                            <ul>
+                                                <li><strong>Bạn đã mua Key và chỉ update code, có thể sử dụng lại Key cũ trên chính ESP32 mà bạn đã kích hoạt trước đó</strong></li>
+                                                <li><strong>Nếu bạn chưa mua Key và spam kích hoạt sẽ bị Khóa ID chip ESP32 với hệ thống bên tôi</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: Mô tả chương trình -->
+                            <div class="tab-pane" id="tab3">
+                                <div class="program-description-section">
+                                    <div class="program-description-card">
+                                        <h3>Tính Năng Chương Trình MochiNav</h3>
+                                        
+                                        <div class="feature-grid">
+                                            <div class="feature-item">
+                                                <div class="feature-icon">👁️</div>
+                                                <div class="feature-content">
+                                                    <h4>Biểu Cảm Mắt Dasai Mochi</h4>
+                                                    <p>Hơn 80 hiệu ứng chuyển động ngẫu nhiên tạo cảm giác sinh động và thú vị</p>
+                                                </div>
+                                            </div>
+                                             <div class="feature-item">
+                                                <div class="feature-icon">🖼️</div>
+                                                <div class="feature-content">
+                                                    <h4>Intro Khởi Động</h4>
+                                                    <p>Linh hoạt chuyển đổi Intro khởi động giữa Bassic hoặc Liberty Walk có kèm theo âm thanh </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="feature-item">
+                                                <div class="feature-icon">⏰</div>
+                                                <div class="feature-content">
+                                                    <h4>Hiển Thị Thời Gian Thực</h4>
+                                                    <p>Đồng hồ, phần trăm pin điện thoại, ngày tháng được cập nhật liên tục đồng bộ với điện thoại</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="feature-item">
+                                                <div class="feature-icon">🗺️</div>
+                                                <div class="feature-content">
+                                                    <h4>Dẫn Đường Google Maps</h4>
+                                                    <p>Hiện hướng đi, thời gian di chuyển, chỉ dẫn bằng biểu tượng và văn bản</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="feature-item">
+                                                <div class="feature-icon">📱</div>
+                                                <div class="feature-content">
+                                                    <h4>Thông Báo Cuộc Gọi & Ứng Dụng</h4>
+                                                    <p>Hiện tên người gọi, tin nhắn Zalo, Messenger, và các ứng dụng khác</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="feature-item">
+                                                <div class="feature-icon">🌤️</div>
+                                                <div class="feature-content">
+                                                    <h4>Dự Báo Thời Tiết</h4>
+                                                    <p>Đồng bộ thông tin thời tiết hiện tại và 3 ngày tới từ điện thoại</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="feature-item">
+                                                <div class="feature-icon">⚙️</div>
+                                                <div class="feature-content">
+                                                    <h4>Menu Tinh Chỉnh</h4>
+                                                    <p>Bật/tắt Bluetooth, âm thanh, điều chỉnh âm lượng, cập nhật phần mềm</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="update-notice">
+                                            <div class="update-icon">🚀</div>
+                                            <div class="update-content">
+                                                <h4>Cập Nhật Liên Tục</h4>
+                                                <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời gian tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 4: Kích Hoạt Chương Trình -->
+                            <div class="tab-pane" id="tab4">
                                 <div class="activation-section">
                                     <div class="activation-card">
                                         <h3>Hướng Dẫn Kích Hoạt Chương Trình</h3>
 
-                                        <!-- Bước 9 -->
+                                        <!-- Bước 1 -->
                                         <div class="step-container">
                                             <div class="step-number">1</div>
                                             <div class="step-content">
@@ -322,112 +465,112 @@
 
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Bước 10 -->
-                                    <div class="step-container">
-                                        <div class="step-number">2</div>
-                                        <div class="step-content">
-                                            <h4>Truy Cập Địa Chỉ IP trong Trình Duyệt</h4>
-                                            <p>Mở trình duyệt và nhập địa chỉ IP được hiển thị trên màn hình OLED.
-                                            </p>
+                                        <!-- Bước 2 -->
+                                        <div class="step-container">
+                                            <div class="step-number">2</div>
+                                            <div class="step-content">
+                                                <h4>Truy Cập Địa Chỉ IP trong Trình Duyệt</h4>
+                                                <p>Mở trình duyệt và nhập địa chỉ IP được hiển thị trên màn hình OLED.
+                                                </p>
 
-                                            <div class="code-block">192.168.4.1</div>
+                                                <div class="code-block">192.168.4.1</div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Bước 11 -->
-                                    <div class="step-container">
-                                        <div class="step-number">3</div>
-                                        <div class="step-content">
-                                            <h4>Nhập Thông Tin WiFi và Kích Hoạt</h4>
-                                            <p>Bạn sẽ được yêu cầu nhập:</p>
-                                            <ul>
-                                                <li><strong>Chọn WiFi:</strong> Nhấn quét WiFi để tìm WiFi</li>
-                                                <li><strong>Mật khẩu:</strong> Nhập mật khẩu WiFi</li>
-                                                <li><strong>Mã kích hoạt:</strong> Nhập key kích hoạt mà bạn đã được
-                                                    cấp</li>
-                                            </ul>
+                                        <!-- Bước 3 -->
+                                        <div class="step-container">
+                                            <div class="step-number">3</div>
+                                            <div class="step-content">
+                                                <h4>Nhập Thông Tin WiFi và Kích Hoạt</h4>
+                                                <p>Bạn sẽ được yêu cầu nhập:</p>
+                                                <ul>
+                                                    <li><strong>Chọn WiFi:</strong> Nhấn quét WiFi để tìm WiFi</li>
+                                                    <li><strong>Mật khẩu:</strong> Nhập mật khẩu WiFi</li>
+                                                    <li><strong>Mã kích hoạt:</strong> Nhập key kích hoạt mà bạn đã được
+                                                        cấp</li>
+                                                </ul>
 
-                                            <p>Sau khi nhập xong, nhấn Activate.</p>
+                                                <p>Sau khi nhập xong, nhấn Activate.</p>
 
+                                                <div class="image-placeholder">
+                                                    <img src="./img/z6700466655302_74f3e313ccf1a3c474ed635b571774be.jpg"
+                                                        alt="Sơ đồ đấu nối ESP32" width="300">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Bước 4 -->
+                                        <div class="step-container">
+                                            <div class="step-number">4</div>
+                                            <div class="step-content">
+                                                <h4>Sau Khi Nhấn "Activate"</h4>
+                                                <p>Khi bạn nhấn Activate, hệ thống sẽ bắt đầu quá trình kết nối với WiFi
+                                                    và xác minh key đã nhập. Trên trình duyệt, bạn sẽ thấy thông báo như
+                                                    sau:</p>
+
+                                                <div class="image-placeholder">
+                                                    <img src="./img/z6700471844954_e6d0cff5f4b7545038637e34f6f8baba.jpg"
+                                                        alt="Sơ đồ đấu nối ESP32" width="500">
+                                                </div>
+
+                                                <p>Lúc này, ESP32 sẽ kết nối với WiFi và xác minh key đã nhập.</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Trường hợp key sai -->
+                                        <div class="result-container error">
+                                            <h4>Trường Hợp Key Sai</h4>
+                                            <p>Nếu key bạn nhập sai, ESP32 sẽ khởi động lại và yêu cầu bạn thực hiện lại
+                                                bước Kết Nối WiFi (bước 1).</p>
                                             <div class="image-placeholder">
-                                                <img src="./img/z6700466655302_74f3e313ccf1a3c474ed635b571774be.jpg"
+                                                <img src="./img/z6700482972139_bcee83d386e7cc54bb68bd933b8313a1.jpg"
                                                     alt="Sơ đồ đấu nối ESP32" width="300">
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <!-- Bước 12 -->
-                                    <div class="step-container">
-                                        <div class="step-number">4</div>
-                                        <div class="step-content">
-                                            <h4>Sau Khi Nhấn "Activate"</h4>
-                                            <p>Khi bạn nhấn Activate, hệ thống sẽ bắt đầu quá trình kết nối với WiFi
-                                                và xác minh key đã nhập. Trên trình duyệt, bạn sẽ thấy thông báo như
-                                                sau:</p>
+                                        </div>
+
+                                        <!-- Trường hợp key đúng -->
+                                        <div class="result-container success">
+                                            <h4>Trường Hợp Key Đúng</h4>
+                                            <p>Nếu key bạn nhập là đúng, hệ thống sẽ hoàn tất quá trình xác minh và tiếp
+                                                tục vào chương trình chính. Màn hình sẽ hiển thị thông báo thành công.
+                                            </p>
 
                                             <div class="image-placeholder">
-                                                <img src="./img/z6700471844954_e6d0cff5f4b7545038637e34f6f8baba.jpg"
-                                                    alt="Sơ đồ đấu nối ESP32" width="500">
+                                                <img src="./img/z6700483015772_0411e382dd8e139759e426413b43ecfa.jpg"
+                                                    alt="Sơ đồ đấu nối ESP32" width="300">
                                             </div>
 
-                                            <p>Lúc này, ESP32 sẽ kết nối với WiFi và xác minh key đã nhập.</p>
+                                            <p>ESP32 sẽ tự động khởi động lại và chuyển sang chế độ hoạt động chính.</p>
                                         </div>
-                                    </div>
-
-                                    <!-- Trường hợp key sai -->
-                                    <div class="result-container error">
-                                        <h4>Trường Hợp Key Sai</h4>
-                                        <p>Nếu key bạn nhập sai, ESP32 sẽ khởi động lại và yêu cầu bạn thực hiện lại
-                                            bước Kết Nối WiFi (bước 9).</p>
-                                        <div class="image-placeholder">
-                                            <img src="./img/z6700482972139_bcee83d386e7cc54bb68bd933b8313a1.jpg"
-                                                alt="Sơ đồ đấu nối ESP32" width="300">
-                                        </div>
-
-                                    </div>
-
-                                    <!-- Trường hợp key đúng -->
-                                    <div class="result-container success">
-                                        <h4>Trường Hợp Key Đúng</h4>
-                                        <p>Nếu key bạn nhập là đúng, hệ thống sẽ hoàn tất quá trình xác minh và tiếp
-                                            tục vào chương trình chính. Màn hình sẽ hiển thị thông báo thành công.
-                                        </p>
-
-                                        <div class="image-placeholder">
-                                            <img src="./img/z6700483015772_0411e382dd8e139759e426413b43ecfa.jpg"
-                                                alt="Sơ đồ đấu nối ESP32" width="300">
-                                        </div>
-
-                                        <p>ESP32 sẽ tự động khởi động lại và chuyển sang chế độ hoạt động chính.</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Tab 3: Cài Đặt App -->
-                        <div class="tab-pane" id="tab3">
-                            <div class="app-section">
-                                <div class="app-card">
-                                    <h3>Cài Đặt và Cấu Hình App</h3>
+                            <!-- Tab 5: Hướng dẫn sử dụng -->
+                            <div class="tab-pane" id="tab5">
+                                <div class="app-section">
+                                    <div class="app-card">
+                                        <h3>Cài Đặt và Cấu Hình App</h3>
 
-                                    <!-- Tải App -->
-                                    <div class="app-download">
-                                        <h4>Tải App MochiNav</h4>
-                                        <div class="app-stores">
-                                            <a href="https://play.google.com/store/apps/details?id=com.fbiego.chronos&pcampaignid=web_share"
-                                                class="app-store-btn">
-                                                <span class="app-store-icon">📱</span>
-                                                <span class="app-store-text">Google Play</span>
-                                            </a>
-                                        </div>
-                                        <div class="app-stores">
-                                            <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
-                                                class="app-store-btn">
-                                                <span class="app-store-icon">📱</span>
-                                                <span class="app-store-text">Link hướng dẫn sử dụng</span>
-                                            </a>
+                                        <!-- Tải App -->
+                                        <div class="app-download">
+                                            <h4>Tải App MochiNav</h4>
+                                            <div class="app-stores">
+                                                <a href="https://play.google.com/store/apps/details?id=com.fbiego.chronos&pcampaignid=web_share"
+                                                    class="app-store-btn">
+                                                    <span class="app-store-icon">📱</span>
+                                                    <span class="app-store-text">Google Play</span>
+                                                </a>
+                                            </div>
+                                            <div class="app-stores">
+                                                <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
+                                                    class="app-store-btn">
+                                                    <span class="app-store-icon">📱</span>
+                                                    <span class="app-store-text">Link hướng dẫn sử dụng</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -436,30 +579,29 @@
                     </div>
                 </div>
             </div>
-    </div>
-    </main>
+        </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <h3>Liên Hệ</h3>
-            <div class="footer-links">
-                <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="footer-link" target="_blank">
-                    <span class="footer-icon">💬</span>
-                    Zalo
-                </a>
-                <a href="https://www.tiktok.com/@tanbeat282" class="footer-link" target="_blank">
-                    <span class="footer-icon">🎵</span>
-                    TikTok
-                </a>
-                <a href="https://www.facebook.com/trantan03" class="footer-link" target="_blank">
-                    <span class="footer-icon">📘</span>
-                    Facebook
-                </a>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <h3>Liên Hệ</h3>
+                <div class="footer-links">
+                    <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="footer-link" target="_blank">
+                        <span class="footer-icon">💬</span>
+                        Zalo
+                    </a>
+                    <a href="https://www.tiktok.com/@tanbeat282" class="footer-link" target="_blank">
+                        <span class="footer-icon">🎵</span>
+                        TikTok
+                    </a>
+                    <a href="https://www.facebook.com/trantan03" class="footer-link" target="_blank">
+                        <span class="footer-icon">📘</span>
+                        Facebook
+                    </a>
+                </div>
+                <p class="footer-text">© 2025 MochiNav - TanDev</p>
             </div>
-            <p class="footer-text">© 2025 MochiNav - TanDev</p>
-        </div>
-    </footer>
+        </footer>
     </div>
 
     <script src="script.js"></script>

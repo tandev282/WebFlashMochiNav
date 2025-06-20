@@ -219,7 +219,7 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
-  align-items: center; /* Add this to ensure vertical centering */
+  align-items: center;
 }
 
 /* Key Section */
@@ -252,6 +252,8 @@ body {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-key:hover {
@@ -275,19 +277,22 @@ body {
   margin-bottom: 2rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .tab-btn {
   background: var(--bg-tertiary);
   border: none;
   border-radius: 8px;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1rem;
   color: var(--text-secondary);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   flex: 1;
   text-align: center;
+  min-width: 120px;
+  font-size: 0.9rem;
 }
 
 .tab-btn:hover {
@@ -312,6 +317,192 @@ body {
 .tab-pane.active {
   display: block;
   animation: fadeIn 0.5s ease;
+}
+
+/* Key Description Section */
+.key-description-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.key-description-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.key-description-card h3 {
+  color: var(--accent-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.key-policy {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.key-policy h4 {
+  color: var(--accent-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.key-policy ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.key-policy li {
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.key-policy li::before {
+  content: "✓";
+  color: var(--accent-success);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.pricing-section {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.pricing-section h4 {
+  color: var(--accent-warning);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.price-card {
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 1rem;
+  display: inline-block;
+}
+
+.price-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.price-label {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.price-value {
+  color: var(--accent-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.purchase-section {
+  text-align: center;
+}
+
+.purchase-section h4 {
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+}
+
+.purchase-section p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Program Description Section */
+.program-description-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.program-description-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.program-description-card h3 {
+  color: var(--accent-primary);
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.feature-item {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.feature-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.feature-content h4 {
+  color: var(--accent-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-content p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.update-notice {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--accent-primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.update-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.update-content h4 {
+  color: var(--accent-primary);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.update-content p {
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 /* Chip Type Tabs */
@@ -1020,6 +1211,10 @@ esp-web-install-button {
   .tab-navigation {
     flex-direction: column;
   }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1034,15 +1229,15 @@ esp-web-install-button {
   .footer-links {
     flex-direction: column;
     gap: 1rem;
-    align-items: center; /* Center the links */
+    align-items: center;
   }
 
   .footer-content {
-    padding: 0 1rem; /* Add padding on small screens */
+    padding: 0 1rem;
   }
 
   .footer-text {
-    padding: 0 1rem; /* Add padding to text */
+    padding: 0 1rem;
   }
 
   .step-container {
@@ -1055,6 +1250,31 @@ esp-web-install-button {
 
   .interface-grid {
     grid-template-columns: 1fr;
+  }
+
+  .tab-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tab-btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .chip-type-tabs {
+    flex-wrap: wrap;
+  }
+
+  .feature-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .update-notice {
+    flex-direction: column;
+    text-align: center;
   }
 }
 
@@ -1080,36 +1300,4 @@ esp-web-install-button {
 .image-placeholder img {
   max-width: 100%;
   height: auto;
-}
-
-/* Additional responsive fixes for tab content */
-@media (max-width: 768px) {
-  .tab-navigation {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .tab-btn {
-    width: 100%;
-  }
-
-  .chip-type-tabs {
-    flex-wrap: wrap;
-  }
-
-  .step-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .step-content {
-    width: 100%;
-    text-align: center;
-  }
-
-  .diagram-container img {
-    max-width: 100%;
-    height: auto;
-  }
 }

@@ -6,7 +6,8 @@ const tabBtns = document.querySelectorAll(".tab-btn")
 const tabPanes = document.querySelectorAll(".tab-pane")
 const chipTabBtns = document.querySelectorAll(".chip-tab-btn")
 const chipTabContents = document.querySelectorAll(".chip-tab-content")
-const progressFill = document.getElementById("progressFill") // Declare progressFill variable
+const progressFill = document.getElementById("progressFill")
+const buyKeyBtn = document.getElementById("buyKeyBtn")
 
 let selectedChip = null
 
@@ -47,10 +48,9 @@ function setupEspWebToolsWithManifest(chipType) {
   installButton.setAttribute("erase-first", "")
   installButton.classList.remove("invisible")
 
- 
   installButton.innerHTML = `
     <button slot="activate" class="btn btn-primary" style="margin: 0 auto; display: block;">
-      Kêt nối
+      Kết nối
     </button>
   `
 
@@ -158,6 +158,10 @@ function switchChipTab(chipTabId) {
   })
 }
 
+function activateKeyTab() {
+  switchTab("tab2")
+}
+
 function setupEventListeners() {
   // Chip selection
   chipCards.forEach((card) => {
@@ -179,6 +183,13 @@ function setupEventListeners() {
       switchChipTab(btn.dataset.chipTab)
     })
   })
+
+  // Buy Key button in flash section
+  if (buyKeyBtn) {
+    buyKeyBtn.addEventListener("click", () => {
+      activateKeyTab()
+    })
+  }
 }
 
 function showError(message) {
