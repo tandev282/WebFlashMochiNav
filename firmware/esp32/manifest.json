@@ -1,6 +1,6 @@
 {
   "name": "ESP32 Firmware",
-  "version": "1.0.0",
+  "version": "3.5",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,
   "builds": [
