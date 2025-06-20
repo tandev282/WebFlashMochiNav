@@ -68,9 +68,11 @@
                     <div class="step-content">
                         <h4>Hướng dẫn nạp code MochiNav</h4>
                         <ul>
-                            <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 và gim cáp kết nối với máy tính</strong></li>
+                            <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 và gim cáp kết nối với máy tính</strong>
+                            </li>
                             <li><strong>Chọn chip phù hợp và nhấn kết nối</strong></li>
-                            <li><strong>Chọn cổng COM của chip và nhấn Kết nối -> Install -> Install -> chờ nạp xong code</strong></li>
+                            <li><strong>Chọn cổng COM của chip và nhấn Kết nối -> Install -> Install -> chờ nạp xong
+                                    code</strong></li>
                         </ul>
                     </div>
 
@@ -93,15 +95,69 @@
 
                         <!-- Tab Navigation -->
                         <div class="tab-navigation">
+                            <button class="tab-btn" data-tab="tab0">Cập Nhật</button>
                             <button class="tab-btn active" data-tab="tab1">Sơ Đồ</button>
                             <button class="tab-btn" data-tab="tab2">Key</button>
                             <button class="tab-btn" data-tab="tab3">Chức Năng</button>
-                            <button class="tab-btn" data-tab="tab4">Kích Hoạt Chương Trình</button>
+                            <button class="tab-btn" data-tab="tab4">Kích Hoạt</button>
                             <button class="tab-btn" data-tab="tab5">Hướng Dẫn Sử Dụng</button>
                         </div>
 
                         <!-- Tab Content -->
                         <div class="tab-content">
+                            <!-- Tab 0: Cập Nhật -->
+                            <div class="tab-pane" id="tab0">
+                                <div class="update-section">
+                                    <div class="update-card">
+                                        <h3>MochiNav V3.5</h3>
+                                        <ul>
+                                            <li><strong>👁️ Biểu cảm mới:</strong> Đã thêm 25 biểu cảm mới, trên tổng số
+                                                hiện tại là 85 biêu cảm.</li>
+                                            <li><strong>🔥 Tối ưu tốc độ:</strong> Đã tối ưu chương trình tốt nhất, tiết
+                                                kiệm pin và cpu nhất, giảm tình trạng nóng chip gây nhanh hư hỏng.</li>
+                                            <li><strong>🖼️ Intro Liberty Walk:</strong> Đã thêm intro mới là Liberty
+                                                Walk kèm âm thanh khởi động. Mọi người có thể bật trong phần Menu ->
+                                                Biểu cảm, nhấn giữ để bật hoặc tắt</li>
+                                            <li><strong>🔊 Âm lượng:</strong> Đã có thể điều chỉnh âm lượng intro khi
+                                                khởi động trong Menu -> Âm lượng, nhấn giữ để tăng.</li>
+                                            <li><strong>Còn nữa:</strong> .....</li>
+                                        </ul>
+                                        <br>
+                                        <div class="important-notes">
+                                            <h4>📌 Lưu ý</h4>
+                                            <ul>
+                                                <li>Người dùng đã có key cũ có thể tiếp tục sử dụng lại key trên cùng
+                                                    thiết bị</li>
+                                                <li>Khuyến nghị cập nhật để nhận được các tính năng mới nhất</li>
+                                            </ul>
+                                        </div>
+                                        <div class="feature-request-form">
+                                            <h4>📬 Gửi Yêu Cầu Tính Năng</h4>
+                                            <p>Nếu bạn có ý tưởng hoặc tính năng muốn bổ sung trong phiên bản tiếp theo,
+                                                hãy gửi tại đây:</p>
+                                            <form id="requestForm">
+                                                <div class="form-group">
+                                                    <label for="name">Tên bạn:</label>
+                                                    <input type="text" id="name" name="name"
+                                                        placeholder="Nhập tên của bạn" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="content">Nội dung yêu cầu:</label>
+                                                    <textarea id="content" name="content" rows="4"
+                                                        placeholder="Chi tiết ý tưởng hoặc đề xuất..."
+                                                        required></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary">📤 Gửi yêu
+                                                        cầu</button>
+                                                </div>
+                                            </form>
+                                            <div id="formMessage"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Tab 1: Đấu Nối Thiết Bị -->
                             <div class="tab-pane active" id="tab1">
                                 <div class="wiring-section">
@@ -304,13 +360,15 @@
                                 <div class="key-description-section">
                                     <div class="key-description-card">
                                         <h3>Chính Sách Mua Key</h3>
-                                        
+
                                         <div class="key-policy">
                                             <h4>📋 Thông Tin Cơ Bản</h4>
                                             <ul>
                                                 <li>Khi mua, người dùng nhận được <strong>01 key kích hoạt</strong></li>
-                                                <li>Mỗi key chỉ sử dụng được trên <strong>01 thiết bị ESP32</strong></li>
-                                                <li>Có thể sử dụng key <strong>nhiều lần</strong> trên cùng 1 thiết bị</li>
+                                                <li>Mỗi key chỉ sử dụng được trên <strong>01 thiết bị ESP32</strong>
+                                                </li>
+                                                <li>Có thể sử dụng key <strong>nhiều lần</strong> trên cùng 1 thiết bị
+                                                </li>
                                             </ul>
                                         </div>
 
@@ -318,14 +376,16 @@
                                             <h4>🆓 Key Được Cấp Miễn Phí Khi</h4>
                                             <ul>
                                                 <li>Người dùng thay bo mạch ESP32 do <strong>lỗi phần cứng</strong></li>
-                                                <li>Làm thêm thiết bị với <strong>mục đích cá nhân</strong> (không thương mại)</li>
+                                                <li>Làm thêm thiết bị với <strong>mục đích cá nhân</strong> (không
+                                                    thương mại)</li>
                                             </ul>
                                         </div>
 
                                         <div class="key-policy">
                                             <h4>💼 Chính Sách Cấp Key Bổ Sung</h4>
-                                            <p>Nếu sử dụng để tạo thêm nhiều sản phẩm hoặc triển khai thương mại, người dùng cần:</p>
-                                             <br>
+                                            <p>Nếu sử dụng để tạo thêm nhiều sản phẩm hoặc triển khai thương mại, người
+                                                dùng cần:</p>
+                                            <br>
                                             <ul>
                                                 <li><strong>Mua key bổ sung</strong> theo số lượng thiết bị</li>
                                                 <li><strong>Liên hệ trực tiếp</strong> để được báo giá và hỗ trợ</li>
@@ -346,7 +406,8 @@
                                             <h4>🛒 Mua Key Ngay</h4>
                                             <p>Liên hệ qua Zalo để được hỗ trợ mua key và tư vấn:</p>
                                             <div class="centered-button">
-                                                <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="btn btn-primary" target="_blank">
+                                                <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="btn btn-primary"
+                                                    target="_blank">
                                                     💬 Mua Key qua Zalo
                                                 </a>
                                             </div>
@@ -356,8 +417,10 @@
                                         <div class="important-notes">
                                             <h4>⚠️ Lưu Ý</h4>
                                             <ul>
-                                                <li><strong>Bạn đã mua Key và chỉ update code, có thể sử dụng lại Key cũ trên chính ESP32 mà bạn đã kích hoạt trước đó</strong></li>
-                                                <li><strong>Nếu bạn chưa mua Key và spam kích hoạt sẽ bị Khóa ID chip ESP32 với hệ thống bên tôi</strong></li>
+                                                <li><strong>Bạn đã mua Key và chỉ update code, có thể sử dụng lại Key cũ
+                                                        trên chính ESP32 mà bạn đã kích hoạt trước đó</strong></li>
+                                                <li><strong>Nếu bạn chưa mua Key và spam kích hoạt sẽ bị Khóa ID chip
+                                                        ESP32 với hệ thống bên tôi</strong></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -369,20 +432,22 @@
                                 <div class="program-description-section">
                                     <div class="program-description-card">
                                         <h3>Tính Năng Chương Trình MochiNav</h3>
-                                        
+
                                         <div class="feature-grid">
                                             <div class="feature-item">
                                                 <div class="feature-icon">👁️</div>
                                                 <div class="feature-content">
                                                     <h4>Biểu Cảm Mắt Dasai Mochi</h4>
-                                                    <p>Hơn 80 hiệu ứng chuyển động ngẫu nhiên tạo cảm giác sinh động và thú vị</p>
+                                                    <p>Hơn 80 hiệu ứng chuyển động ngẫu nhiên tạo cảm giác sinh động và
+                                                        thú vị</p>
                                                 </div>
                                             </div>
-                                             <div class="feature-item">
+                                            <div class="feature-item">
                                                 <div class="feature-icon">🖼️</div>
                                                 <div class="feature-content">
                                                     <h4>Intro Khởi Động</h4>
-                                                    <p>Linh hoạt chuyển đổi Intro khởi động giữa Bassic hoặc Liberty Walk có kèm theo âm thanh </p>
+                                                    <p>Linh hoạt chuyển đổi Intro khởi động giữa Bassic hoặc Liberty
+                                                        Walk có kèm theo âm thanh </p>
                                                 </div>
                                             </div>
 
@@ -390,7 +455,8 @@
                                                 <div class="feature-icon">⏰</div>
                                                 <div class="feature-content">
                                                     <h4>Hiển Thị Thời Gian Thực</h4>
-                                                    <p>Đồng hồ, phần trăm pin điện thoại, ngày tháng được cập nhật liên tục đồng bộ với điện thoại</p>
+                                                    <p>Đồng hồ, phần trăm pin điện thoại, ngày tháng được cập nhật liên
+                                                        tục đồng bộ với điện thoại</p>
                                                 </div>
                                             </div>
 
@@ -398,7 +464,8 @@
                                                 <div class="feature-icon">🗺️</div>
                                                 <div class="feature-content">
                                                     <h4>Dẫn Đường Google Maps</h4>
-                                                    <p>Hiện hướng đi, thời gian di chuyển, chỉ dẫn bằng biểu tượng và văn bản</p>
+                                                    <p>Hiện hướng đi, thời gian di chuyển, chỉ dẫn bằng biểu tượng và
+                                                        văn bản</p>
                                                 </div>
                                             </div>
 
@@ -406,7 +473,8 @@
                                                 <div class="feature-icon">📱</div>
                                                 <div class="feature-content">
                                                     <h4>Thông Báo Cuộc Gọi & Ứng Dụng</h4>
-                                                    <p>Hiện tên người gọi, tin nhắn Zalo, Messenger, và các ứng dụng khác</p>
+                                                    <p>Hiện tên người gọi, tin nhắn Zalo, Messenger, và các ứng dụng
+                                                        khác</p>
                                                 </div>
                                             </div>
 
@@ -414,7 +482,8 @@
                                                 <div class="feature-icon">🌤️</div>
                                                 <div class="feature-content">
                                                     <h4>Dự Báo Thời Tiết</h4>
-                                                    <p>Đồng bộ thông tin thời tiết hiện tại và 3 ngày tới từ điện thoại</p>
+                                                    <p>Đồng bộ thông tin thời tiết hiện tại và 3 ngày tới từ điện thoại
+                                                    </p>
                                                 </div>
                                             </div>
 
@@ -422,7 +491,8 @@
                                                 <div class="feature-icon">⚙️</div>
                                                 <div class="feature-content">
                                                     <h4>Menu Tinh Chỉnh</h4>
-                                                    <p>Bật/tắt Bluetooth, âm thanh, điều chỉnh âm lượng, cập nhật phần mềm</p>
+                                                    <p>Bật/tắt Bluetooth, âm thanh, điều chỉnh âm lượng, cập nhật phần
+                                                        mềm</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -431,7 +501,8 @@
                                             <div class="update-icon">🚀</div>
                                             <div class="update-content">
                                                 <h4>Cập Nhật Liên Tục</h4>
-                                                <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời gian tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
+                                                <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời gian
+                                                    tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
                                             </div>
                                         </div>
                                     </div>
