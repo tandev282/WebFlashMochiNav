@@ -9,6 +9,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+<!-- Popup cảnh báo -->
+<div id="keyWarningPopup" class="popup-overlay" style="display: none;">
+  <div class="popup-box">
+    <h3>⚠️ Cảnh Báo Trước Khi Nạp</h3>
+    <p>
+      Nếu bạn <strong>chưa mua key kích hoạt</strong>, xin vui lòng <strong>chỉ xem website mà không nạp chương trình</strong>.<br>
+      Thiết bị sẽ <span style="color: var(--accent-danger); font-weight: 600;">không hoạt động</span> nếu không có key hợp lệ.
+    </p>
+
+    <!-- Checkbox nâng cấp -->
+    <label class="custom-checkbox">
+      <input type="checkbox" id="dontShowAgain">
+      <span class="checkmark"></span>
+      <span class="checkbox-label-text">Tôi đã đọc và không muốn hiển thị cảnh báo này lần sau</span>
+    </label>
+
+    <button id="closePopupBtn" class="btn btn-primary" style="margin-top: 1.5rem;">Tôi đã hiểu</button>
+  </div>
+</div>
+
+
 <body>
     <div class="container">
         <!-- Header -->
@@ -16,7 +37,7 @@
             <div class="header-content">
                 <div class="logo">
                     <img src="./img/logo.png"></img>
-                    <h1>MochiNav - V3.5 by TanDev</h1>
+                    <h1>MochiNav by TanDev</h1>
                 </div>
             </div>
         </header>
@@ -91,11 +112,11 @@
                 <!-- Right Panel - 70% -->
                 <div class="right-panel">
                     <div class="guide-section">
-                        <h2>Hướng Dẫn Sử Dụng MochiNav</h2>
+                        <h2>MochiNav</h2>
 
                         <!-- Tab Navigation -->
                         <div class="tab-navigation">
-                            <button class="tab-btn" data-tab="tab0">Cập Nhật</button>
+                            <button class="tab-btn" data-tab="tab0">v3.5.0 có gì ???</button>
                             <button class="tab-btn active" data-tab="tab1">Sơ Đồ</button>
                             <button class="tab-btn" data-tab="tab2">Key</button>
                             <button class="tab-btn" data-tab="tab3">Chức Năng</button>

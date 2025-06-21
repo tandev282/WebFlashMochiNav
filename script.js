@@ -241,4 +241,26 @@ document.addEventListener("keydown", (event) => {
   }
 })
 
+
+// Popup lưu trạng thái vào localStorage
+window.addEventListener("DOMContentLoaded", () => {
+  const popup = document.getElementById("keyWarningPopup")
+  const closeBtn = document.getElementById("closePopupBtn")
+  const dontShowAgain = document.getElementById("dontShowAgain")
+
+  // Nếu chưa lưu trạng thái => hiển thị popup
+  if (!localStorage.getItem("hideKeyWarning")) {
+    popup.style.display = "flex"
+  }
+
+  // Gắn sự kiện click vào nút "Tôi đã hiểu"
+  closeBtn.addEventListener("click", () => {
+    if (dontShowAgain.checked) {
+      localStorage.setItem("hideKeyWarning", "true")
+    }
+    popup.style.display = "none"
+  })
+})
+
+
 document.addEventListener("DOMContentLoaded", initializeApp)
