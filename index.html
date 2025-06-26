@@ -11,22 +11,24 @@
 
 <!-- Popup cảnh báo -->
 <div id="keyWarningPopup" class="popup-overlay" style="display: none;">
-  <div class="popup-box">
-    <h3>⚠️ Cảnh Báo Trước Khi Nạp</h3>
-    <p>
-      Nếu bạn <strong>chưa mua key kích hoạt</strong>, xin vui lòng <strong>chỉ xem website mà không nạp chương trình</strong>.<br>
-      Thiết bị sẽ <span style="color: var(--accent-danger); font-weight: 600;">không hoạt động</span> nếu không có key hợp lệ.
-    </p>
+    <div class="popup-box">
+        <h3>⚠️ Cảnh Báo Trước Khi Nạp</h3>
+        <p>
+            Nếu bạn <strong>chưa mua key kích hoạt</strong>, xin vui lòng <strong>chỉ xem website mà không nạp chương
+                trình</strong>.<br>
+            Thiết bị sẽ <span style="color: var(--accent-danger); font-weight: 600;">không hoạt động</span> nếu không có
+            key hợp lệ.
+        </p>
 
-    <!-- Checkbox nâng cấp -->
-    <label class="custom-checkbox">
-      <input type="checkbox" id="dontShowAgain">
-      <span class="checkmark"></span>
-      <span class="checkbox-label-text">Tôi đã đọc và không muốn hiển thị cảnh báo này lần sau</span>
-    </label>
+        <!-- Checkbox nâng cấp -->
+        <label class="custom-checkbox">
+            <input type="checkbox" id="dontShowAgain">
+            <span class="checkmark"></span>
+            <span class="checkbox-label-text">Tôi đã đọc và không muốn hiển thị cảnh báo này lần sau</span>
+        </label>
 
-    <button id="closePopupBtn" class="btn btn-primary" style="margin-top: 1.5rem;">Tôi đã hiểu</button>
-  </div>
+        <button id="closePopupBtn" class="btn btn-primary" style="margin-top: 1.5rem;">Tôi đã hiểu</button>
+    </div>
 </div>
 
 
@@ -441,7 +443,9 @@
                                             <ul>
                                                 <li><strong>Bạn đã mua Key và chỉ update code, có thể sử dụng lại Key cũ
                                                         trên chính ESP32 mà bạn đã kích hoạt trước đó</strong></li>
-                                                <li><strong>Nếu bạn chưa mua Key và spam kích hoạt sẽ bị hệ thống chúng tôi chặn</strong></li>
+                                                <li><strong>Nếu bạn chưa mua Key và spam kích hoạt sẽ bị hệ thống chúng
+                                                        tôi chặn</strong></li>
+                                                <li><strong>Mua 1 lần sử dụng trọn đời, hỗ trợ update vô thời hạn</strong></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -452,13 +456,13 @@
                             <div class="tab-pane" id="tab3">
                                 <div class="program-description-section">
                                     <div class="program-description-card">
-                                        <h3>Tính Năng Chương Trình MochiNav</h3>
+                                        <h3>Tính Năng Chính</h3>
 
                                         <div class="feature-grid">
                                             <div class="feature-item">
                                                 <div class="feature-icon">👁️</div>
                                                 <div class="feature-content">
-                                                    <h4>Biểu Cảm Mắt Dasai Mochi</h4>
+                                                    <h4>Biểu Cảm Dasai Mochi</h4>
                                                     <p>Hơn 80 hiệu ứng chuyển động ngẫu nhiên tạo cảm giác sinh động và
                                                         thú vị</p>
                                                 </div>
@@ -469,6 +473,15 @@
                                                     <h4>Intro Khởi Động</h4>
                                                     <p>Linh hoạt chuyển đổi Intro khởi động giữa Bassic hoặc Liberty
                                                         Walk có kèm theo âm thanh </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="feature-item">
+                                                <div class="feature-icon">🔊</div>
+                                                <div class="feature-content">
+                                                    <h4>Âm Thanh Biểu Cảm</h4>
+                                                    <p>Hơn 50% biểu cảm đã có âm thanh, giúp cho trải nghiệm thêm sống
+                                                        động. </p>
                                                 </div>
                                             </div>
 
@@ -503,7 +516,7 @@
                                                 <div class="feature-icon">🌤️</div>
                                                 <div class="feature-content">
                                                     <h4>Dự Báo Thời Tiết</h4>
-                                                    <p>Đồng bộ thông tin thời tiết hiện tại và 3 ngày tới từ điện thoại
+                                                    <p>Đồng bộ thông tin thời tiết hiện tại từ điện thoại
                                                     </p>
                                                 </div>
                                             </div>
@@ -513,7 +526,7 @@
                                                 <div class="feature-content">
                                                     <h4>Menu Tinh Chỉnh</h4>
                                                     <p>Bật/tắt Bluetooth, âm thanh, điều chỉnh âm lượng, cập nhật phần
-                                                        mềm</p>
+                                                        mềm,...</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -526,6 +539,58 @@
                                                     tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
                                             </div>
                                         </div>
+
+                                    </div>
+
+                                    <div class="app-card">
+                                        <h3>Chức Năng Ẩn</h3>
+                                        <div class="app-setup">
+                                            <ul class="setup-steps">
+                                                <li>
+                                                    <strong>Chuyển Màn Hình</strong>
+                                                    <p>Nếu có nút bạn nhấn nhã 1 lần sẽ chuyển sang màn hình thời gian,
+                                                        không có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên App
+                                                        Chronos 1 lần.
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <strong>Menu</strong>
+                                                    <p>Nếu có nút bạn nhấn giữ 1 lần để vào Menu, không
+                                                        có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên App
+                                                        Chronos 2 lần liên
+                                                        tiếp.</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Di Chuyển Và Chọn Trong Menu</strong>
+                                                    <p>1. Nếu có nút bạn nhấn nhã 1 lần sẽ là di chuyển trong Menu,
+                                                        không
+                                                        có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên App
+                                                        Chronos 1 lần.</p>
+                                                    <p>2. Nếu có nút bạn nhấn giữ 1 lần sẽ là chọn trong Menu, không
+                                                        có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên App
+                                                        Chronos 2 lần liên
+                                                        tiếp.</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Phím Tắt Nhanh</strong>
+                                                    <p>1. Nếu có nút bạn nhấn 2 lần sẽ tắt hoặc bật phát animations ngẫu
+                                                        nhiên hay tuần tự</p>
+                                                    <p>2. Nếu có nút bạn nhấn 3 lần sẽ tắt hoặc bật âm thanh</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Lưu ý quan trọng -->
+                                    <div class="important-notes">
+                                        <h4>⚠️ Lưu Ý</h4>
+                                        <ul>
+                                            <li><strong>Tính từ khi khởi động, nếu bạn không kết nối điện thoại với
+                                                    thiết bị, thiết bị sẽ tự động tắt Bluetooth sau 3 phút giúp tăng
+                                                    thời gian sử dụng pin và tránh tình trạng thiết bị bị nóng khi không
+                                                    sử
+                                                    dụng.</strong></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -638,8 +703,6 @@
                             <div class="tab-pane" id="tab5">
                                 <div class="app-section">
                                     <div class="app-card">
-                                        <h3>Cài Đặt và Cấu Hình App</h3>
-
                                         <!-- Tải App -->
                                         <div class="app-download">
                                             <h4>Tải App MochiNav</h4>
@@ -654,13 +717,14 @@
                                                 <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
                                                     class="app-store-btn">
                                                     <span class="app-store-icon">📱</span>
-                                                    <span class="app-store-text">Link hướng dẫn sử dụng</span>
+                                                    <span class="app-store-text">Hướng dẫn sử dụng App</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
