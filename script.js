@@ -1,4 +1,4 @@
-const chipCards = document.querySelectorAll(".chip-card")
+// Optimized JavaScript - removed unused variables and functions
 const flashSection = document.getElementById("flashSection")
 const statusSection = document.getElementById("statusSection")
 const installButton = document.getElementById("installButton")
@@ -7,8 +7,28 @@ const tabPanes = document.querySelectorAll(".tab-pane")
 const chipTabBtns = document.querySelectorAll(".chip-tab-btn")
 const chipTabContents = document.querySelectorAll(".chip-tab-content")
 const progressFill = document.getElementById("progressFill")
+const mainGuideTabBtns = document.querySelectorAll(".main-guide-tab-btn")
+const mainGuideTabContents = document.querySelectorAll(".main-guide-tab-content")
+const fwCards = document.querySelectorAll(".fw-button")
+const chipGrid = document.getElementById("chipGrid")
+const chipSelection = document.getElementById("chipSelection")
+const oledSelection = document.getElementById("oledSelection")
+const oledButtons = document.querySelectorAll(".oled-button")
 
 let selectedChip = null
+let selectedFw = null
+let selectedOled = null
+
+const chipOptions = {
+  mochi_nav: [
+    { chip: "esp32", label: "ESP32" },
+    { chip: "esp32c3", label: "ESP32-C3" },
+  ],
+  xiaozhi: [
+    { chip: "esp32s3", label: "ESP32-S3" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Mini" },
+  ],
+}
 
 function initializeApp() {
   try {
@@ -20,40 +40,148 @@ function initializeApp() {
   }
 }
 
-function selectChip(chipType) {
-  selectedChip = chipType
+// Function to generate firmware binary file name and path
+function generateFirmwarePath(fw, chip, oled = null) {
+  let binaryFileName = ""
+  let folderPath = ""
 
-  chipCards.forEach((card) => {
-    card.classList.remove("selected")
-    if (card.dataset.chip === chipType) {
-      card.classList.add("selected")
+  if (fw === "mochi_nav") {
+    // MochiNav: mochi_nav_esp32.bin, mochi_nav_esp32c3.bin
+    binaryFileName = `mochi_nav_${chip}.bin`
+    folderPath = `./firmware/${fw}/${chip}`
+  } else if (fw === "xiaozhi") {
+    // Xiaozhi has different structure with OLED folders and OLED in filename
+    if (chip === "esp32s3_mini") {
+      // xiaozhi_esp32s3mini_oled0.96.bin, xiaozhi_esp32s3mini_oled0.91.bin
+      binaryFileName = `xiaozhi_esp32s3mini_oled${oled}.bin`
+      folderPath = `./firmware/${fw}/esp32s3mini/oled${oled}`
+    } else {
+      // esp32s3: xiaozhi_esp32s3_oled0.96.bin, xiaozhi_esp32s3_oled0.91.bin
+      binaryFileName = `xiaozhi_esp32s3_oled${oled}.bin`
+      folderPath = `./firmware/${fw}/${chip}/oled${oled}`
     }
-  })
+  }
 
-  showFlashSection(chipType)
+  return {
+    binaryFileName,
+    folderPath,
+    fullPath: `${folderPath}/${binaryFileName}`,
+  }
 }
 
-function showFlashSection(chipType) {
-  flashSection.style.display = "block"
-  statusSection.style.display = "none"
+// Function to check if firmware binary file exists
+async function checkFirmwareExists(fw, chip, oled = null) {
+  try {
+    const { fullPath } = generateFirmwarePath(fw, chip, oled)
 
-  setupEspWebToolsWithManifest(chipType)
+    console.log(`Checking firmware: ${fullPath}`)
+
+    const response = await fetch(fullPath, { method: "HEAD" })
+    const exists = response.ok
+
+    if (exists) {
+      console.log(`✅ Firmware found: ${fullPath}`)
+    } else {
+      console.log(`❌ Firmware not found: ${fullPath}`)
+    }
+
+    return exists
+  } catch (error) {
+    console.log(`❌ Error checking firmware: ${fw}/${chip}${oled ? `/oled${oled}` : ""} - ${error.message}`)
+    return false
+  }
+}
+
+async function updateFlashButtonVisibility() {
+  const shouldShow =
+    (selectedFw === "mochi_nav" && selectedChip) || (selectedFw === "xiaozhi" && selectedChip && selectedOled)
+
+  if (!shouldShow) {
+    flashSection.style.display = "none"
+    return
+  }
+
+  // Show loading state while checking
+  flashSection.style.display = "block"
+  showFirmwareCheckingState()
+
+  // Check if firmware binary exists
+  const firmwareExists = await checkFirmwareExists(selectedFw, selectedChip, selectedOled)
+
+  if (firmwareExists) {
+    // Show connect button if firmware exists
+    setupEspWebToolsWithManifest(selectedChip)
+  } else {
+    // Show message if firmware doesn't exist
+    showFirmwareNotAvailableMessage()
+  }
+}
+
+function showFirmwareCheckingState() {
+  const espWebToolsContainer = document.getElementById("espWebToolsContainer")
+
+  espWebToolsContainer.innerHTML = `
+    <div class="firmware-checking">
+      <div class="checking-icon">🔍</div>
+      <p>Đang kiểm tra firmware...</p>
+    </div>
+  `
+}
+
+function showFirmwareNotAvailableMessage() {
+  const espWebToolsContainer = document.getElementById("espWebToolsContainer")
+
+  // Create firmware name for display
+  const firmwareName = selectedFw === "mochi_nav" ? "MochiNav" : "Xiaozhi"
+  const chipName = selectedChip.toUpperCase().replace("_", "-")
+  const oledInfo = selectedOled ? ` với OLED ${selectedOled}"` : ""
+  const { binaryFileName, folderPath } = generateFirmwarePath(selectedFw, selectedChip, selectedOled)
+
+  espWebToolsContainer.innerHTML = `
+    <div class="firmware-not-available">
+      <div class="not-available-icon">⚠️</div>
+      <h4>Firmware Chưa Sẵn Sàng</h4>
+      <p>Hiện tại firmware <strong>${firmwareName}</strong> cho chip <strong>${chipName}</strong>${oledInfo} đang được phát triển.</p>
+      <p class="coming-soon">Sẽ có sớm trong thời gian tới! 🚀</p>
+    </div>
+  `
 }
 
 function setupEspWebToolsWithManifest(chipType) {
-  const manifestPath = `./firmware/${chipType}/manifest.json`
+  let manifestPath = ""
 
-  installButton.manifest = manifestPath
-  installButton.setAttribute("erase-first", "")
-  installButton.classList.remove("invisible")
+  if (selectedFw === "mochi_nav") {
+    manifestPath = `./firmware/${selectedFw}/${chipType}/manifest.json`
+  } else if (selectedFw === "xiaozhi") {
+    // Xiaozhi has OLED-specific folders
+    if (chipType === "esp32s3_mini") {
+      manifestPath = `./firmware/${selectedFw}/esp32s3mini/oled${selectedOled}/manifest.json`
+    } else {
+      manifestPath = `./firmware/${selectedFw}/${chipType}/oled${selectedOled}/manifest.json`
+    }
+  }
 
-  installButton.innerHTML = `
+  // Reset container content to show ESP Web Tools button
+  const espWebToolsContainer = document.getElementById("espWebToolsContainer")
+  espWebToolsContainer.innerHTML = `
+    <esp-web-install-button class="invisible" id="installButton"></esp-web-install-button>
+  `
+
+  // Re-get the button element after innerHTML reset
+  const newInstallButton = document.getElementById("installButton")
+  newInstallButton.manifest = manifestPath
+  newInstallButton.setAttribute("erase-first", "")
+  newInstallButton.classList.remove("invisible")
+
+  newInstallButton.innerHTML = `
     <button slot="activate" class="btn btn-primary" style="margin: 0 auto; display: block;">
       Kết nối
     </button>
   `
 
-  installButton.addEventListener("state-changed", handleFlashStateChange)
+  // Remove existing listeners to prevent duplicates
+  newInstallButton.removeEventListener("state-changed", handleFlashStateChange)
+  newInstallButton.addEventListener("state-changed", handleFlashStateChange)
 }
 
 function handleFlashStateChange(event) {
@@ -62,50 +190,59 @@ function handleFlashStateChange(event) {
   const statusTitle = document.getElementById("statusTitle")
   const statusMessage = document.getElementById("statusMessage")
 
-  switch (state) {
-    case "preparing":
-      showStatusSection()
-      statusIcon.textContent = "⏳"
-      statusTitle.textContent = "Đang chuẩn bị..."
-      statusMessage.textContent = "Đang chuẩn bị nạp firmware"
-      progressFill.style.width = "10%"
-      break
+  const stateConfig = {
+    preparing: {
+      icon: "⏳",
+      title: "Đang chuẩn bị...",
+      message: "Đang chuẩn bị nạp firmware",
+      progress: "10%",
+    },
+    erasing: {
+      icon: "🔄",
+      title: "Đang xóa Flash...",
+      message: "Đang xóa firmware cũ",
+      progress: "30%",
+    },
+    writing: {
+      icon: "📝",
+      title: "Đang ghi Firmware...",
+      message: "Đang cài đặt firmware mới",
+      progress: "70%",
+    },
+    finished: {
+      icon: "✅",
+      title: "Thành công!",
+      message: "Firmware đã được cài đặt thành công",
+      progress: "100%",
+      notification: { message: "Firmware đã được cài đặt thành công!", type: "success" },
+      hideAfter: 3000,
+    },
+    error: {
+      icon: "❌",
+      title: "Lỗi",
+      message: "Không thể cài đặt firmware",
+      progress: "0%",
+      notification: { message: "Không thể cài đặt firmware", type: "error" },
+      hideAfter: 5000,
+    },
+  }
 
-    case "erasing":
-      statusIcon.textContent = "🔄"
-      statusTitle.textContent = "Đang xóa Flash..."
-      statusMessage.textContent = "Đang xóa firmware cũ"
-      progressFill.style.width = "30%"
-      break
+  const config = stateConfig[state]
+  if (!config) return
 
-    case "writing":
-      statusIcon.textContent = "📝"
-      statusTitle.textContent = "Đang ghi Firmware..."
-      statusMessage.textContent = "Đang cài đặt firmware mới"
-      progressFill.style.width = "70%"
-      break
+  if (state === "preparing") showStatusSection()
 
-    case "finished":
-      statusIcon.textContent = "✅"
-      statusTitle.textContent = "Thành công!"
-      statusMessage.textContent = "Firmware đã được cài đặt thành công"
-      progressFill.style.width = "100%"
-      showNotification("Firmware đã được cài đặt thành công!", "success")
-      setTimeout(() => {
-        hideStatusSection()
-      }, 3000)
-      break
+  statusIcon.textContent = config.icon
+  statusTitle.textContent = config.title
+  statusMessage.textContent = config.message
+  progressFill.style.width = config.progress
 
-    case "error":
-      statusIcon.textContent = "❌"
-      statusTitle.textContent = "Lỗi"
-      statusMessage.textContent = "Không thể cài đặt firmware"
-      progressFill.style.width = "0%"
-      showNotification("Không thể cài đặt firmware", "error")
-      setTimeout(() => {
-        hideStatusSection()
-      }, 5000)
-      break
+  if (config.notification) {
+    showNotification(config.notification.message, config.notification.type)
+  }
+
+  if (config.hideAfter) {
+    setTimeout(hideStatusSection, config.hideAfter)
   }
 }
 
@@ -120,67 +257,119 @@ function hideStatusSection() {
 }
 
 function switchTab(tabId) {
-  // Hide all tab panes
-  tabPanes.forEach((pane) => {
-    pane.classList.remove("active")
-  })
-
-  // Show the selected tab pane
+  tabPanes.forEach((pane) => pane.classList.remove("active"))
   document.getElementById(tabId).classList.add("active")
 
-  // Update active state of tab buttons
   tabBtns.forEach((btn) => {
-    if (btn.dataset.tab === tabId) {
-      btn.classList.add("active")
-    } else {
-      btn.classList.remove("active")
-    }
+    btn.classList.toggle("active", btn.dataset.tab === tabId)
   })
 }
 
 function switchChipTab(chipTabId) {
-  // Hide all chip tab contents
-  chipTabContents.forEach((content) => {
-    content.classList.remove("active")
-  })
-
-  // Show the selected chip tab content
+  chipTabContents.forEach((content) => content.classList.remove("active"))
   document.getElementById(chipTabId + "-content").classList.add("active")
 
-  // Update active state of chip tab buttons
   chipTabBtns.forEach((btn) => {
-    if (btn.dataset.chipTab === chipTabId) {
-      btn.classList.add("active")
-    } else {
-      btn.classList.remove("active")
-    }
+    btn.classList.toggle("active", btn.dataset.chipTab === chipTabId)
   })
 }
 
-function activateKeyTab() {
-  switchTab("tab2")
+function switchMainTab(tabId) {
+  mainGuideTabContents.forEach((content) => content.classList.remove("active"))
+  document.getElementById(tabId).classList.add("active")
+
+  mainGuideTabBtns.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.mainTab === tabId)
+  })
+}
+
+function resetSelections() {
+  chipSelection.style.display = "block"
+  chipGrid.innerHTML = ""
+  oledSelection.style.display = "none"
+  flashSection.style.display = "none"
+  statusSection.style.display = "none"
+  selectedChip = null
+  selectedOled = null
+}
+
+function createChipButton(opt) {
+  const btn = document.createElement("button")
+  btn.className = "chip-button"
+  btn.dataset.chip = opt.chip
+  btn.textContent = opt.label
+
+  btn.addEventListener("click", async () => {
+    document.querySelectorAll(".chip-button").forEach((b) => b.classList.remove("active"))
+    btn.classList.add("active")
+    selectedChip = opt.chip
+
+    if (selectedFw === "xiaozhi") {
+      oledSelection.style.display = "block"
+      oledButtons.forEach((b) => b.classList.remove("active"))
+      selectedOled = null
+    } else {
+      oledSelection.style.display = "none"
+    }
+
+    await updateFlashButtonVisibility()
+  })
+
+  return btn
 }
 
 function setupEventListeners() {
-  // Chip selection
-  chipCards.forEach((card) => {
+  // Firmware selection
+  fwCards.forEach((card) => {
     card.addEventListener("click", () => {
-      selectChip(card.dataset.chip)
+      fwCards.forEach((btn) => btn.classList.remove("active"))
+      card.classList.add("active")
+      selectedFw = card.dataset.fw
+
+      resetSelections()
+
+      chipOptions[selectedFw].forEach((opt) => {
+        chipGrid.appendChild(createChipButton(opt))
+      })
+    })
+  })
+
+  // OLED selection
+  oledButtons.forEach((oledBtn) => {
+    oledBtn.addEventListener("click", async () => {
+      oledButtons.forEach((b) => b.classList.remove("active"))
+      oledBtn.classList.add("active")
+      selectedOled = oledBtn.dataset.oled
+      await updateFlashButtonVisibility()
     })
   })
 
   // Tab navigation
   tabBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      switchTab(btn.dataset.tab)
-    })
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab))
   })
 
   // Chip tab navigation
   chipTabBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      switchChipTab(btn.dataset.chipTab)
-    })
+    btn.addEventListener("click", () => switchChipTab(btn.dataset.chipTab))
+  })
+
+  // Main guide tabs
+  mainGuideTabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => switchMainTab(btn.dataset.mainTab))
+  })
+
+  // Escape key handler
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && flashSection.style.display === "block") {
+      flashSection.style.display = "none"
+      document
+        .querySelectorAll(".chip-button, .fw-button, .oled-button")
+        .forEach((card) => card.classList.remove("active"))
+      selectedChip = null
+      selectedFw = null
+      selectedOled = null
+    }
   })
 }
 
@@ -194,6 +383,13 @@ function showNotification(message, type = "info") {
   notification.className = `notification notification-${type}`
   notification.textContent = message
 
+  const colors = {
+    info: "#0ea5e9",
+    success: "#22c55e",
+    warning: "#f59e0b",
+    error: "#ef4444",
+  }
+
   Object.assign(notification.style, {
     position: "fixed",
     top: "20px",
@@ -203,23 +399,14 @@ function showNotification(message, type = "info") {
     color: "white",
     fontWeight: "600",
     zIndex: "1000",
+    backgroundColor: colors[type] || colors.info,
     transform: "translateX(100%)",
     transition: "transform 0.3s ease",
   })
 
-  const colors = {
-    info: "#0ea5e9",
-    success: "#22c55e",
-    warning: "#f59e0b",
-    error: "#ef4444",
-  }
-  notification.style.backgroundColor = colors[type] || colors.info
-
   document.body.appendChild(notification)
 
-  setTimeout(() => {
-    notification.style.transform = "translateX(0)"
-  }, 100)
+  setTimeout(() => (notification.style.transform = "translateX(0)"), 100)
 
   setTimeout(() => {
     notification.style.transform = "translateX(100%)"
@@ -231,36 +418,43 @@ function showNotification(message, type = "info") {
   }, 3000)
 }
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    if (flashSection.style.display === "block") {
-      flashSection.style.display = "none"
-      chipCards.forEach((card) => card.classList.remove("selected"))
-      selectedChip = null
-    }
-  }
-})
+// Popup management
+function initializePopups() {
+  const fbPopup = document.getElementById("fbJoinPopup")
+  const keyPopup = document.getElementById("keyWarningPopup")
 
+  // Facebook popup
+  if (fbPopup) {
+    const closeBtn = fbPopup.querySelector("#closePopupBtn")
+    const joinBtn = fbPopup.querySelector("#joinButton")
 
-// Popup lưu trạng thái vào localStorage
-window.addEventListener("DOMContentLoaded", () => {
-  const popup = document.getElementById("keyWarningPopup")
-  const closeBtn = document.getElementById("closePopupBtn")
-  const dontShowAgain = document.getElementById("dontShowAgain")
+    fbPopup.style.display = "flex"
 
-  // Nếu chưa lưu trạng thái => hiển thị popup
-  if (!localStorage.getItem("hideKeyWarning")) {
-    popup.style.display = "flex"
+    closeBtn?.addEventListener("click", () => (fbPopup.style.display = "none"))
+    joinBtn?.addEventListener("click", () => {
+      window.open("https://www.facebook.com/share/g/1G743kz7iZ/", "_blank")
+      fbPopup.style.display = "none"
+    })
   }
 
-  // Gắn sự kiện click vào nút "Tôi đã hiểu"
-  closeBtn.addEventListener("click", () => {
-    if (dontShowAgain.checked) {
-      localStorage.setItem("hideKeyWarning", "true")
-    }
-    popup.style.display = "none"
-  })
+  // Key warning popup
+  if (keyPopup && !localStorage.getItem("hideKeyWarning")) {
+    const closeBtn = keyPopup.querySelector("#closePopupBtn")
+    const dontShowAgain = keyPopup.querySelector("#dontShowAgain")
+
+    keyPopup.style.display = "flex"
+
+    closeBtn?.addEventListener("click", () => {
+      if (dontShowAgain?.checked) {
+        localStorage.setItem("hideKeyWarning", "true")
+      }
+      keyPopup.style.display = "none"
+    })
+  }
+}
+
+// Initialize app when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  initializeApp()
+  initializePopups()
 })
-
-
-document.addEventListener("DOMContentLoaded", initializeApp)
