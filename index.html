@@ -586,20 +586,21 @@
                                                             ngẫu
                                                             nhiên hay tuần tự</p>
                                                         <p>2. Nếu có nút bạn nhấn 3 lần sẽ tắt hoặc bật âm thanh</p>
-                                                        <p>3. Nếu có nút bạn nhấn 4 lần nhanh sẽ tắt hoặc bật thời gian chờ khi phát animations ngẫu nhiên</p>
+                                                        <p>3. Nếu có nút bạn nhấn 4 lần nhanh sẽ tắt hoặc bật thời gian
+                                                            chờ khi phát animations ngẫu nhiên</p>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div class="update-notice">
-                                                <div class="update-icon">🚀</div>
-                                                <div class="update-content">
-                                                    <h4>Cập Nhật Liên Tục</h4>
-                                                    <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời
-                                                        gian
-                                                        tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
-                                                </div>
+                                            <div class="update-icon">🚀</div>
+                                            <div class="update-content">
+                                                <h4>Cập Nhật Liên Tục</h4>
+                                                <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời
+                                                    gian
+                                                    tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
                                             </div>
+                                        </div>
 
 
                                         <!-- Lưu ý quan trọng -->
@@ -762,7 +763,189 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <div class="xiaozhi-guide">
                                 <h3>Hướng Dẫn Chat Bot AI</h3>
-                                <p>Nội dung hướng dẫn cho Chat Bot AI sẽ được bổ sung tại đây...</p>
+                                <!-- Hình ảnh sơ đồ -->
+                                <div class="diagram-container">
+                                    <img src="./img/xiaozhi_esp32.png" alt="Sơ đồ đấu nối ESP32-S3"
+                                        class="wiring-diagram">
+                                </div>
+                                <!-- Bảng đấu nối -->
+                                <div class="connection-table">
+                                    <!-- ESP32 với OLED -->
+                                    <h5>ESP32-S3 - OLED 0.96inch SSD1306</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>OLED SSD1306</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>3V3</td>
+                                                <td>VCC</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO42</td>
+                                                <td>SCL</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO41</td>
+                                                <td>SDA</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- ESP32 với MAX98357A -->
+                                    <h5>ESP32-S3 - MAX98357A</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>MAX98357A</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>GPIO7</td>
+                                                <td>DIN</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO15</td>
+                                                <td>BCLK</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO16</td>
+                                                <td>LRCLK</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3V3</td>
+                                                <td>VIN</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GAIN</td>
+                                                <td>GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>SD</td>
+                                                <td>VIN</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>GND</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- ESP32 với MIC INMP441 -->
+                                    <h5>ESP32-S3 - Micro INMP441</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>INMP441</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3V3</td>
+                                                <td>VCC</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO4</td>
+                                                <td>WS</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO5</td>
+                                                <td>SCK</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO6</td>
+                                                <td>SD</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>L/R</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- ESP32 với Nút nhấn -->
+                                    <h5>ESP32-S3 - Nút nhấn</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>Nút nhấn</th>
+                                                <th>Chức năng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>GPIO40</td>
+                                                <td>Nút 1</td>
+                                                <td>Tăng âm lượng</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO30</td>
+                                                <td>Nút 2</td>
+                                                <td>Giảm âm lượng</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIOO0</td>
+                                                <td>Nút 3</td>
+                                                <td>Đánh thức</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- Pin và Module sạc -->
+                                    <h5>Pin 3.7V - Module sạc và Tăng áp</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Thiết bị</th>
+                                                <th>Kết nối</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Pin 3.7V</td>
+                                                <td>Kết nối với đầu IN+ và IN- của module sạc</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Module sạc</td>
+                                                <td>OUT+ đến 5V (VIN ESP32), OUT- đến GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Công tắc</td>
+                                                <td>Nối giữa OUT+ và ESP32 để bật/tắt nguồn</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Lưu ý quan trọng -->
+                                <div class="important-notes">
+                                    <h4>⚠️ Lưu Ý</h4>
+                                    <ul>
+                                        <li><strong>Màn hình OLED:</strong> SSD1306, I2C, địa chỉ mặc định 0x3C</li>
+                                        <li><strong>MIC INMP441:</strong> là microphone kỹ thuật số, dùng giao tiếp I2S
+                                        </li>
+                                        <li><strong>MAX98357A:</strong> là amplifier mono, cũng dùng giao tiếp I2S</li>
+                                        <li><strong>Nút nhấn:</strong> Được kéo xuống GND</li>
+                                        <li><strong>ESP32-S3:</strong> sử dụng các GPIO từ 0 đến 46 (chọn đúng GPIO có
+                                            hỗ trợ I2S/I2C)</li>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
 
