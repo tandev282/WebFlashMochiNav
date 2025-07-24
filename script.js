@@ -48,17 +48,17 @@ function generateFirmwarePath(fw, chip, oled = null) {
   if (fw === "mochi_nav") {
     // MochiNav: mochi_nav_esp32.bin, mochi_nav_esp32c3.bin
     binaryFileName = `mochi_nav_${chip}.bin`
-    folderPath = `./firmware/${fw}/${chip}`
+    folderPath = `/firmware/${fw}/${chip}`
   } else if (fw === "xiaozhi") {
     // Xiaozhi has different structure with OLED folders and OLED in filename
     if (chip === "esp32s3_mini") {
       // xiaozhi_esp32s3mini_oled0.96.bin, xiaozhi_esp32s3mini_oled0.91.bin
       binaryFileName = `xiaozhi_esp32s3mini_oled${oled}.bin`
-      folderPath = `./firmware/${fw}/esp32s3mini/oled${oled}`
+      folderPath = `/firmware/${fw}/esp32s3mini/oled${oled}`
     } else {
       // esp32s3: xiaozhi_esp32s3_oled0.96.bin, xiaozhi_esp32s3_oled0.91.bin
       binaryFileName = `xiaozhi_esp32s3_oled${oled}.bin`
-      folderPath = `./firmware/${fw}/${chip}/oled${oled}`
+      folderPath = `/firmware/${fw}/${chip}/oled${oled}`
     }
   }
 
@@ -151,13 +151,13 @@ function setupEspWebToolsWithManifest(chipType) {
   let manifestPath = ""
 
   if (selectedFw === "mochi_nav") {
-    manifestPath = `./firmware/${selectedFw}/${chipType}/manifest.json`
+    manifestPath = `/firmware/${selectedFw}/${chipType}/manifest.json`
   } else if (selectedFw === "xiaozhi") {
     // Xiaozhi has OLED-specific folders
     if (chipType === "esp32s3_mini") {
-      manifestPath = `./firmware/${selectedFw}/esp32s3mini/oled${selectedOled}/manifest.json`
+      manifestPath = `/firmware/${selectedFw}/esp32s3mini/oled${selectedOled}/manifest.json`
     } else {
-      manifestPath = `./firmware/${selectedFw}/${chipType}/oled${selectedOled}/manifest.json`
+      manifestPath = `/firmware/${selectedFw}/${chipType}/oled${selectedOled}/manifest.json`
     }
   }
 
