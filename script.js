@@ -47,20 +47,19 @@ function generateFirmwarePath(fw, chip, oled = null) {
 
   if (fw === "mochi_nav") {
     binaryFileName = `mochi_nav_${chip}.bin`
-    // Đã thay đổi đường dẫn từ tuyệt đối sang tương đối
     folderPath = `firmware/${fw}/${chip}`
   } else if (fw === "xiaozhi") {
     if (chip === "esp32s3_mini") {
       binaryFileName = `xiaozhi_esp32s3mini_oled${oled}.bin`
-      // Đã thay đổi đường dẫn từ tuyệt đối sang tương đối
       folderPath = `firmware/${fw}/esp32s3mini/oled${oled}`
     } else {
       binaryFileName = `xiaozhi_esp32s3_oled${oled}.bin`
-      // Đã thay đổi đường dẫn từ tuyệt đối sang tương đối
       folderPath = `firmware/${fw}/${chip}/oled${oled}`
     }
   }
 
+  // For checkFirmwareExists, we still check the main binary file.
+  // The manifest will handle the multi-part flashing.
   return {
     binaryFileName,
     folderPath,
@@ -71,6 +70,10 @@ function generateFirmwarePath(fw, chip, oled = null) {
 // Function to check if firmware binary file exists
 async function checkFirmwareExists(fw, chip, oled = null) {
   try {
+    // When using multi-part flashing, the manifest.json is the primary file.
+    // However, the current generateFirmwarePath returns the main binary path.
+    // We can keep this check as a basic validation that the main binary exists.
+    // The esp-web-tools will fetch the manifest and then its parts.
     const { fullPath } = generateFirmwarePath(fw, chip, oled)
 
     console.log(`Checking firmware: ${fullPath}`)
@@ -150,15 +153,11 @@ function setupEspWebToolsWithManifest(chipType) {
   let manifestPath = ""
 
   if (selectedFw === "mochi_nav") {
-    // Đã thay đổi đường dẫn từ tuyệt đối sang tương đối
     manifestPath = `firmware/${selectedFw}/${chipType}/manifest.json`
   } else if (selectedFw === "xiaozhi") {
-    // Xiaozhi has OLED-specific folders
     if (chipType === "esp32s3_mini") {
-      // Đã thay đổi đường dẫn từ tuyệt đối sang tương đối
       manifestPath = `firmware/${selectedFw}/esp32s3mini/oled${selectedOled}/manifest.json`
     } else {
-      // Đã thay đổi đường dẫn từ tuyệt đối sang tương đối
       manifestPath = `firmware/${selectedFw}/${chipType}/oled${selectedOled}/manifest.json`
     }
   }

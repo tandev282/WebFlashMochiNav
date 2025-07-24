@@ -1,12 +1,16 @@
 {
   "name": "Xiaozhi Firmware - ESP32-S3 Mini OLED 0.96",
-  "version": "1.7.6",
+  "version": "1.8.2",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,
   "builds": [
     {
       "chipFamily": "ESP32-S3",
-      "parts": [{ "path": "xiaozhi_esp32s3mini_oled0.96.bin", "offset": 0 }]
+      "parts": [
+        { "path": "bootloader.bin", "offset": 0 },
+        { "path": "partition-table.bin", "offset": 32768 },
+        { "path": "xiaozhi_esp32s3mini_oled0.96.bin", "offset": 65536 }
+      ]
     }
   ]
 }
