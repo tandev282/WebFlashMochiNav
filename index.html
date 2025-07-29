@@ -133,23 +133,31 @@
                                                 <li><strong>Biểu cảm:</strong> <br> 1. Vẫn giữ lại 84 biểu cảm thay vì
                                                     bản
                                                     chính
-                                                    thức sản phẩm thương mại là 102 biểu cảm <br>
+                                                    thức trên sản phẩm thương mại là 102 biểu cảm <br>
                                                     2. Thêm một số tùy chọn khi phát emoji như: Ngẫu nhiên - tuần tự,
                                                     Delay - No delay, Nháy mắt,... <br>
                                                 </li>
-                                                <li><strong>Âm Thanh</strong> <br> 1. Thêm bật tắt âm thanh tổng cho
-                                                    toàn
-                                                    bộ thiết bị, và âm thanh cho emoji khi phát <br>
-                                                    2. Ở bản này vẫn chưa công khai âm thanh full cho biểu cảm, biểu cảm
+                                                <li><strong>Âm Thanh</strong> <br>
+                                                    1. Thêm bật / tắt âm thanh tổng cho toàn bộ thiết bị, và âm thanh
+                                                    cho
+                                                    emoji khi phát <br>
+                                                    2. Bộ nhớ ESP32-C3 Super Mini chỉ 4MB nên tôi chỉ lưu được 102 biểu
+                                                    cảm + 2 âm thanh intro / Nên âm thanh biểu cảm sẽ được lưu vào thẻ
+                                                    nhớ.<br>
+                                                    3.Thẻ nhớ chuẩn Format FAT32, Âm thanh biểu cảm sẽ có dạng Wav 16bit
+                                                    22050HZ Mono, và được đánh
+                                                    số thứ tự từ 1 đến 102.
+                                                    4. Ở bản này vẫn chưa công khai âm thanh full cho biểu cảm, biểu cảm
                                                     vẫn sẽ không có âm thanh <br>
                                                 </li>
-                                                <li><strong>Thêm Menu Update</strong> <br> 1. Cho phép nhập và lưu SSID
+                                                <li><strong>Thêm Menu Update (Đang phát triển)</strong> <br> 1. Cho
+                                                    phép nhập và lưu SSID
                                                     và Passwrod WiFi vào thiết bị<br>
                                                     2. Hiển thị phiên bản hiện tại và chức năng kiểm tra phiên bản cập
                                                     nhật khi có phiên bản mới<br>
                                                     3. Thêm chuyển đổi ngôn ngữ: Hiện tại hỗ trợ 2 ngôn ngữ chính là
                                                     Vietnamese và English, điều chỉnh trực tiếp trong app Chronos hoặc
-                                                    trong Menu thiết bị<br>
+                                                    trong Menu -> Cập nhật<br>
                                                 </li>
                                                 <li><strong>Đồng hồ</strong> <br> 1. Đã thêm hiển thị âm lịch trong giao
                                                     diện đồng hồ<br>
@@ -161,15 +169,24 @@
                                                 </li>
                                                 <li><strong>Phím tắt nhanh:</strong> Đã thêm phím tắt nhanh ở giao diện
                                                     emoji: <br>
-                                                    1. Nếu có nút bạn nhấn 2 lần nhanh sẽ tắt hoặc bật phát animations
+                                                    1. Nếu có nút bạn nhấn 1 lần hoặc nhấn "Tìm Đồng Hồ" sẽ tắt chuyển
+                                                    sang màn hình Đồng Hồ.<br>
+                                                    2. Nếu có nút bạn nhấn 2 lần nhanh sẽ tắt hoặc bật phát animations
                                                     ngẫu nhiên hay tuần tự.<br>
-                                                    2. Nếu có nút bạn nhấn 3 lần nhanh sẽ tắt hoặc bật âm thanh.<br>
-                                                    3. Nếu có nút bạn nhấn 4 lần nhanh sẽ tắt hoặc bật thời gian chờ khi
+                                                    3. Nếu có nút bạn nhấn 3 lần nhanh sẽ tắt hoặc bật âm thanh.<br>
+                                                    4. Nếu có nút bạn nhấn 4 lần nhanh sẽ tắt hoặc bật thời gian chờ khi
                                                     phát animations ngẫu nhiên
                                                 </li>
                                                 <li><strong>Bug:</strong><br> Đã fix một số lỗi như: không setting đã
                                                     cài đặt,... </li>
                                                 <li><strong>Còn nữa:</strong> .....</li>
+                                                <li><strong>Update tiếp theo:</strong><br>
+                                                    1. Cập nhật chương trình không cần
+                                                    lên web<br>
+                                                    2. App Android dùng để Setting MochiNav thay vì lệ thuộc vào
+                                                    Chronos<br>
+                                                    3. Hoàn thiện các chức năng hiện tại còn lỗi ẩn.<br>
+                                                </li>
                                             </ul>
                                             <br>
                                             <div class="important-notes">
@@ -792,7 +809,8 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <div class="xiaozhi-guide">
                                 <h3>Hướng Dẫn Chat Bot AI sẽ được update khi có thời gian </h3>
-                                <h2>Phiên bản này đã được TanDev mod hỗ trợ full tiếng việt và sử dụng được trên chip Esp32 S3 Super Mini</h2>
+                                <h2>Phiên bản này đã được TanDev mod hỗ trợ full tiếng việt và sử dụng được trên chip
+                                    Esp32 S3 Super Mini</h2>
                                 <!-- Hình ảnh sơ đồ -->
                                 <div class="diagram-container">
                                     <img src="./img/xiaozhi_esp32-s3_supermini.png" alt="Sơ đồ đấu nối ESP32-S3"
