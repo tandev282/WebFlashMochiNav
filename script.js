@@ -142,7 +142,7 @@ function showFirmwareNotAvailableMessage() {
       <div class="not-available-icon">⚠️</div>
       <h4>Firmware Chưa Sẵn Sàng</h4>
       <p>Hiện tại firmware <strong>${firmwareName}</strong> cho chip <strong>${chipName}</strong>${oledInfo} đang được phát triển.</p>
-      <p class="coming-soon">Sẽ có sớm trong thời gian tới! 🚀</p>
+      <p class="coming-soon">Nhắn tin Zalo hoặc Facebook để nhận file chương trình mới nhất! 🚀</p>
     </div>
   `
 }
