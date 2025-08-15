@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TanDev</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- Facebook Group Join Popup -->
+<div id="fbJoinPopup" class="popup-overlay" style="display: none;">
+    <div class="popup-box">
+        <button id="closePopupBtn" class="close-btn">X</button>
+        <h3>🌟 Join the Xiaozhi VN Facebook Group</h3>
+        <p>Join our Facebook group to get support and the latest updates!</p>
+        <p>MochiNav V5.0.0 has been released — install now to experience it!</p>
+        <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
+            Join Now
+        </a>
+    </div>
+</div>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="../img/logo.png" alt="Logo">
+                    <div class="logo-text">
+                        <h1>TanDev</h1>
+                        <p class="tagline">original creator of Dasai Mochi clone trend</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Left Panel - 30% -->
+                <div class="left-panel">
+                    <!-- Chip Selection -->
+                    <!-- Firmware Selection -->
+                    <section class="chip-selection">
+                        <h2>Select Firmware</h2>
+                        <div class="fw-grid-horizontal">
+                            <button class="fw-button" data-fw="mochi_nav">MochiNav</button>
+                            <button class="fw-button" data-fw="xiaozhi">Chat Bot AI</button>
+                        </div>
+                    </section>
+
+                    <!-- Chip Selection after FW -->
+                    <section class="chip-selection" id="chipSelection" style="display: none;">
+                        <h2>Select Chip</h2>
+                        <div class="chip-grid-horizontal" id="chipGrid"></div>
+                    </section>
+
+                    <!-- OLED Selection (only for xiaozhi) -->
+                    <section class="chip-selection" id="oledSelection" style="display: none;">
+                        <h2>Select OLED Display</h2>
+                        <div class="chip-grid-horizontal" id="oledGrid">
+                            <button class="oled-button" data-oled="0.91">OLED 0.91inch 128x32</button>
+                            <button class="oled-button" data-oled="0.96">OLED 0.96inch 128x64</button>
+                        </div>
+                    </section>
+
+                    <!-- Flash Section -->
+                    <section class="flash-section" id="flashSection" style="display: none;">
+                        <div class="flash-card">
+                            <div class="flash-controls">
+                                <div id="espWebToolsContainer" class="centered-button">
+                                    <esp-web-install-button class="invisible"
+                                        id="installButton"></esp-web-install-button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Status Section -->
+                    <section class="status-section" id="statusSection" style="display: none;">
+                        <div class="status-card">
+                            <div class="status-icon" id="statusIcon">⏳</div>
+                            <h3 id="statusTitle">Preparing...</h3>
+                            <p id="statusMessage">Preparing to flash firmware</p>
+                            <div class="progress-bar" id="progressBar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="step-content">
+                        <h4>Instructions for flashing MochiNav code</h4>
+                        <ul>
+                            <li><strong>Hold down the BOOT button on the ESP32 / ESP32-C3 and connect the cable to your
+                                    computer</strong></li>
+                            <li><strong>Select the correct chip and click Connect</strong></li>
+                            <li><strong>Select the chip's COM port and click Connect → Install → Install → wait for the
+                                    flashing process to complete</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right Panel - 70% -->
+                <div class="right-panel">
+                    <div class="guide-section">
+                        <!-- Main Tab for MochiNav and Xiaozhi -->
+                        <div class="main-guide-tabs">
+                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav</button>
+                            <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">Chat Bot AI</button>
+                        </div>
+
+                        <!-- Tab Content for MochiNav -->
+                        <div class="main-guide-tab-content active" id="mochinav-tab">
+                            <!-- Tab Navigation -->
+                            <div class="tab-navigation">
+                                <button class="tab-btn active" data-tab="tab0">What's New in v5.0.0???</button>
+                                <button class="tab-btn" data-tab="tab1">Diagram</button>
+                                <button class="tab-btn" data-tab="tab2">Key</button>
+                                <button class="tab-btn" data-tab="tab3">Features</button>
+                                <button class="tab-btn" data-tab="tab4">Activation</button>
+                                <button class="tab-btn" data-tab="tab5">User Guide</button>
+                            </div>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content">
+                                <!-- Tab 0: Cập Nhật -->
+                                <div class="tab-pane active" id="tab0">
+                                    <div class="update-section">
+                                        <div class="update-card">
+                                            <h3>MochiNav V5.0.0</h3>
+                                            <ul>
+                                                <li><strong>Connection:</strong><br> 1. Added a feature to adjust the
+                                                    auto-off time for BLE when there is no connection with the phone: 5,
+                                                    10, 15, 20, 25, or 30 minutes.</li>
+                                                <li><strong>Expressions:</strong><br> 1. Retains 84 expressions instead
+                                                    of the official commercial version’s 102 expressions.<br>
+                                                    2. Added several options for emoji playback: Random - Sequential,
+                                                    Delay - No delay, Wink, etc.<br>
+                                                </li>
+                                                <li><strong>Sound:</strong><br>
+                                                    1. Added a master ON/OFF switch for all device sounds, and separate
+                                                    ON/OFF for emoji sounds.<br>
+                                                    2. The ESP32-C3 Super Mini has only 4MB of flash memory, so only 102
+                                                    expressions + 2 intro sounds are stored internally. Emoji sounds
+                                                    will be stored on an SD card.<br>
+                                                    3. SD card must be formatted in FAT32. Emoji sounds are in Wav
+                                                    16-bit 22050Hz Mono format, numbered from 1 to 102.<br>
+                                                    4. In this version, full emoji sounds are not yet released, so
+                                                    expressions still have no sound.<br>
+                                                </li>
+                                                <li><strong>Added Update Menu (In Development):</strong><br>
+                                                    1. Allows entering and saving WiFi SSID and Password into the
+                                                    device.<br>
+                                                    2. Displays the current version and checks for updates when a new
+                                                    version is available.<br>
+                                                    3. Added language switcher: Currently supports two main languages,
+                                                    Vietnamese and English, adjustable directly in the Chronos app or in
+                                                    Menu -> Update.<br>
+                                                </li>
+                                                <li><strong>Clock:</strong><br>
+                                                    1. Added lunar calendar display in the clock interface.<br>
+                                                    2. Added weather forecast and current temperature synced from the
+                                                    Chronos app.<br>
+                                                </li>
+                                                <li><strong>Performance Optimization:</strong><br> The program has been
+                                                    optimized for stability and faster performance.</li>
+                                                <li><strong>Quick Shortcuts:</strong> Added quick shortcuts in the emoji
+                                                    interface:<br>
+                                                    1. If a button is present, press once or press "Find Watch" to
+                                                    switch to the Clock screen.<br>
+                                                    2. Press the button twice quickly to toggle random or sequential
+                                                    animations.<br>
+                                                    3. Press the button three times quickly to toggle sound.<br>
+                                                    4. Press the button four times quickly to toggle the delay time when
+                                                    playing random animations.
+                                                </li>
+                                                <li><strong>Bug Fixes:</strong><br> Fixed some issues such as settings
+                                                    not being saved, etc.</li>
+                                                <li><strong>More to come:</strong> .....</li>
+                                            </ul>
+                                            <br>
+                                            <div class="important-notes">
+                                                <h4>📌 Notes</h4>
+                                                <ul>
+                                                    <li>Users who already have an old key can continue using it on the
+                                                        same device.</li>
+                                                    <li>Updating is recommended to receive the latest features.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="feature-request-form">
+                                                <h4>📬 Submit Feature Request</h4>
+                                                <p>If you have an idea or a feature you want to add in the next version,
+                                                    submit it here:</p>
+                                                <form id="requestForm">
+                                                    <div class="form-group">
+                                                        <label for="name">Your Name:</label>
+                                                        <input type="text" id="name" name="name"
+                                                            placeholder="Enter your name" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="content">Request Details:</label>
+                                                        <textarea id="content" name="content" rows="4"
+                                                            placeholder="Detail your idea or suggestion..."
+                                                            required></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-primary">📤 Submit</button>
+                                                    </div>
+                                                </form>
+                                                <div id="formMessage"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Tab 1: Đấu Nối Thiết Bị -->
+                                <div class="tab-pane" id="tab1">
+                                    <div class="wiring-section">
+                                        <!-- Chip Type Tabs -->
+                                        <div class="chip-type-tabs">
+                                            <button class="chip-tab-btn active" data-chip-tab="esp32">ESP32-C3</button>
+                                            <button class="chip-tab-btn" data-chip-tab="esp32c3">ESP32</button>
+                                        </div>
+
+                                        <div class="wiring-card chip-tab-content active" id="esp32-content">
+                                            <h3>ESP32-C3 Wiring Diagram</h3>
+
+                                            <!-- Diagram image -->
+                                            <div class="diagram-container">
+                                                <img src="../img/esp32c3_diagram.png" alt="ESP32-C3 Wiring Diagram"
+                                                    class="wiring-diagram">
+                                            </div>
+
+                                            <!-- Connection table -->
+                                            <div class="connection-table">
+                                                <!-- ESP32-C3 with OLED -->
+                                                <h5>ESP32-C3 - OLED 0.96inch</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-C3</th>
+                                                            <th>OLED 0.96inch</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VCC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO8</td>
+                                                            <td>SDA</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO9</td>
+                                                            <td>SCL</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32-C3 with Audio Module -->
+                                                <h5>ESP32-C3 - MAX98357A</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-C3</th>
+                                                            <th>MAX98357A</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GPIO5</td>
+                                                            <td>LRCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO6</td>
+                                                            <td>BCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO7</td>
+                                                            <td>DIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GAIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>SD</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VIN</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32-C3 with TF Micro SD Card Module -->
+                                                <h5>ESP32-C3 - TF Micro SD Card Mini Module</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-C3</th>
+                                                            <th>TF Micro SD Card Mini Module</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GPIO1</td>
+                                                            <td>CLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO2</td>
+                                                            <td>MISO</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO3</td>
+                                                            <td>MOSI</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO4</td>
+                                                            <td>CS</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>3v3</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <!-- Important notes -->
+                                            <div class="important-notes">
+                                                <h4>⚠️ Notes</h4>
+                                                <ul>
+                                                    <li><strong>Without connecting the display, the program will not
+                                                            run.</strong></li>
+                                                    <li><strong>OLED Display:</strong> Use 0.96" SSD1306 I2C (address
+                                                        0x3C)</li>
+                                                    <li><strong>Push Button (optional, no effect if not used):</strong>
+                                                        Connect GND to GPIO0 to control the device.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="wiring-card chip-tab-content" id="esp32c3-content">
+                                            <h3>ESP32 Wiring Diagram</h3>
+
+                                            <!-- Diagram image -->
+                                            <div class="diagram-container">
+                                                <img src="../img/esp32_diagram.png" alt="ESP32 Wiring Diagram"
+                                                    class="wiring-diagram">
+                                            </div>
+
+                                            <!-- Connection table -->
+                                            <div class="connection-table">
+                                                <!-- ESP32 with OLED -->
+                                                <h5>ESP32 - OLED 0.96inch</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32</th>
+                                                            <th>OLED 0.96inch</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VCC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO21</td>
+                                                            <td>SDA</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO22</td>
+                                                            <td>SCL</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32 with Audio Module -->
+                                                <h5>ESP32 - MAX98357A</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32</th>
+                                                            <th>MAX98357A</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GPIO25</td>
+                                                            <td>LRCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO26</td>
+                                                            <td>BCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO27</td>
+                                                            <td>DIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GAIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>SD</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VIN</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <!-- Important notes -->
+                                            <div class="important-notes">
+                                                <h4>⚠️ Notes</h4>
+                                                <ul>
+                                                    <li><strong>OLED Display:</strong> Use 0.96" SSD1306 I2C (address
+                                                        0x3C)</li>
+                                                    <li><strong>Push Button (optional, no effect if not used):</strong>
+                                                        Connect GND to GPIO0 to control the device.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- Tab 2: Mô tả Key -->
+                                <div class="tab-pane" id="tab2">
+                                    <div class="key-description-section">
+                                        <div class="key-description-card">
+                                            <h3>Key Purchase Policy</h3>
+
+                                            <div class="key-policy">
+                                                <h4>📋 Basic Information</h4>
+                                                <ul>
+                                                    <li>When purchased, the user will receive <strong>01 activation
+                                                            key</strong>.</li>
+                                                    <li>Each key can only be used on <strong>01 ESP32 device</strong>.
+                                                    </li>
+                                                    <li>The key can be used <strong>multiple times</strong> on the same
+                                                        device.</li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="key-policy">
+                                                <h4>🆓 Free Key Issuance When</h4>
+                                                <ul>
+                                                    <li>The user replaces the ESP32 board due to <strong>hardware
+                                                            failure</strong>.</li>
+                                                    <li>Making an additional device for <strong>personal use</strong>
+                                                        (non-commercial).</li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="key-policy">
+                                                <h4>💼 Additional Key Policy</h4>
+                                                <p>If used to produce more devices or for commercial deployment, the
+                                                    user needs to:</p>
+                                                <br>
+                                                <ul>
+                                                    <li><strong>Purchase additional keys</strong> based on the number of
+                                                        devices.</li>
+                                                    <li><strong>Contact directly</strong> for pricing and support.</li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="pricing-section">
+                                                <h4>💰 Price</h4>
+                                                <div class="price-card">
+                                                    <div class="price-item">
+                                                        <span class="price-label">1 Key:</span>
+                                                        <span class="price-value">50,000₫</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="purchase-section">
+                                                <h4>🛒 Buy Key Now</h4>
+                                                <p>Contact via Zalo for key purchase support and consultation:</p>
+                                                <div class="centered-button">
+                                                    <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih"
+                                                        class="btn btn-primary" target="_blank">
+                                                        💬 Buy Key via Zalo
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <!-- Important notes -->
+                                            <div class="important-notes">
+                                                <h4>⚠️ Notes</h4>
+                                                <ul>
+                                                    <li><strong>If you have already purchased a key and are only
+                                                            updating the code, you can reuse the old key on the same
+                                                            ESP32 you activated before.</strong></li>
+                                                    <li><strong>If you have not purchased a key and repeatedly spam
+                                                            activation, our system will block you.</strong></li>
+                                                    <li><strong>One-time purchase with lifetime use, unlimited update
+                                                            support.</strong></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Tab 3: Mô tả chương trình -->
+                                <div class="tab-pane" id="tab3">
+                                    <div class="program-description-section">
+                                        <div class="program-description-card">
+                                            <h3>Main Features</h3>
+
+                                            <div class="feature-grid">
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">👁️</div>
+                                                    <div class="feature-content">
+                                                        <h4>Dasai Mochi Expressions</h4>
+                                                        <p>Over 80 random motion effects for a lively and fun
+                                                            experience.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">🖼️</div>
+                                                    <div class="feature-content">
+                                                        <h4>Startup Intro</h4>
+                                                        <p>Flexibly switch between Basic or Liberty Walk startup intros,
+                                                            with sound included.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">🔊</div>
+                                                    <div class="feature-content">
+                                                        <h4>Expression Sounds</h4>
+                                                        <p>Over 50% of expressions already have sounds, making the
+                                                            experience more engaging.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">⏰</div>
+                                                    <div class="feature-content">
+                                                        <h4>Real-Time Display</h4>
+                                                        <p>Clock, phone battery percentage, and date are continuously
+                                                            updated and synced with your phone.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">🗺️</div>
+                                                    <div class="feature-content">
+                                                        <h4>Google Maps Navigation</h4>
+                                                        <p>Displays directions, travel time, and guidance with icons and
+                                                            text.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">📱</div>
+                                                    <div class="feature-content">
+                                                        <h4>Call & App Notifications</h4>
+                                                        <p>Shows caller name, Zalo and Messenger messages, and
+                                                            notifications from other apps.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">🌤️</div>
+                                                    <div class="feature-content">
+                                                        <h4>Weather Forecast</h4>
+                                                        <p>Syncs current weather information from your phone.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="feature-item">
+                                                    <div class="feature-icon">⚙️</div>
+                                                    <div class="feature-content">
+                                                        <h4>Settings Menu</h4>
+                                                        <p>Turn Bluetooth and sound on/off, adjust volume, update
+                                                            software, and more.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="app-card">
+                                            <h3>Hidden Features</h3>
+                                            <div class="app-setup">
+                                                <ul class="setup-steps">
+                                                    <li>
+                                                        <strong>Switch Screen</strong>
+                                                        <p>If there is a button, press once to switch to the clock
+                                                            screen.
+                                                            If there is no button, connect to the device and press "Find
+                                                            Watch" once in the Chronos App.</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Menu</strong>
+                                                        <p>If there is a button, press and hold once to enter the menu.
+                                                            If there is no button, connect to the device and press "Find
+                                                            Watch" twice in the Chronos App.</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Navigate & Select in Menu</strong>
+                                                        <p>1. If there is a button, press once to move through menu
+                                                            items.
+                                                            If there is no button, connect to the device and press "Find
+                                                            Watch" once in the Chronos App.</p>
+                                                        <p>2. If there is a button, press and hold once to select a menu
+                                                            item.
+                                                            If there is no button, connect to the device and press "Find
+                                                            Watch" twice in the Chronos App.</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Quick Shortcuts</strong>
+                                                        <p>1. Press the button twice to toggle between random and
+                                                            sequential animations.</p>
+                                                        <p>2. Press the button three times to turn sound on/off.</p>
+                                                        <p>3. Press the button four times quickly to turn the random
+                                                            animation delay on/off.</p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="update-notice">
+                                            <div class="update-icon">🚀</div>
+                                            <div class="update-content">
+                                                <h4>Continuous Updates</h4>
+                                                <p>The device will continue to receive software/feature upgrades in the
+                                                    future to provide the best user experience.</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Important notes -->
+                                        <div class="important-notes">
+                                            <h4>⚠️ Notes</h4>
+                                            <ul>
+                                                <li><strong>From startup, if you do not connect your phone to the
+                                                        device, Bluetooth will automatically turn off after 3 minutes to
+                                                        extend battery life and prevent overheating when not in
+                                                        use.</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Tab 4: Kích Hoạt Chương Trình -->
+                                <div class="tab-pane" id="tab4">
+                                    <div class="activation-section">
+                                        <div class="activation-card">
+                                            <h3>Program Activation Guide</h3>
+
+                                            <!-- Step 1 -->
+                                            <div class="step-container">
+                                                <div class="step-number">1</div>
+                                                <div class="step-content">
+                                                    <h4>Connect to WiFi</h4>
+                                                    <p>The ESP32 will display the WiFi name and IP address on the OLED
+                                                        screen as shown below. Connect to the WiFi network without a
+                                                        password.</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/z6700482998486_841a47ff137098a82447cb820f7e9de5.jpg"
+                                                            alt="ESP32 Connection Diagram" width="300">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 2 -->
+                                            <div class="step-container">
+                                                <div class="step-number">2</div>
+                                                <div class="step-content">
+                                                    <h4>Access the IP Address in Your Browser</h4>
+                                                    <p>Open your browser and enter the IP address shown on the OLED
+                                                        screen.</p>
+
+                                                    <div class="code-block">192.168.4.1</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 3 -->
+                                            <div class="step-container">
+                                                <div class="step-number">3</div>
+                                                <div class="step-content">
+                                                    <h4>Enter WiFi Information and Activate</h4>
+                                                    <p>You will be asked to enter:</p>
+                                                    <ul>
+                                                        <li><strong>Select WiFi:</strong> Click Scan WiFi to find
+                                                            available networks</li>
+                                                        <li><strong>Password:</strong> Enter your WiFi password</li>
+                                                        <li><strong>Activation Key:</strong> Enter the activation key
+                                                            you were provided</li>
+                                                    </ul>
+
+                                                    <p>After entering, click Activate.</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/z6700466655302_74f3e313ccf1a3c474ed635b571774be.jpg"
+                                                            alt="ESP32 Connection Diagram" width="300">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 4 -->
+                                            <div class="step-container">
+                                                <div class="step-number">4</div>
+                                                <div class="step-content">
+                                                    <h4>After Clicking "Activate"</h4>
+                                                    <p>When you click Activate, the system will start connecting to WiFi
+                                                        and verifying the entered key. In the browser, you will see a
+                                                        notification like this:</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/z6700471844954_e6d0cff5f4b7545038637e34f6f8baba.jpg"
+                                                            alt="ESP32 Connection Diagram" width="500">
+                                                    </div>
+
+                                                    <p>At this point, the ESP32 will connect to WiFi and verify the
+                                                        entered key.</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Wrong key case -->
+                                            <div class="result-container error">
+                                                <h4>Wrong Key Case</h4>
+                                                <p>If the entered key is incorrect, the ESP32 will restart and prompt
+                                                    you to repeat the WiFi Connection step (Step 1).</p>
+                                                <div class="image-placeholder">
+                                                    <img src="../img/z6700482972139_bcee83d386e7cc54bb68bd933b8313a1.jpg"
+                                                        alt="ESP32 Connection Diagram" width="300">
+                                                </div>
+                                            </div>
+
+                                            <!-- Correct key case -->
+                                            <div class="result-container success">
+                                                <h4>Correct Key Case</h4>
+                                                <p>If the entered key is correct, the system will complete the
+                                                    verification process and proceed to the main program. The screen
+                                                    will display a success message.</p>
+
+                                                <div class="image-placeholder">
+                                                    <img src="../img/z6700483015772_0411e382dd8e139759e426413b43ecfa.jpg"
+                                                        alt="ESP32 Connection Diagram" width="300">
+                                                </div>
+
+                                                <p>The ESP32 will automatically restart and switch to main operating
+                                                    mode.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Tab 5: Hướng dẫn sử dụng -->
+                                <div class="tab-pane" id="tab5">
+                                    <div class="app-section">
+                                        <div class="app-card">
+                                            <!-- Download App -->
+                                            <div class="app-download">
+                                                <h4>Download MochiNav App</h4>
+                                                <div class="app-stores">
+                                                    <a href="https://play.google.com/store/apps/details?id=com.fbiego.chronos&pcampaignid=web_share"
+                                                        class="app-store-btn">
+                                                        <span class="app-store-icon">📱</span>
+                                                        <span class="app-store-text">Google Play</span>
+                                                    </a>
+                                                </div>
+                                                <div class="app-stores">
+                                                    <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
+                                                        class="app-store-btn">
+                                                        <span class="app-store-icon">📱</span>
+                                                        <span class="app-store-text">App User Guide</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Tab Content for Xiaozhi -->
+                        <div class="main-guide-tab-content" id="xiaozhi-tab">
+                            <div class="xiaozhi-guide">
+                                <h2>The AI Chat Bot Guide will be updated when time permits</h2>
+                                <h3>This version has been modified by TanDev to fully support Vietnamese and can run on
+                                    the ESP32 S3 Super Mini chip completely free of charge</h3>
+                                <!-- Diagram image -->
+                                <div class="diagram-container">
+                                    <img src="../img/xiaozhi_esp32-s3_supermini.png" alt="ESP32-S3 Wiring Diagram"
+                                        class="wiring-diagram">
+                                </div>
+                                <!-- Connection table -->
+                                <div class="connection-table">
+                                    <!-- ESP32 with OLED -->
+                                    <h5>ESP32-S3 - OLED 0.96inch SSD1306</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>OLED SSD1306</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>3V3</td>
+                                                <td>VCC</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO42</td>
+                                                <td>SCL</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO41</td>
+                                                <td>SDA</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- ESP32 with MAX98357A -->
+                                    <h5>ESP32-S3 - MAX98357A</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>MAX98357A</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>GPIO5</td>
+                                                <td>DIN</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO6</td>
+                                                <td>BCLK</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO7</td>
+                                                <td>LRCLK</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3V3</td>
+                                                <td>VIN</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GAIN</td>
+                                                <td>GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>SD</td>
+                                                <td>VIN</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>GND</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- ESP32 with MIC INMP441 -->
+                                    <h5>ESP32-S3 - Microphone INMP441</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>INMP441</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3V3</td>
+                                                <td>VCC</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO2</td>
+                                                <td>WS</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO3</td>
+                                                <td>SCK</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO4</td>
+                                                <td>SD</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GND</td>
+                                                <td>L/R</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- ESP32 with Buttons -->
+                                    <h5>ESP32-S3 - Buttons</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ESP32-S3</th>
+                                                <th>Button</th>
+                                                <th>Function</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>GPIO10</td>
+                                                <td>Button 1</td>
+                                                <td>Increase volume</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO11</td>
+                                                <td>Button 2</td>
+                                                <td>Decrease volume</td>
+                                            </tr>
+                                            <tr>
+                                                <td>GPIO01</td>
+                                                <td>Button 3</td>
+                                                <td>Wake up</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- Battery and Charging Module -->
+                                    <h5>3.7V Battery - Charging and Boost Module</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Device</th>
+                                                <th>Connection</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>3.7V Battery</td>
+                                                <td>Connect to IN+ and IN- of the charging module</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Charging Module</td>
+                                                <td>OUT+ to 5V (VIN ESP32), OUT- to GND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Switch</td>
+                                                <td>Connect between OUT+ and ESP32 to turn power on/off</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Important notes -->
+                                <div class="important-notes">
+                                    <h4>⚠️ Notes</h4>
+                                    <ul>
+                                        <li><strong>OLED Display:</strong> SSD1306, I2C, default address 0x3C</li>
+                                        <li><strong>MIC INMP441:</strong> digital microphone, uses I2S communication
+                                        </li>
+                                        <li><strong>MAX98357A:</strong> mono amplifier, also uses I2S communication</li>
+                                        <li><strong>Buttons:</strong> Pulled down to GND</li>
+                                        <li><strong>ESP32-S3:</strong> uses GPIOs from 0 to 46 (select GPIOs that
+                                            support I2S/I2C)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <h3>Liên Hệ</h3>
+                <div class="footer-links">
+                    <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="footer-link" target="_blank">
+                        <span class="footer-icon">💬</span>
+                        Zalo
+                    </a>
+                    <a href="https://www.tiktok.com/@tanbeat282" class="footer-link" target="_blank">
+                        <span class="footer-icon">🎵</span>
+                        TikTok
+                    </a>
+                    <a href="https://www.facebook.com/trantan03" class="footer-link" target="_blank">
+                        <span class="footer-icon">📘</span>
+                        Facebook
+                    </a>
+                </div>
+                <p class="footer-text">© 2025 MochiNav - TanDev</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

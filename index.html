@@ -2,1060 +2,169 @@
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TanDev</title>
-    <script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trang đang bảo trì</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+        :root {
+            --bg: #0b0c10;
+            --card: #111319;
+            --text: #e8edf3;
+            --muted: #9aa7b2;
+            --accent: #4da3ff;
+            --accent-2: #6df0c2;
+            --border: #1c2230;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f7f9fc;
+                --card: #fff;
+                --text: #101928;
+                --muted: #5f6b7a;
+                --accent: #1a73e8;
+                --accent-2: #10b981;
+                --border: #e6eaf0;
+            }
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+            background: radial-gradient(1200px 800px at 10% 10%, rgba(77, 163, 255, .09), transparent 60%),
+                radial-gradient(900px 600px at 90% 50%, rgba(109, 240, 194, .08), transparent 55%),
+                var(--bg);
+            color: var(--text);
+        }
+
+        .wrap {
+            min-height: 100%;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 500px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, 0)), var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+            text-align: center;
+        }
+
+        .emoji {
+            font-size: 38px;
+            margin-bottom: 12px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-6px)
+            }
+        }
+
+        h1 {
+            font-size: clamp(20px, 3.2vw, 28px);
+            margin: 8px 0 6px;
+        }
+
+        p.lead {
+            color: var(--muted);
+            font-size: 15px;
+            margin: 0 0 14px;
+        }
+
+        .progress {
+            height: 8px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 16px 0 8px;
+        }
+
+        .bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            animation: load 2.2s ease-in-out infinite;
+        }
+
+        @keyframes load {
+            0% {
+                width: 10%
+            }
+
+            50% {
+                width: 75%
+            }
+
+            100% {
+                width: 10%
+            }
+        }
+    </style>
 </head>
 
-<!-- Popup gia nhập nhóm FB -->
-<div id="fbJoinPopup" class="popup-overlay" style="display: none;">
-    <div class="popup-box">
-        <button id="closePopupBtn" class="close-btn">X</button>
-        <h3>🌟 Gia Nhập Nhóm Facebook Xiaozhi VN</h3>
-        <p>Hãy gia nhập nhóm Facebook của chúng tôi để nhận hỗ trợ và cập nhật thông tin mới nhất!</p>
-        <p>MochiNav V5.0.0 đã phát hành, hãy nhanh tay cài đặt trải nghiệm</p>
-        <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
-            Tham gia
-        </a>
-    </div>
-</div>
-
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <img src="./img/logo.png"></img>
-                    <h1>TanDev</h1>
-                </div>
+    <div class="wrap" id="maintenanceUI" style="display:none;">
+        <div class="card">
+            <div class="emoji">🛠️</div>
+            <h1 id="maint-title"></h1>
+            <p class="lead" id="maint-desc"></p>
+            <div class="progress">
+                <div class="bar"></div>
             </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="content-grid">
-                <!-- Left Panel - 30% -->
-                <div class="left-panel">
-                    <!-- Chip Selection -->
-                    <!-- Firmware Selection -->
-                    <section class="chip-selection">
-                        <h2>Chọn Firmware</h2>
-                        <div class="fw-grid-horizontal">
-                            <button class="fw-button" data-fw="mochi_nav">MochiNav</button>
-                            <button class="fw-button" data-fw="xiaozhi">Chat Bot AI</button>
-                        </div>
-                    </section>
-                    <!-- Chip Selection after FW -->
-                    <section class="chip-selection" id="chipSelection" style="display: none;">
-                        <h2>Chọn Chip</h2>
-                        <div class="chip-grid-horizontal" id="chipGrid"></div>
-                    </section>
-
-                    <!-- OLED Selection (only for xiaozhi) -->
-                    <section class="chip-selection" id="oledSelection" style="display: none;">
-                        <h2>Chọn Màn Hình OLED</h2>
-                        <div class="chip-grid-horizontal" id="oledGrid">
-                            <button class="oled-button" data-oled="0.91">OLED 0.91inch 128x32</button>
-                            <button class="oled-button" data-oled="0.96">OLED 0.96inch 128x64</button>
-                        </div>
-                    </section>
-
-                    <!-- Flash Section -->
-                    <section class="flash-section" id="flashSection" style="display: none;">
-                        <div class="flash-card">
-                            <div class="flash-controls">
-                                <div id="espWebToolsContainer" class="centered-button">
-                                    <esp-web-install-button class="invisible"
-                                        id="installButton"></esp-web-install-button>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Status Section -->
-                    <section class="status-section" id="statusSection" style="display: none;">
-                        <div class="status-card">
-                            <div class="status-icon" id="statusIcon">⏳</div>
-                            <h3 id="statusTitle">Đang chuẩn bị...</h3>
-                            <p id="statusMessage">Đang chuẩn bị nạp firmware</p>
-                            <div class="progress-bar" id="progressBar">
-                                <div class="progress-fill" id="progressFill"></div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <div class="step-content">
-                        <h4>Hướng dẫn nạp code MochiNav</h4>
-                        <ul>
-                            <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 và gim cáp kết nối với máy tính</strong>
-                            </li>
-                            <li><strong>Chọn chip phù hợp và nhấn kết nối</strong></li>
-                            <li><strong>Chọn cổng COM của chip và nhấn Kết nối -> Install -> Install -> chờ nạp xong
-                                    code</strong></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Right Panel - 70% -->
-                <div class="right-panel">
-                    <div class="guide-section">
-                        <!-- Main Tab for MochiNav and Xiaozhi -->
-                        <div class="main-guide-tabs">
-                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav</button>
-                            <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">Chat Bot AI</button>
-                        </div>
-
-                        <!-- Tab Content for MochiNav -->
-                        <div class="main-guide-tab-content active" id="mochinav-tab">
-                            <!-- Tab Navigation -->
-                            <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="tab0">v5.0.0 có gì ???</button>
-                                <button class="tab-btn" data-tab="tab1">Sơ Đồ</button>
-                                <button class="tab-btn" data-tab="tab2">Key</button>
-                                <button class="tab-btn" data-tab="tab3">Chức Năng</button>
-                                <button class="tab-btn" data-tab="tab4">Kích Hoạt</button>
-                                <button class="tab-btn" data-tab="tab5">Hướng Dẫn Sử Dụng</button>
-                            </div>
-                            <!-- Tab Content -->
-                            <div class="tab-content">
-                                <!-- Tab 0: Cập Nhật -->
-                                <div class="tab-pane active" id="tab0">
-                                    <div class="update-section">
-                                        <div class="update-card">
-                                            <h3>MochiNav V5.0.0</h3>
-                                            <ul>
-                                                <li><strong>Kết nối:</strong> <br> 1. Thêm chức năng cho phép chỉnh thời
-                                                    gian tự động tắt BLE khi không
-                                                    có kết nối với điện thoại: 5 10 15 20 25 30 phút.</li>
-                                                <li><strong>Biểu cảm:</strong> <br> 1. Vẫn giữ lại 84 biểu cảm thay vì
-                                                    bản
-                                                    chính
-                                                    thức trên sản phẩm thương mại là 102 biểu cảm <br>
-                                                    2. Thêm một số tùy chọn khi phát emoji như: Ngẫu nhiên - tuần tự,
-                                                    Delay - No delay, Nháy mắt,... <br>
-                                                </li>
-                                                <li><strong>Âm Thanh</strong> <br>
-                                                    1. Thêm bật / tắt âm thanh tổng cho toàn bộ thiết bị, và âm thanh
-                                                    cho
-                                                    emoji khi phát <br>
-                                                    2. Bộ nhớ ESP32-C3 Super Mini chỉ 4MB nên tôi chỉ lưu được 102 biểu
-                                                    cảm + 2 âm thanh intro / Nên âm thanh biểu cảm sẽ được lưu vào thẻ
-                                                    nhớ.<br>
-                                                    3.Thẻ nhớ chuẩn Format FAT32, Âm thanh biểu cảm sẽ có dạng Wav 16bit
-                                                    22050HZ Mono, và được đánh
-                                                    số thứ tự từ 1 đến 102.
-                                                    4. Ở bản này vẫn chưa công khai âm thanh full cho biểu cảm, biểu cảm
-                                                    vẫn sẽ không có âm thanh <br>
-                                                </li>
-                                                <li><strong>Thêm Menu Update (Đang phát triển)</strong> <br> 1. Cho
-                                                    phép nhập và lưu SSID
-                                                    và Passwrod WiFi vào thiết bị<br>
-                                                    2. Hiển thị phiên bản hiện tại và chức năng kiểm tra phiên bản cập
-                                                    nhật khi có phiên bản mới<br>
-                                                    3. Thêm chuyển đổi ngôn ngữ: Hiện tại hỗ trợ 2 ngôn ngữ chính là
-                                                    Vietnamese và English, điều chỉnh trực tiếp trong app Chronos hoặc
-                                                    trong Menu -> Cập nhật<br>
-                                                </li>
-                                                <li><strong>Đồng hồ</strong> <br> 1. Đã thêm hiển thị âm lịch trong giao
-                                                    diện đồng hồ<br>
-                                                    2. Thêm dự báo thời tiết, nhiệt độ hiện tại, Sync từ app Chronos<br>
-                                                </li>
-                                                <li><strong>Tối ưu xử lý:</strong> <br> Đã tối ưu chương trình ngắn gọn
-                                                    hoạt
-                                                    động ổn định và nhanh hơn.
-                                                </li>
-                                                <li><strong>Phím tắt nhanh:</strong> Đã thêm phím tắt nhanh ở giao diện
-                                                    emoji: <br>
-                                                    1. Nếu có nút bạn nhấn 1 lần hoặc nhấn "Tìm Đồng Hồ" sẽ tắt chuyển
-                                                    sang màn hình Đồng Hồ.<br>
-                                                    2. Nếu có nút bạn nhấn 2 lần nhanh sẽ tắt hoặc bật phát animations
-                                                    ngẫu nhiên hay tuần tự.<br>
-                                                    3. Nếu có nút bạn nhấn 3 lần nhanh sẽ tắt hoặc bật âm thanh.<br>
-                                                    4. Nếu có nút bạn nhấn 4 lần nhanh sẽ tắt hoặc bật thời gian chờ khi
-                                                    phát animations ngẫu nhiên
-                                                </li>
-                                                <li><strong>Bug:</strong><br> Đã fix một số lỗi như: không setting đã
-                                                    cài đặt,... </li>
-                                                <li><strong>Còn nữa:</strong> .....</li>
-                                            </ul>
-                                            <br>
-                                            <div class="important-notes">
-                                                <h4>📌 Lưu ý</h4>
-                                                <ul>
-                                                    <li>Người dùng đã có key cũ có thể tiếp tục sử dụng lại key trên
-                                                        cùng
-                                                        thiết bị</li>
-                                                    <li>Khuyến nghị cập nhật để nhận được các tính năng mới nhất</li>
-                                                </ul>
-                                            </div>
-                                            <div class="feature-request-form">
-                                                <h4>📬 Gửi Yêu Cầu Tính Năng</h4>
-                                                <p>Nếu bạn có ý tưởng hoặc tính năng muốn bổ sung trong phiên bản tiếp
-                                                    theo,
-                                                    hãy gửi tại đây:</p>
-                                                <form id="requestForm">
-                                                    <div class="form-group">
-                                                        <label for="name">Tên bạn:</label>
-                                                        <input type="text" id="name" name="name"
-                                                            placeholder="Nhập tên của bạn" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="content">Nội dung yêu cầu:</label>
-                                                        <textarea id="content" name="content" rows="4"
-                                                            placeholder="Chi tiết ý tưởng hoặc đề xuất..."
-                                                            required></textarea>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit" class="btn btn-primary">📤 Gửi yêu
-                                                            cầu</button>
-                                                    </div>
-                                                </form>
-                                                <div id="formMessage"></div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Tab 1: Đấu Nối Thiết Bị -->
-                                <div class="tab-pane" id="tab1">
-                                    <div class="wiring-section">
-                                        <!-- Chip Type Tabs -->
-                                        <div class="chip-type-tabs">
-                                            <button class="chip-tab-btn active" data-chip-tab="esp32">ESP32-C3</button>
-                                            <button class="chip-tab-btn" data-chip-tab="esp32c3">ESP32</button>
-                                        </div>
-
-                                        <div class="wiring-card chip-tab-content active" id="esp32-content">
-                                            <h3>Sơ Đồ Đấu Nối ESP32-C3</h3>
-
-                                            <!-- Hình ảnh sơ đồ -->
-                                            <div class="diagram-container">
-                                                <img src="./img/esp32c3_diagram.png" alt="Sơ đồ đấu nối ESP32-C3"
-                                                    class="wiring-diagram">
-                                            </div>
-
-                                            <!-- Bảng đấu nối -->
-                                            <div class="connection-table">
-                                                <!-- ESP32-C3 với OLED -->
-                                                <h5>ESP32-C3 - OLED 0.96inch</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-C3</th>
-                                                            <th>OLED 0.96inch</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VCC</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO8</td>
-                                                            <td>SDA</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO9</td>
-                                                            <td>SCL</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32-C3 với Module Âm Thanh -->
-                                                <h5>ESP32-C3 - MAX98357A</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-C3</th>
-                                                            <th>MAX98357A</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GPIO5</td>
-                                                            <td>LRCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO6</td>
-                                                            <td>BCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO7</td>
-                                                            <td>DIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GAIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>SD</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VIN</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32-C3 với Module Âm Thanh -->
-                                                <h5>ESP32-C3 - Module TF Micro SD Card Mini</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-C3</th>
-                                                            <th>Module TF Micro SD Card Mini</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GPIO1</td>
-                                                            <td>CLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO2</td>
-                                                            <td>MISO</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO3</td>
-                                                            <td>MOSI</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO4</td>
-                                                            <td>CS</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>3v3</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <!-- Lưu ý quan trọng -->
-                                            <div class="important-notes">
-                                                <h4>⚠️ Lưu Ý</h4>
-                                                <ul>
-                                                    <li><strong>Không lắp màn hình, chương trình sẽ không chạy</strong>
-                                                    </li>
-                                                    <li><strong>Màn hình OLED:</strong> Sử dụng loại 0.96" SSD1306 I2C
-                                                        (địa
-                                                        chỉ 0x3C)</li>
-                                                    <li><strong>Nút nhấn (có thể làm hoặc không, không ảnh hưởng
-                                                            gì):</strong> Kết nối GND với GPIO0 để điều khiển thiết bị
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                        <div class="wiring-card chip-tab-content" id="esp32c3-content">
-                                            <h3>Sơ Đồ Đấu Nối ESP32</h3>
-
-                                            <!-- Hình ảnh sơ đồ -->
-                                            <div class="diagram-container">
-                                                <img src="./img/esp32_diagram.png" alt="Sơ đồ đấu nối ESP32"
-                                                    class="wiring-diagram">
-                                            </div>
-
-                                            <!-- Bảng đấu nối -->
-                                            <div class="connection-table">
-                                                <!-- ESP32 với OLED -->
-                                                <h5>ESP32 - OLED 0.96inch</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32</th>
-                                                            <th>OLED 0.96inch</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VCC</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO21</td>
-                                                            <td>SDA</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO22</td>
-                                                            <td>SCL</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32 với Module Âm Thanh -->
-                                                <h5>ESP32 - MAX98357A</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32</th>
-                                                            <th>MAX98357A</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GPIO25</td>
-                                                            <td>LRCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO26</td>
-                                                            <td>BCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO27</td>
-                                                            <td>DIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GAIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>SD</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VIN</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <!-- Lưu ý quan trọng -->
-                                            <div class="important-notes">
-                                                <h4>⚠️ Lưu Ý</h4>
-                                                <ul>
-                                                    <li><strong>Màn hình OLED:</strong> Sử dụng loại 0.96" SSD1306 I2C
-                                                        (địa
-                                                        chỉ 0x3C)</li>
-                                                    <li><strong>Nút nhấn (có thể làm hoặc không, không ảnh hưởng
-                                                            gì):</strong> Kết nối GND với GPIO0 để điều khiển thiết bị
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Tab 2: Mô tả Key -->
-                                <div class="tab-pane" id="tab2">
-                                    <div class="key-description-section">
-                                        <div class="key-description-card">
-                                            <h3>Chính Sách Mua Key</h3>
-
-                                            <div class="key-policy">
-                                                <h4>📋 Thông Tin Cơ Bản</h4>
-                                                <ul>
-                                                    <li>Khi mua, người dùng nhận được <strong>01 key kích hoạt</strong>
-                                                    </li>
-                                                    <li>Mỗi key chỉ sử dụng được trên <strong>01 thiết bị ESP32</strong>
-                                                    </li>
-                                                    <li>Có thể sử dụng key <strong>nhiều lần</strong> trên cùng 1 thiết
-                                                        bị
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="key-policy">
-                                                <h4>🆓 Key Được Cấp Miễn Phí Khi</h4>
-                                                <ul>
-                                                    <li>Người dùng thay bo mạch ESP32 do <strong>lỗi phần cứng</strong>
-                                                    </li>
-                                                    <li>Làm thêm thiết bị với <strong>mục đích cá nhân</strong> (không
-                                                        thương mại)</li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="key-policy">
-                                                <h4>💼 Chính Sách Cấp Key Bổ Sung</h4>
-                                                <p>Nếu sử dụng để tạo thêm nhiều sản phẩm hoặc triển khai thương mại,
-                                                    người
-                                                    dùng cần:</p>
-                                                <br>
-                                                <ul>
-                                                    <li><strong>Mua key bổ sung</strong> theo số lượng thiết bị</li>
-                                                    <li><strong>Liên hệ trực tiếp</strong> để được báo giá và hỗ trợ
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="pricing-section">
-                                                <h4>💰 Giá Bán</h4>
-                                                <div class="price-card">
-                                                    <div class="price-item">
-                                                        <span class="price-label">1 Key:</span>
-                                                        <span class="price-value">50.000đ</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="purchase-section">
-                                                <h4>🛒 Mua Key Ngay</h4>
-                                                <p>Liên hệ qua Zalo để được hỗ trợ mua key và tư vấn:</p>
-                                                <div class="centered-button">
-                                                    <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih"
-                                                        class="btn btn-primary" target="_blank">
-                                                        💬 Mua Key qua Zalo
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <!-- Lưu ý quan trọng -->
-                                            <div class="important-notes">
-                                                <h4>⚠️ Lưu Ý</h4>
-                                                <ul>
-                                                    <li><strong>Bạn đã mua Key và chỉ update code, có thể sử dụng lại
-                                                            Key cũ
-                                                            trên chính ESP32 mà bạn đã kích hoạt trước đó</strong></li>
-                                                    <li><strong>Nếu bạn chưa mua Key và spam kích hoạt sẽ bị hệ thống
-                                                            chúng
-                                                            tôi chặn</strong></li>
-                                                    <li><strong>Mua 1 lần sử dụng trọn đời, hỗ trợ update vô thời
-                                                            hạn</strong></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Tab 3: Mô tả chương trình -->
-                                <div class="tab-pane" id="tab3">
-                                    <div class="program-description-section">
-                                        <div class="program-description-card">
-                                            <h3>Tính Năng Chính</h3>
-
-                                            <div class="feature-grid">
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">👁️</div>
-                                                    <div class="feature-content">
-                                                        <h4>Biểu Cảm Dasai Mochi</h4>
-                                                        <p>Hơn 80 hiệu ứng chuyển động ngẫu nhiên tạo cảm giác sinh động
-                                                            và
-                                                            thú vị</p>
-                                                    </div>
-                                                </div>
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">🖼️</div>
-                                                    <div class="feature-content">
-                                                        <h4>Intro Khởi Động</h4>
-                                                        <p>Linh hoạt chuyển đổi Intro khởi động giữa Bassic hoặc Liberty
-                                                            Walk có kèm theo âm thanh </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">🔊</div>
-                                                    <div class="feature-content">
-                                                        <h4>Âm Thanh Biểu Cảm</h4>
-                                                        <p>Hơn 50% biểu cảm đã có âm thanh, giúp cho trải nghiệm thêm
-                                                            sống
-                                                            động. </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">⏰</div>
-                                                    <div class="feature-content">
-                                                        <h4>Hiển Thị Thời Gian Thực</h4>
-                                                        <p>Đồng hồ, phần trăm pin điện thoại, ngày tháng được cập nhật
-                                                            liên
-                                                            tục đồng bộ với điện thoại</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">🗺️</div>
-                                                    <div class="feature-content">
-                                                        <h4>Dẫn Đường Google Maps</h4>
-                                                        <p>Hiện hướng đi, thời gian di chuyển, chỉ dẫn bằng biểu tượng
-                                                            và
-                                                            văn bản</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">📱</div>
-                                                    <div class="feature-content">
-                                                        <h4>Thông Báo Cuộc Gọi & Ứng Dụng</h4>
-                                                        <p>Hiện tên người gọi, tin nhắn Zalo, Messenger, và các ứng dụng
-                                                            khác</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">🌤️</div>
-                                                    <div class="feature-content">
-                                                        <h4>Dự Báo Thời Tiết</h4>
-                                                        <p>Đồng bộ thông tin thời tiết hiện tại từ điện thoại
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="feature-item">
-                                                    <div class="feature-icon">⚙️</div>
-                                                    <div class="feature-content">
-                                                        <h4>Menu Tinh Chỉnh</h4>
-                                                        <p>Bật/tắt Bluetooth, âm thanh, điều chỉnh âm lượng, cập nhật
-                                                            phần
-                                                            mềm,...</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="app-card">
-                                            <h3>Chức Năng Ẩn</h3>
-                                            <div class="app-setup">
-                                                <ul class="setup-steps">
-                                                    <li>
-                                                        <strong>Chuyển Màn Hình</strong>
-                                                        <p>Nếu có nút bạn nhấn nhã 1 lần sẽ chuyển sang màn hình thời
-                                                            gian,
-                                                            không có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên
-                                                            App
-                                                            Chronos 1 lần.
-                                                        </p>
-                                                    </li>
-                                                    <li>
-                                                        <strong>Menu</strong>
-                                                        <p>Nếu có nút bạn nhấn giữ 1 lần để vào Menu, không
-                                                            có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên App
-                                                            Chronos 2 lần liên
-                                                            tiếp.</p>
-                                                    </li>
-                                                    <li>
-                                                        <strong>Di Chuyển Và Chọn Trong Menu</strong>
-                                                        <p>1. Nếu có nút bạn nhấn nhã 1 lần sẽ là di chuyển trong Menu,
-                                                            không
-                                                            có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên App
-                                                            Chronos 1 lần.</p>
-                                                        <p>2. Nếu có nút bạn nhấn giữ 1 lần sẽ là chọn trong Menu, không
-                                                            có nút kết nối với thiết bị và nhấn "Tìm đồng hồ" trên App
-                                                            Chronos 2 lần liên
-                                                            tiếp.</p>
-                                                    </li>
-                                                    <li>
-                                                        <strong>Phím Tắt Nhanh</strong>
-                                                        <p>1. Nếu có nút bạn nhấn 2 lần sẽ tắt hoặc bật phát animations
-                                                            ngẫu
-                                                            nhiên hay tuần tự</p>
-                                                        <p>2. Nếu có nút bạn nhấn 3 lần sẽ tắt hoặc bật âm thanh</p>
-                                                        <p>3. Nếu có nút bạn nhấn 4 lần nhanh sẽ tắt hoặc bật thời gian
-                                                            chờ khi phát animations ngẫu nhiên</p>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="update-notice">
-                                            <div class="update-icon">🚀</div>
-                                            <div class="update-content">
-                                                <h4>Cập Nhật Liên Tục</h4>
-                                                <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời
-                                                    gian
-                                                    tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
-                                            </div>
-                                        </div>
-
-
-                                        <!-- Lưu ý quan trọng -->
-                                        <div class="important-notes">
-                                            <h4>⚠️ Lưu Ý</h4>
-                                            <ul>
-                                                <li><strong>Tính từ khi khởi động, nếu bạn không kết nối điện thoại với
-                                                        thiết bị, thiết bị sẽ tự động tắt Bluetooth sau 3 phút giúp tăng
-                                                        thời gian sử dụng pin và tránh tình trạng thiết bị bị nóng khi
-                                                        không
-                                                        sử
-                                                        dụng.</strong></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Tab 4: Kích Hoạt Chương Trình -->
-                                <div class="tab-pane" id="tab4">
-                                    <div class="activation-section">
-                                        <div class="activation-card">
-                                            <h3>Hướng Dẫn Kích Hoạt Chương Trình</h3>
-
-                                            <!-- Bước 1 -->
-                                            <div class="step-container">
-                                                <div class="step-number">1</div>
-                                                <div class="step-content">
-                                                    <h4>Kết Nối WiFi</h4>
-                                                    <p>ESP32 sẽ hiển thị tên WiFi và địa chỉ IP trên màn hình OLED như
-                                                        hình
-                                                        dưới đây. Kết nối với mạng WiFi mà không cần mật khẩu.</p>
-
-                                                    <div class="image-placeholder">
-                                                        <img src="./img/z6700482998486_841a47ff137098a82447cb820f7e9de5.jpg"
-                                                            alt="Sơ đồ đấu nối ESP32" width="300">
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                            <!-- Bước 2 -->
-                                            <div class="step-container">
-                                                <div class="step-number">2</div>
-                                                <div class="step-content">
-                                                    <h4>Truy Cập Địa Chỉ IP trong Trình Duyệt</h4>
-                                                    <p>Mở trình duyệt và nhập địa chỉ IP được hiển thị trên màn hình
-                                                        OLED.
-                                                    </p>
-
-                                                    <div class="code-block">192.168.4.1</div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Bước 3 -->
-                                            <div class="step-container">
-                                                <div class="step-number">3</div>
-                                                <div class="step-content">
-                                                    <h4>Nhập Thông Tin WiFi và Kích Hoạt</h4>
-                                                    <p>Bạn sẽ được yêu cầu nhập:</p>
-                                                    <ul>
-                                                        <li><strong>Chọn WiFi:</strong> Nhấn quét WiFi để tìm WiFi</li>
-                                                        <li><strong>Mật khẩu:</strong> Nhập mật khẩu WiFi</li>
-                                                        <li><strong>Mã kích hoạt:</strong> Nhập key kích hoạt mà bạn đã
-                                                            được
-                                                            cấp</li>
-                                                    </ul>
-
-                                                    <p>Sau khi nhập xong, nhấn Activate.</p>
-
-                                                    <div class="image-placeholder">
-                                                        <img src="./img/z6700466655302_74f3e313ccf1a3c474ed635b571774be.jpg"
-                                                            alt="Sơ đồ đấu nối ESP32" width="300">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Bước 4 -->
-                                            <div class="step-container">
-                                                <div class="step-number">4</div>
-                                                <div class="step-content">
-                                                    <h4>Sau Khi Nhấn "Activate"</h4>
-                                                    <p>Khi bạn nhấn Activate, hệ thống sẽ bắt đầu quá trình kết nối với
-                                                        WiFi
-                                                        và xác minh key đã nhập. Trên trình duyệt, bạn sẽ thấy thông báo
-                                                        như
-                                                        sau:</p>
-
-                                                    <div class="image-placeholder">
-                                                        <img src="./img/z6700471844954_e6d0cff5f4b7545038637e34f6f8baba.jpg"
-                                                            alt="Sơ đồ đấu nối ESP32" width="500">
-                                                    </div>
-
-                                                    <p>Lúc này, ESP32 sẽ kết nối với WiFi và xác minh key đã nhập.</p>
-                                                </div>
-                                            </div>
-
-                                            <!-- Trường hợp key sai -->
-                                            <div class="result-container error">
-                                                <h4>Trường Hợp Key Sai</h4>
-                                                <p>Nếu key bạn nhập sai, ESP32 sẽ khởi động lại và yêu cầu bạn thực hiện
-                                                    lại
-                                                    bước Kết Nối WiFi (bước 1).</p>
-                                                <div class="image-placeholder">
-                                                    <img src="./img/z6700482972139_bcee83d386e7cc54bb68bd933b8313a1.jpg"
-                                                        alt="Sơ đồ đấu nối ESP32" width="300">
-                                                </div>
-
-                                            </div>
-
-                                            <!-- Trường hợp key đúng -->
-                                            <div class="result-container success">
-                                                <h4>Trường Hợp Key Đúng</h4>
-                                                <p>Nếu key bạn nhập là đúng, hệ thống sẽ hoàn tất quá trình xác minh và
-                                                    tiếp
-                                                    tục vào chương trình chính. Màn hình sẽ hiển thị thông báo thành
-                                                    công.
-                                                </p>
-
-                                                <div class="image-placeholder">
-                                                    <img src="./img/z6700483015772_0411e382dd8e139759e426413b43ecfa.jpg"
-                                                        alt="Sơ đồ đấu nối ESP32" width="300">
-                                                </div>
-
-                                                <p>ESP32 sẽ tự động khởi động lại và chuyển sang chế độ hoạt động chính.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Tab 5: Hướng dẫn sử dụng -->
-                                <div class="tab-pane" id="tab5">
-                                    <div class="app-section">
-                                        <div class="app-card">
-                                            <!-- Tải App -->
-                                            <div class="app-download">
-                                                <h4>Tải App MochiNav</h4>
-                                                <div class="app-stores">
-                                                    <a href="https://play.google.com/store/apps/details?id=com.fbiego.chronos&pcampaignid=web_share"
-                                                        class="app-store-btn">
-                                                        <span class="app-store-icon">📱</span>
-                                                        <span class="app-store-text">Google Play</span>
-                                                    </a>
-                                                </div>
-                                                <div class="app-stores">
-                                                    <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
-                                                        class="app-store-btn">
-                                                        <span class="app-store-icon">📱</span>
-                                                        <span class="app-store-text">Hướng dẫn sử dụng App</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tab Content for Xiaozhi -->
-                        <div class="main-guide-tab-content" id="xiaozhi-tab">
-                            <div class="xiaozhi-guide">
-                                <h3>Hướng Dẫn Chat Bot AI sẽ được update khi có thời gian </h3>
-                                <h2>Phiên bản này đã được TanDev mod hỗ trợ full tiếng việt và sử dụng được trên chip
-                                    Esp32 S3 Super Mini</h2>
-                                <!-- Hình ảnh sơ đồ -->
-                                <div class="diagram-container">
-                                    <img src="./img/xiaozhi_esp32-s3_supermini.png" alt="Sơ đồ đấu nối ESP32-S3"
-                                        class="wiring-diagram">
-                                </div>
-                                <!-- Bảng đấu nối -->
-                                <div class="connection-table">
-                                    <!-- ESP32 với OLED -->
-                                    <h5>ESP32-S3 - OLED 0.96inch SSD1306</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>OLED SSD1306</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>3V3</td>
-                                                <td>VCC</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO42</td>
-                                                <td>SCL</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO41</td>
-                                                <td>SDA</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <!-- ESP32 với MAX98357A -->
-                                    <h5>ESP32-S3 - MAX98357A</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>MAX98357A</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>GPIO5</td>
-                                                <td>DIN</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO6</td>
-                                                <td>BCLK</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO7</td>
-                                                <td>LRCLK</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3V3</td>
-                                                <td>VIN</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GAIN</td>
-                                                <td>GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>SD</td>
-                                                <td>VIN</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>GND</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <!-- ESP32 với MIC INMP441 -->
-                                    <h5>ESP32-S3 - Micro INMP441</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>INMP441</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3V3</td>
-                                                <td>VCC</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO2</td>
-                                                <td>WS</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPI3</td>
-                                                <td>SCK</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO4</td>
-                                                <td>SD</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>L/R</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <!-- ESP32 với Nút nhấn -->
-                                    <h5>ESP32-S3 - Nút nhấn</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>Nút nhấn</th>
-                                                <th>Chức năng</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>GPIO10</td>
-                                                <td>Nút 1</td>
-                                                <td>Tăng âm lượng</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO11</td>
-                                                <td>Nút 2</td>
-                                                <td>Giảm âm lượng</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIOO1</td>
-                                                <td>Nút 3</td>
-                                                <td>Đánh thức</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <!-- Pin và Module sạc -->
-                                    <h5>Pin 3.7V - Module sạc và Tăng áp</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Thiết bị</th>
-                                                <th>Kết nối</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Pin 3.7V</td>
-                                                <td>Kết nối với đầu IN+ và IN- của module sạc</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Module sạc</td>
-                                                <td>OUT+ đến 5V (VIN ESP32), OUT- đến GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Công tắc</td>
-                                                <td>Nối giữa OUT+ và ESP32 để bật/tắt nguồn</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <!-- Lưu ý quan trọng -->
-                                <div class="important-notes">
-                                    <h4>⚠️ Lưu Ý</h4>
-                                    <ul>
-                                        <li><strong>Màn hình OLED:</strong> SSD1306, I2C, địa chỉ mặc định 0x3C</li>
-                                        <li><strong>MIC INMP441:</strong> là microphone kỹ thuật số, dùng giao tiếp I2S
-                                        </li>
-                                        <li><strong>MAX98357A:</strong> là amplifier mono, cũng dùng giao tiếp I2S</li>
-                                        <li><strong>Nút nhấn:</strong> Được kéo xuống GND</li>
-                                        <li><strong>ESP32-S3:</strong> sử dụng các GPIO từ 0 đến 46 (chọn đúng GPIO có
-                                            hỗ trợ I2S/I2C)</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3>Liên Hệ</h3>
-                <div class="footer-links">
-                    <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="footer-link" target="_blank">
-                        <span class="footer-icon">💬</span>
-                        Zalo
-                    </a>
-                    <a href="https://www.tiktok.com/@tanbeat282" class="footer-link" target="_blank">
-                        <span class="footer-icon">🎵</span>
-                        TikTok
-                    </a>
-                    <a href="https://www.facebook.com/trantan03" class="footer-link" target="_blank">
-                        <span class="footer-icon">📘</span>
-                        Facebook
-                    </a>
-                </div>
-                <p class="footer-text">© 2025 MochiNav - TanDev</p>
-            </div>
-        </footer>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const FORCE_MAINTENANCE = false; 
+
+        const i18n = {
+            vi: {
+                title: "Trang đang bảo trì",
+                desc: "Vui lòng quay lại sau."
+            },
+            en: {
+                title: "Site Under Maintenance",
+                desc: "Please check back later."
+            }
+        };
+
+        function getLang() {
+            return (navigator.language || navigator.userLanguage || 'vi')
+                .toLowerCase()
+                .startsWith('en') ? 'en' : 'vi';
+        }
+
+        function getLangPath() {
+            return getLang() === 'en' ? '/en/' : '/vi/';
+        }
+
+        if (FORCE_MAINTENANCE) {
+            const lang = getLang();
+            document.getElementById('maint-title').textContent = i18n[lang].title;
+            document.getElementById('maint-desc').textContent = i18n[lang].desc;
+            document.getElementById('maintenanceUI').style.display = 'grid';
+        } else {
+            window.location.href = getLangPath();
+        }
+    </script>
 </body>
 
 </html>

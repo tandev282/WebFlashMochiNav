@@ -69,6 +69,32 @@ body {
   gap: 1rem;
 }
 
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.logo-text h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.logo-text .tagline {
+  font-family: 'Ubuntu', cursive;
+  /* hoặc font đẹp hơn */
+  font-size: 1.0rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+
 .logo img {
   width: 120px;
   height: auto;
@@ -1172,6 +1198,7 @@ esp-web-install-button {
 
 /* Animations */
 @keyframes pulse {
+
   0%,
   100% {
     transform: scale(1);
@@ -1453,7 +1480,8 @@ esp-web-install-button {
 .popup-box h3 {
   color: var(--accent-warning);
   margin-bottom: 1rem;
-  margin-top: 1rem; /* Thêm margin-top để tránh đè lên nút X */
+  margin-top: 1rem;
+  /* Thêm margin-top để tránh đè lên nút X */
 }
 
 .popup-box p {
@@ -1491,7 +1519,7 @@ esp-web-install-button {
   flex-shrink: 0;
 }
 
-.custom-checkbox input:checked + .checkmark::after {
+.custom-checkbox input:checked+.checkmark::after {
   content: "✔";
   position: absolute;
   top: -2px;
@@ -1647,6 +1675,7 @@ esp-web-install-button {
 .oled-button.active::before {
   transform: scaleX(1);
 }
+
 /* Additional styles for firmware checking and not available messages */
 .firmware-checking {
   background: var(--bg-card);
@@ -1713,17 +1742,20 @@ esp-web-install-button {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.05);
     opacity: 0.8;
