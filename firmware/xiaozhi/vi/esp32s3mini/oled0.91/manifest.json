@@ -1,5 +1,5 @@
 {
-  "name": "Xiaozhi Firmware - ESP32-S3 Mini OLED 0.91",
+  "name": "Xiaozhi Firmware - ESP32-S3 Mini OLED 0.91 - VI",
   "version": "1.8.2",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,

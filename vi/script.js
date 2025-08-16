@@ -40,6 +40,16 @@ function initializeApp() {
   }
 }
 
+function getXiaozhiLang() {
+  const lang = (navigator.language || navigator.userLanguage || 'vi').toLowerCase()
+  // Cho phép override thủ công nếu cần: window.XIAOZHI_LANG = 'en' | 'vi'
+  if (typeof window !== "undefined" && (window.XIAOZHI_LANG === "en" || window.XIAOZHI_LANG === "vi")) {
+    return window.XIAOZHI_LANG
+  }
+  return lang.startsWith('en') ? 'en' : 'vi'
+}
+
+
 // Function to generate firmware binary file name and path
 function generateFirmwarePath(fw, chip, oled = null) {
   let binaryFileName = ""
@@ -50,16 +60,18 @@ function generateFirmwarePath(fw, chip, oled = null) {
     binaryFileName = `mochi_nav_${chip}.bin`
     folderPath = `../firmware/${fw}/${chip}`
   } else if (fw === "xiaozhi") {
-    // Xiaozhi has different structure with OLED folders and OLED in filename
+    const lang = getXiaozhiLang()
+    const chipDir = chip === "esp32s3_mini" ? "esp32s3mini" : chip
+
+    // Tên file giữ nguyên quy ước cũ
     if (chip === "esp32s3_mini") {
-      // xiaozhi_esp32s3mini_oled0.96.bin, xiaozhi_esp32s3mini_oled0.91.bin
       binaryFileName = `xiaozhi_esp32s3mini_oled${oled}.bin`
-      folderPath = `../firmware/${fw}/esp32s3mini/oled${oled}`
     } else {
-      // esp32s3: xiaozhi_esp32s3_oled0.96.bin, xiaozhi_esp32s3_oled0.91.bin
       binaryFileName = `xiaozhi_esp32s3_oled${oled}.bin`
-      folderPath = `../firmware/${fw}/${chip}/oled${oled}`
     }
+
+    // ĐƯỜNG DẪN MỚI: thêm {lang}
+    folderPath = `../firmware/${fw}/${lang}/${chipDir}/oled${oled}`
   }
 
   return {
@@ -153,13 +165,11 @@ function setupEspWebToolsWithManifest(chipType) {
   if (selectedFw === "mochi_nav") {
     manifestPath = `../firmware/${selectedFw}/${chipType}/manifest.json`
   } else if (selectedFw === "xiaozhi") {
-    // Xiaozhi has OLED-specific folders
-    if (chipType === "esp32s3_mini") {
-      manifestPath = `../firmware/${selectedFw}/esp32s3mini/oled${selectedOled}/manifest.json`
-    } else {
-      manifestPath = `../firmware/${selectedFw}/${chipType}/oled${selectedOled}/manifest.json`
-    }
+    const lang = getXiaozhiLang()
+    const chipDir = chipType === "esp32s3_mini" ? "esp32s3mini" : chipType
+    manifestPath = `../firmware/${selectedFw}/${lang}/${chipDir}/oled${selectedOled}/manifest.json`
   }
+
 
   // Reset container content to show ESP Web Tools button
   const espWebToolsContainer = document.getElementById("espWebToolsContainer")
