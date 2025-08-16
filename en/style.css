@@ -1761,3 +1761,11 @@ esp-web-install-button {
     opacity: 0.8;
   }
 }
+/* Main guide tabs (MochiNav / Xiaozhi) */
+.main-guide-tab-content { 
+  display: none;
+}
+.main-guide-tab-content.active { 
+  display: block;
+  animation: fadeIn 0.5s ease;
+}

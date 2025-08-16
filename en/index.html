@@ -814,194 +814,657 @@
 
                         <!-- Tab Content for Xiaozhi -->
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
-                            <div class="xiaozhi-guide">
-                                <h2>The AI Chat Bot Guide will be updated when time permits</h2>
-                                <h3>This version has been modified by TanDev to fully support Vietnamese and can run on
-                                    the ESP32 S3 Super Mini chip completely free of charge</h3>
+                            <!-- Tab Navigation -->
+                            <div class="tab-navigation">
+                                <button class="tab-btn active" data-tab="xz-tab0">What’s new in v1.8.8 ???</button>
+                                <button class="tab-btn" data-tab="xz-tab1">Diagram</button>
+                                <button class="tab-btn" data-tab="xz-tab2">Activation</button>
+                            </div>
 
-                                <h2>The default ChatBot AI firmware language will change according to the browser
-                                    language. Current supported languages: EN, VI</h2>
-                                <!-- Diagram image -->
-                                <div class="diagram-container">
-                                    <img src="../img/xiaozhi_esp32-s3_supermini.png" alt="ESP32-S3 Wiring Diagram"
-                                        class="wiring-diagram">
+
+                            <!-- Tab Content -->
+                            <div class="tab-content">
+                                <!-- xz-tab0: Cập Nhật -->
+                                <div class="tab-pane active" id="xz-tab0">
+                                    <div class="update-section">
+                                        <div class="update-card">
+                                            <h3>Chat Bot AI (Xiaozhi) v1.8.8</h3>
+                                            <ul>
+                                                <li><strong>Language & firmware structure:</strong> Auto-detect EN/VI
+                                                    based on browser.
+                                                    For example: <code>https://tandev.click/vi/</code> will load
+                                                    Vietnamese firmware,
+                                                    <code>https://tandev.click/en/</code> will load English firmware.
+                                                </li>
+
+                                                <li><strong>Supported chips:</strong> ESP32-S3 DevKit, ESP32-S3 Super
+                                                    Mini
+                                                    (make sure to select the correct board when flashing).
+                                                </li>
+
+                                                <li><strong>OLED:</strong> Choose the correct size 0.91"/0.96" (I2C
+                                                    SSD1306).
+                                                </li>
+                                                <li><strong>Github:</strong>Here is the official Open source Git link if you want to tinker: <div class="code-block">https://github.com/78/xiaozhi-esp32</div></li>
+                                            </ul>
+
+                                            <div class="important-notes">
+                                                <h4>📌 Notes</h4>
+                                                <ul>
+                                                    <li>Make sure to select the correct <strong>chip</strong> and
+                                                        <strong>OLED size</strong> before pressing Connect
+                                                    </li>
+                                                    <li>Users can override language by
+                                                        <code>window.XIAOZHI_LANG = 'en' | 'vi'</code> if needed
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!-- Connection table -->
-                                <div class="connection-table">
-                                    <!-- ESP32 with OLED -->
-                                    <h5>ESP32-S3 - OLED 0.96inch SSD1306</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>OLED SSD1306</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>3V3</td>
-                                                <td>VCC</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO42</td>
-                                                <td>SCL</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO41</td>
-                                                <td>SDA</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <!-- xz-tab1: Sơ Đồ -->
+                                <div class="tab-pane" id="xz-tab1">
+                                    <div class="wiring-section">
+                                        <!-- Chip Type Tabs -->
+                                        <div class="chip-type-tabs">
+                                            <button class="chip-tab-btn active" data-chip-tab="xz-esp32s3">ESP32-S3
+                                                DevKit</button>
+                                            <button class="chip-tab-btn" data-chip-tab="xz-esp32s3mini">ESP32-S3 Super
+                                                Mini</button>
+                                        </div>
 
-                                    <!-- ESP32 with MAX98357A -->
-                                    <h5>ESP32-S3 - MAX98357A</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>MAX98357A</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>GPIO5</td>
-                                                <td>DIN</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO6</td>
-                                                <td>BCLK</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO7</td>
-                                                <td>LRCLK</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3V3</td>
-                                                <td>VIN</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GAIN</td>
-                                                <td>GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>SD</td>
-                                                <td>VIN</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>GND</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                        <!-- ESP32-S3 DevKit -->
+                                        <div class="wiring-card chip-tab-content active" id="xz-esp32s3-content">
+                                            <h3>ESP32-S3 DevKit Wiring Diagram</h3>
+                                            <div class="diagram-container">
+                                                <img src="../img/esp32s3.jpg" alt="ESP32-S3 DevKit Wiring Diagram"
+                                                    class="wiring-diagram">
+                                            </div>
 
-                                    <!-- ESP32 with MIC INMP441 -->
-                                    <h5>ESP32-S3 - Microphone INMP441</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>INMP441</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3V3</td>
-                                                <td>VCC</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO2</td>
-                                                <td>WS</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO3</td>
-                                                <td>SCK</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO4</td>
-                                                <td>SD</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GND</td>
-                                                <td>L/R</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                            <div class="connection-table">
+                                                <h5>ESP32-S3 - OLED 0.96inch SSD1306 / OLED 0.91inch</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>OLED SSD1306</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VCC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO42</td>
+                                                            <td>SCL</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO41</td>
+                                                            <td>SDA</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                    <!-- ESP32 with Buttons -->
-                                    <h5>ESP32-S3 - Buttons</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ESP32-S3</th>
-                                                <th>Button</th>
-                                                <th>Function</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>GPIO10</td>
-                                                <td>Button 1</td>
-                                                <td>Increase volume</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO11</td>
-                                                <td>Button 2</td>
-                                                <td>Decrease volume</td>
-                                            </tr>
-                                            <tr>
-                                                <td>GPIO01</td>
-                                                <td>Button 3</td>
-                                                <td>Wake up</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                <!-- ESP32 with MAX98357A -->
+                                                <h5>ESP32-S3 - MAX98357A</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>MAX98357A</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GPIO7</td>
+                                                            <td>DIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO15</td>
+                                                            <td>BCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO16</td>
+                                                            <td>LRCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GAIN</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SD</td>
+                                                            <td>VIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                    <!-- Battery and Charging Module -->
-                                    <h5>3.7V Battery - Charging and Boost Module</h5>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Device</th>
-                                                <th>Connection</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>3.7V Battery</td>
-                                                <td>Connect to IN+ and IN- of the charging module</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Charging Module</td>
-                                                <td>OUT+ to 5V (VIN ESP32), OUT- to GND</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Switch</td>
-                                                <td>Connect between OUT+ and ESP32 to turn power on/off</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                <!-- ESP32 with MIC INMP441 -->
+                                                <h5>ESP32-S3 - Microphone INMP441</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>INMP441</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VCC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO4</td>
+                                                            <td>WS</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO5</td>
+                                                            <td>SCK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO6</td>
+                                                            <td>SD</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>L/R</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32 with Buttons -->
+                                                <h5>ESP32-S3 - Buttons</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>Button</th>
+                                                            <th>Function</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GPIO40</td>
+                                                            <td>Button 1</td>
+                                                            <td>Increase Volume</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO39</td>
+                                                            <td>Button 2</td>
+                                                            <td>Decrease Volume</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO01</td>
+                                                            <td>Button 3</td>
+                                                            <td>Wake Up</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Battery and Charging Module -->
+                                                <h5>3.7V Battery - Charging and Boost Module</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Device</th>
+                                                            <th>Connection</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>3.7V Battery</td>
+                                                            <td>Connect to IN+ and IN- of the charging module</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Charging Module</td>
+                                                            <td>OUT+ to 5V (VIN ESP32), OUT- to GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Switch</td>
+                                                            <td>Connect between OUT+ and ESP32 to turn power on/off</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- Important Notes -->
+                                            <div class="important-notes">
+                                                <h4>⚠️ Notes</h4>
+                                                <ul>
+                                                    <li><strong>OLED Display:</strong> SSD1306, I2C, default address
+                                                        0x3C</li>
+                                                    <li><strong>MIC INMP441:</strong> Digital microphone, uses I2S
+                                                        communication</li>
+                                                    <li><strong>MAX98357A:</strong> Mono amplifier, also uses I2S
+                                                        communication</li>
+                                                    <li><strong>Buttons:</strong> Pulled down to GND</li>
+                                                    <li><strong>ESP32-S3:</strong> Uses GPIOs from 0 to 46 (select GPIOs
+                                                        that support I2S/I2C)</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <!-- ESP32-S3 Super Mini -->
+                                        <div class="wiring-card chip-tab-content" id="xz-esp32s3mini-content">
+                                            <h3>ESP32-S3 Super Mini Wiring Diagram</h3>
+                                            <div class="diagram-container">
+                                                <img src="../img/xiaozhi_esp32-s3_supermini.png"
+                                                    alt="ESP32-S3 Super Mini Wiring Diagram" class="wiring-diagram">
+                                            </div>
+
+                                            <div class="connection-table">
+                                                <h5>ESP32-S3 - OLED 0.96inch SSD1306</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>OLED SSD1306</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VCC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO10</td>
+                                                            <td>SCL</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO9</td>
+                                                            <td>SDA</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32 with MAX98357A -->
+                                                <h5>ESP32-S3 - MAX98357A</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>MAX98357A</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GPIO5</td>
+                                                            <td>DIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO6</td>
+                                                            <td>BCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO7</td>
+                                                            <td>LRCLK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GAIN</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SD</td>
+                                                            <td>VIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32 with MIC INMP441 -->
+                                                <h5>ESP32-S3 - Microphone INMP441</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>INMP441</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VCC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO2</td>
+                                                            <td>WS</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO3</td>
+                                                            <td>SCK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO4</td>
+                                                            <td>SD</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>L/R</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32 with Buttons -->
+                                                <h5>ESP32-S3 - Buttons</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>Button</th>
+                                                            <th>Function</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GPIO40</td>
+                                                            <td>Button 1</td>
+                                                            <td>Increase Volume</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO39</td>
+                                                            <td>Button 2</td>
+                                                            <td>Decrease Volume</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO01</td>
+                                                            <td>Button 3</td>
+                                                            <td>Wake Up</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Battery and Charging Module -->
+                                                <h5>3.7V Battery - Charging and Boost Module</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Device</th>
+                                                            <th>Connection</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>3.7V Battery</td>
+                                                            <td>Connect to IN+ and IN- of the charging module</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Charging Module</td>
+                                                            <td>OUT+ to 5V (VIN ESP32), OUT- to GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Switch</td>
+                                                            <td>Connect between OUT+ and ESP32 to turn power on/off</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- Important Notes -->
+                                            <div class="important-notes">
+                                                <h4>⚠️ Notes</h4>
+                                                <ul>
+                                                    <li><strong>OLED Display:</strong> SSD1306, I2C, default address
+                                                        0x3C</li>
+                                                    <li><strong>MIC INMP441:</strong> Digital microphone, uses I2S
+                                                        communication</li>
+                                                    <li><strong>MAX98357A:</strong> Mono amplifier, also uses I2S
+                                                        communication</li>
+                                                    <li><strong>Buttons:</strong> Pulled down to GND</li>
+                                                    <li><strong>ESP32-S3:</strong> Uses GPIOs from 0 to 46 (select GPIOs
+                                                        that support I2S/I2C)</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <!-- Tab 4: Kích Hoạt Chương Trình -->
+                                <div class="tab-pane" id="xz-tab2">
+                                    <div class="activation-section">
+                                        <div class="activation-card">
+                                            <h3>Program Activation Guide</h3>
 
-                                <!-- Important notes -->
-                                <div class="important-notes">
-                                    <h4>⚠️ Notes</h4>
-                                    <ul>
-                                        <li><strong>OLED Display:</strong> SSD1306, I2C, default address 0x3C</li>
-                                        <li><strong>MIC INMP441:</strong> digital microphone, uses I2S communication
-                                        </li>
-                                        <li><strong>MAX98357A:</strong> mono amplifier, also uses I2S communication</li>
-                                        <li><strong>Buttons:</strong> Pulled down to GND</li>
-                                        <li><strong>ESP32-S3:</strong> uses GPIOs from 0 to 46 (select GPIOs that
-                                            support I2S/I2C)</li>
-                                    </ul>
+                                            <!-- Step 1 -->
+                                            <div class="step-container">
+                                                <div class="step-number">1</div>
+                                                <div class="step-content">
+                                                    <h4>Connect to WiFi</h4>
+                                                    <p>The ESP32 will display the WiFi name and IP address on the OLED
+                                                        screen as shown below. Connect to the WiFi network without a
+                                                        password.</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz1.jpg" alt="ESP32 wiring diagram"
+                                                            width="300">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 2 -->
+                                            <div class="step-container">
+                                                <div class="step-number">2</div>
+                                                <div class="step-content">
+                                                    <h4>Access IP Address in Browser</h4>
+                                                    <p>Open your browser and enter the IP address displayed on the OLED
+                                                        screen.</p>
+                                                    <div class="code-block">192.168.4.1</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 3 -->
+                                            <div class="step-container">
+                                                <div class="step-number">3</div>
+                                                <div class="step-content">
+                                                    <h4>Enter WiFi Information</h4>
+                                                    <p>You will be asked to enter:</p>
+                                                    <ul>
+                                                        <li><strong>Select WiFi:</strong> Enter or choose a WiFi below
+                                                        </li>
+                                                        <li><strong>Password:</strong> Enter the WiFi password</li>
+                                                    </ul>
+                                                    <p>After entering, press Ok.</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz3.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 4 -->
+                                            <div class="step-container">
+                                                <div class="step-number">4</div>
+                                                <div class="step-content">
+                                                    <h4>After Pressing "OK"</h4>
+                                                    <p>After pressing OK, the system will restart:</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz4.jpg" alt="ESP32 wiring diagram"
+                                                            width="500">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 5 -->
+                                            <div class="step-container">
+                                                <div class="step-number">5</div>
+                                                <div class="step-content">
+                                                    <h4>Create an Account and Log In</h4>
+                                                    <p>Go to the following website to create an account:</p>
+                                                    <div class="code-block">https://xiaozhi.me/</div>
+                                                    <p>Enter the required information such as ID, phone number, etc.</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz5.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 6 -->
+                                            <div class="step-container">
+                                                <div class="step-number">6</div>
+                                                <div class="step-content">
+                                                    <h4>Go to Control Panel</h4>
+                                                    <p>Click Console to open the control panel:</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz7.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 7 -->
+                                            <div class="step-container">
+                                                <div class="step-number">7</div>
+                                                <div class="step-content">
+                                                    <h4>Add Device</h4>
+                                                    <p>Click Add Device to add a new device:</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz8.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 8 -->
+                                            <div class="step-container">
+                                                <div class="step-number">8</div>
+                                                <div class="step-content">
+                                                    <h4>Enter Device Code</h4>
+                                                    <p>The device will have a 6-digit code. Enter it in Verification
+                                                        Code and press Confirm to add the new device.</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz6.jpg" alt="ESP32 wiring diagram"
+                                                            width="500">
+                                                    </div>
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz9.jpg" alt="ESP32 wiring diagram"
+                                                            width="500">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 9 -->
+                                            <div class="step-container">
+                                                <div class="step-number">9</div>
+                                                <div class="step-content">
+                                                    <h4>Functions</h4>
+                                                    <p>Configure Role → Role Configuration</p>
+                                                    <p>Speaker Recognition → Voice Recognition</p>
+                                                    <p>Chat History → Chat History</p>
+                                                    <p>Manage Devices (1) → Manage Devices (1)</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz10.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 10 -->
+                                            <div class="step-container">
+                                                <div class="step-number">10</div>
+                                                <div class="step-content">
+                                                    <h4>Configure Role</h4>
+                                                    <p>In this section you can configure information for your device:
+                                                    </p>
+                                                    <p>Role Template = Role Template</p>
+                                                    <p>Assistant Name = Assistant Name</p>
+                                                    <p>Dialogue Language = Dialogue Language</p>
+                                                    <p>Voice Role = Voice Role</p>
+                                                    <p>Role Introduction = Role Introduction</p>
+                                                    <p>Memory = Memory</p>
+                                                    <p>Current Memory (Regenerated after each conversation) = Current
+                                                        Memory (Regenerated after each conversation)</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz11.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 11 -->
+                                            <div class="step-container">
+                                                <div class="step-number">11</div>
+                                                <div class="step-content">
+                                                    <h4>Delete Role Template</h4>
+                                                    <p>Delete an existing role template</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz12.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 12 -->
+                                            <div class="step-container">
+                                                <div class="step-number">12</div>
+                                                <div class="step-content">
+                                                    <h4>Language Model</h4>
+                                                    <p>Select the AI language model you prefer. It is recommended to
+                                                        choose Qwen3 Realtime for the fastest response speed.</p>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz13.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 13 -->
+                                            <div class="step-container">
+                                                <div class="step-number">13</div>
+                                                <div class="step-content">
+                                                    <h4>Advanced Settings</h4>
+                                                    <p>Voice Recognition Speed = Voice Recognition Speed</p>
+                                                    <p>Character Speech Speed = Character Speech Speed</p>
+                                                    <p>Voice Pitch = Voice Pitch</p>
+                                                    <p>Low Pitch = Low Pitch</p>
+                                                    <p>High Pitch = High Pitch</p>
+                                                    <h4>Press Save and restart the device to apply changes</h4>
+
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/xz14.jpg" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
