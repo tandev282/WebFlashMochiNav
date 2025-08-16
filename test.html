@@ -47,12 +47,6 @@
       background: #fafafa
     }
 
-    code {
-      background: #f2f2f2;
-      padding: 2px 6px;
-      border-radius: 6px
-    }
-
     .ok {
       color: #0a7a00
     }
@@ -71,7 +65,7 @@
   </div>
 
   <div class="row">
-    <input id="inpDid" placeholder="Device ID (auto)" style="flex:1" readonly />
+    <input id="inpDid" placeholder="Device ID (chỉ hiện khi bấm Get)" style="flex:1" readonly />
     <input id="inpKey" placeholder="Nhập key: MOCHI-XXXXX hoặc key trong Firebase" style="flex:1" />
   </div>
 
@@ -81,99 +75,142 @@
   </div>
 
   <div class="row">
-    <small>
-      Endpoint ký: <code id="endpoint">https://license-signer.tandev.workers.dev/sign</code>
-      (đổi sang domain của bạn nếu cần)
-    </small>
+    <small>Endpoint ký: <code>https://license-signer.tandev.workers.dev/sign</code></small>
   </div>
 
   <div id="log"></div>
 
   <script>
-    const WORKER_URL = "https://license-signer.tandev.workers.dev/sign"; // đổi nếu dùng domain riêng
-    let port, reader, writer, readLoopAbort;
+    const WORKER_URL = "https://license-signer.tandev.workers.dev/sign";
+    let port, reader, writer;
 
-    const $ = sel => document.querySelector(sel);
-    const log = (m, cls = "") => {
-      const el = $("#log");
-      const time = new Date().toLocaleTimeString();
-      el.innerHTML += `<div class="${cls}">[${time}] ${escapeHtml(m)}</div>`;
-      el.scrollTop = el.scrollHeight;
-    };
+    // --- tiện ích ---
+    const $ = s => document.querySelector(s);
     const escapeHtml = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const log = (m, cls = "") => { const el = $("#log"); const t = new Date().toLocaleTimeString(); el.innerHTML += `<div class="${cls}">[${t}] ${escapeHtml(m)}</div>`; el.scrollTop = el.scrollHeight; };
 
+    // --- hàng đợi chờ dòng phù hợp ---
+    const waiters = [];
+    function notifyLine(line) {
+      for (let i = waiters.length - 1; i >= 0; i--) {
+        const { re, resolve } = waiters[i];
+        if (re.test(line)) { waiters.splice(i, 1); resolve(line); }
+      }
+    }
+    function waitForLine(re, timeoutMs = 5000) {
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          // bỏ waiter nếu hết hạn
+          const idx = waiters.findIndex(w => w.resolve === resolve);
+          if (idx >= 0) waiters.splice(idx, 1);
+          reject(new Error("timeout waiting for line: " + re));
+        }, timeoutMs);
+        waiters.push({
+          re,
+          resolve: (line) => { clearTimeout(timer); resolve(line); }
+        });
+      });
+    }
+
+    // --- read pump: đọc nền, log & phát sự kiện dòng ---
+    let pumpRunning = false;
+    async function startReadPump() {
+      if (pumpRunning) return;
+      pumpRunning = true;
+      const dec = new TextDecoder();
+      let buf = "";
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          if (!value) continue;
+          buf += dec.decode(value);
+          let i;
+          while ((i = buf.indexOf("\n")) >= 0) {
+            let line = buf.slice(0, i).replace(/\r/g, "").trim();
+            buf = buf.slice(i + 1);
+            if (!line) continue;
+            log("<< " + line);
+            notifyLine(line);
+          }
+        }
+      } catch (e) {
+        // reader closed hoặc lỗi—cứ để im, user có thể reconnect
+      } finally {
+        pumpRunning = false;
+      }
+    }
+
+    // --- serial open / write ---
     async function openSerial() {
       if (!("serial" in navigator)) { alert("Trình duyệt không hỗ trợ Web Serial."); return; }
       port = await navigator.serial.requestPort();
       await port.open({ baudRate: 115200 });
 
-      // một số board reset khi mở cổng: đợi tí cho ESP khởi động xong
-      try { await port.setSignals?.({ dataTerminalReady: false, requestToSend: false }); } catch { }
-      await new Promise(r => setTimeout(r, 400));
+      // USB-CDC ESP32-S3: bật DTR, tắt RTS
+      try { await port.setSignals?.({ dataTerminalReady: true, requestToSend: false }); } catch { }
 
       reader = port.readable.getReader();
       writer = port.writable.getWriter();
+      startReadPump();
 
       log("Đã kết nối serial.");
+
+      // chờ ổn định một chút trước khi gửi lệnh đầu tiên
+      await new Promise(r => setTimeout(r, 200));
+
       $("#btnGetDid").disabled = false;
       $("#btnActivate").disabled = false;
       $("#btnReboot").disabled = false;
     }
 
-
     async function sendLine(line) {
-      if (!writer) throw new Error("Chưa kết nối serial");
       const enc = new TextEncoder();
-      await writer.write(enc.encode(line + "\n"));
+      await writer.write(enc.encode(line + "\r\n")); // CRLF
       log(">> " + line);
     }
 
-    async function readLine(timeoutMs = 3000) {
-      if (!reader) throw new Error("Chưa kết nối serial");
-      const dec = new TextDecoder();
-      let buf = "", timer;
-      const to = new Promise((_, rej) => timer = setTimeout(() => rej(new Error("Timeout đọc serial")), timeoutMs));
-      try {
-        while (true) {
-          const { value, done } = await Promise.race([reader.read(), to]);
-          if (done) throw new Error("Serial closed");
-          buf += dec.decode(value);
-          const i = buf.indexOf("\n");
-          if (i >= 0) {
-            const line = buf.slice(0, i).trim();
-            log("<< " + line);
-            return line;
-          }
-        }
-      } finally { clearTimeout(timer); }
-    }
-
+    // --- nghiệp vụ ---
     async function getDid() {
-      // gửi GETDID, nhưng ESP có thể vừa reboot/khởi tạo nên có sẵn DID trong setup()
-      try { await sendLine("GETDID"); } catch { }
+      const MAX_TRY = 3;
+      for (let attempt = 1; attempt <= MAX_TRY; attempt++) {
+        await sendLine("GETDID");
 
-      const deadline = Date.now() + 5000; // đợi tối đa 5s
-      while (Date.now() < deadline) {
-        const line = await readLine(1000).catch(() => null);
-        if (!line) continue;
-        if (line.startsWith("DID:")) {
-          const did = line.slice(4).trim();
+        try {
+          // nếu board vừa reset và in banner, pump sẽ log. ta chỉ chờ DID:
+          const didLine = await waitForLine(/^DID:\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 3000);
+          const m = didLine.match(/^DID:\s*([0-9A-F]{2}(?::[0-9A-F]{2}){5})$/i);
+          const did = m[1].toUpperCase();
           $("#inpDid").value = did;
           log("Device ID: " + did, "ok");
           return did;
+        } catch (e) {
+          log(`Không thấy DID (lần ${attempt})`, "err");
+          // thử set lại DTR một nhịp (một số stack CDC cần tick)
+          try { await port.setSignals?.({ dataTerminalReady: false }); } catch { }
+          await new Promise(r => setTimeout(r, 80));
+          try { await port.setSignals?.({ dataTerminalReady: true }); } catch { }
+          await new Promise(r => setTimeout(r, 150));
         }
-        // bỏ qua các dòng log khác: "ESP32 License Agent ready.", [INFO], ...
       }
-      throw new Error("Không nhận được DID từ ESP32");
+      throw new Error("Không nhận được DID từ ESP32 sau nhiều lần thử");
+    }
+
+    function showPayload(license) {
+      try {
+        const payloadB64 = license.split(".")[0];
+        const json = JSON.parse(atob(payloadB64));
+        log("Payload: " + JSON.stringify(json, null, 2), "ok");
+      } catch (e) { log("Decode payload lỗi: " + e, "err"); }
     }
 
     async function activate() {
-      const deviceId = $("#inpDid").value.trim() || await getDid().catch(e => { throw e });
+      const deviceId = $("#inpDid").value.trim();
       const activationKey = $("#inpKey").value.trim();
+      if (!deviceId) { alert("Hãy bấm 'Lấy Device ID' trước."); return; }
       if (!activationKey) { alert("Nhập activation key!"); return; }
 
-      // gọi backend ký (POST)
-      log("Gọi server ký license...");
+      log("Gọi server ký...");
       const res = await fetch(WORKER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -184,17 +221,23 @@
 
       const license = js.license;
       log("Nhận license OK.");
+      showPayload(license);
 
-      // ghi license xuống ESP32
       await sendLine("LIC:" + license);
-      const ack = await readLine(5000);
-      if (ack === "[OK]") { log("ESP32 xác nhận license hợp lệ.", "ok"); }
-      else { log("ESP32 từ chối license: " + ack, "err"); return; }
+
+      // chờ [OK] hoặc [ERR:...]
+      try {
+        const ok = await waitForLine(/^\[(OK|ERR:.*)\]$/i, 5000);
+        if (/^\[OK\]$/i.test(ok)) log("ESP32 xác nhận license.", "ok");
+        else log("ESP32 từ chối license: " + ok, "err");
+      } catch {
+        log("Không nhận được phản hồi từ ESP32 sau khi gửi license.", "err");
+      }
     }
 
     async function reboot() {
       await sendLine("REBOOT");
-      log("Đã gửi lệnh reboot.");
+      // nếu board reset, pump sẽ thấy banner
     }
 
     $("#btnConnect").onclick = () => openSerial().catch(e => log(String(e), "err"));
@@ -202,16 +245,11 @@
     $("#btnActivate").onclick = () => activate().catch(e => log(String(e), "err"));
     $("#btnReboot").onclick = () => reboot().catch(e => log(String(e), "err"));
 
-    // đóng serial khi rời trang
     window.addEventListener("beforeunload", async () => {
-      try {
-        readLoopAbort?.abort();
-        await reader?.releaseLock();
-        await writer?.releaseLock();
-        await port?.close();
-      } catch { }
+      try { await reader?.releaseLock(); await writer?.releaseLock(); await port?.close(); } catch { }
     });
   </script>
+
 </body>
 
 </html>
