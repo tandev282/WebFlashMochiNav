@@ -103,17 +103,23 @@
     const escapeHtml = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
     async function openSerial() {
-      if (!("serial" in navigator)) { alert("Trình duyệt không hỗ trợ Web Serial. Dùng Chrome/Edge mới trên HTTPS."); return; }
+      if (!("serial" in navigator)) { alert("Trình duyệt không hỗ trợ Web Serial."); return; }
       port = await navigator.serial.requestPort();
       await port.open({ baudRate: 115200 });
+
+      // một số board reset khi mở cổng: đợi tí cho ESP khởi động xong
+      try { await port.setSignals?.({ dataTerminalReady: false, requestToSend: false }); } catch { }
+      await new Promise(r => setTimeout(r, 400));
+
       reader = port.readable.getReader();
       writer = port.writable.getWriter();
-      readLoopAbort = new AbortController();
+
       log("Đã kết nối serial.");
       $("#btnGetDid").disabled = false;
       $("#btnActivate").disabled = false;
       $("#btnReboot").disabled = false;
     }
+
 
     async function sendLine(line) {
       if (!writer) throw new Error("Chưa kết nối serial");
@@ -143,13 +149,22 @@
     }
 
     async function getDid() {
-      await sendLine("GETDID");
-      const line = await readLine(5000);
-      if (!line.startsWith("DID:")) throw new Error("Không nhận được DID từ ESP32");
-      const did = line.slice(4).trim();
-      $("#inpDid").value = did;
-      log("Device ID: " + did, "ok");
-      return did;
+      // gửi GETDID, nhưng ESP có thể vừa reboot/khởi tạo nên có sẵn DID trong setup()
+      try { await sendLine("GETDID"); } catch { }
+
+      const deadline = Date.now() + 5000; // đợi tối đa 5s
+      while (Date.now() < deadline) {
+        const line = await readLine(1000).catch(() => null);
+        if (!line) continue;
+        if (line.startsWith("DID:")) {
+          const did = line.slice(4).trim();
+          $("#inpDid").value = did;
+          log("Device ID: " + did, "ok");
+          return did;
+        }
+        // bỏ qua các dòng log khác: "ESP32 License Agent ready.", [INFO], ...
+      }
+      throw new Error("Không nhận được DID từ ESP32");
     }
 
     async function activate() {
