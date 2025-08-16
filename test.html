@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESP32 License Activator</title>
+  <style>
+    body {
+      font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+      max-width: 780px;
+      margin: 32px auto;
+      padding: 0 16px
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0 0 12px
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 8px 0
+    }
+
+    input,
+    button {
+      font-size: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    #log {
+      white-space: pre-wrap;
+      font-family: ui-monospace, Consolas, monospace;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 12px;
+      min-height: 140px;
+      background: #fafafa
+    }
+
+    code {
+      background: #f2f2f2;
+      padding: 2px 6px;
+      border-radius: 6px
+    }
+
+    .ok {
+      color: #0a7a00
+    }
+
+    .err {
+      color: #b00020
+    }
+  </style>
+</head>
+
+<body>
+  <h1>ESP32 License Activator</h1>
+  <div class="row">
+    <button id="btnConnect">Kết nối ESP32</button>
+    <button id="btnGetDid" disabled>Lấy Device ID</button>
+  </div>
+
+  <div class="row">
+    <input id="inpDid" placeholder="Device ID (auto)" style="flex:1" readonly />
+    <input id="inpKey" placeholder="Nhập key: MOCHI-XXXXX hoặc key trong Firebase" style="flex:1" />
+  </div>
+
+  <div class="row">
+    <button id="btnActivate" disabled>Kích hoạt</button>
+    <button id="btnReboot" disabled>Reboot</button>
+  </div>
+
+  <div class="row">
+    <small>
+      Endpoint ký: <code id="endpoint">https://license-signer.tandev.workers.dev/sign</code>
+      (đổi sang domain của bạn nếu cần)
+    </small>
+  </div>
+
+  <div id="log"></div>
+
+  <script>
+    const WORKER_URL = "https://license-signer.tandev.workers.dev/sign"; // đổi nếu dùng domain riêng
+    let port, reader, writer, readLoopAbort;
+
+    const $ = sel => document.querySelector(sel);
+    const log = (m, cls = "") => {
+      const el = $("#log");
+      const time = new Date().toLocaleTimeString();
+      el.innerHTML += `<div class="${cls}">[${time}] ${escapeHtml(m)}</div>`;
+      el.scrollTop = el.scrollHeight;
+    };
+    const escapeHtml = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    async function openSerial() {
+      if (!("serial" in navigator)) { alert("Trình duyệt không hỗ trợ Web Serial. Dùng Chrome/Edge mới trên HTTPS."); return; }
+      port = await navigator.serial.requestPort();
+      await port.open({ baudRate: 115200 });
+      reader = port.readable.getReader();
+      writer = port.writable.getWriter();
+      readLoopAbort = new AbortController();
+      log("Đã kết nối serial.");
+      $("#btnGetDid").disabled = false;
+      $("#btnActivate").disabled = false;
+      $("#btnReboot").disabled = false;
+    }
+
+    async function sendLine(line) {
+      if (!writer) throw new Error("Chưa kết nối serial");
+      const enc = new TextEncoder();
+      await writer.write(enc.encode(line + "\n"));
+      log(">> " + line);
+    }
+
+    async function readLine(timeoutMs = 3000) {
+      if (!reader) throw new Error("Chưa kết nối serial");
+      const dec = new TextDecoder();
+      let buf = "", timer;
+      const to = new Promise((_, rej) => timer = setTimeout(() => rej(new Error("Timeout đọc serial")), timeoutMs));
+      try {
+        while (true) {
+          const { value, done } = await Promise.race([reader.read(), to]);
+          if (done) throw new Error("Serial closed");
+          buf += dec.decode(value);
+          const i = buf.indexOf("\n");
+          if (i >= 0) {
+            const line = buf.slice(0, i).trim();
+            log("<< " + line);
+            return line;
+          }
+        }
+      } finally { clearTimeout(timer); }
+    }
+
+    async function getDid() {
+      await sendLine("GETDID");
+      const line = await readLine(5000);
+      if (!line.startsWith("DID:")) throw new Error("Không nhận được DID từ ESP32");
+      const did = line.slice(4).trim();
+      $("#inpDid").value = did;
+      log("Device ID: " + did, "ok");
+      return did;
+    }
+
+    async function activate() {
+      const deviceId = $("#inpDid").value.trim() || await getDid().catch(e => { throw e });
+      const activationKey = $("#inpKey").value.trim();
+      if (!activationKey) { alert("Nhập activation key!"); return; }
+
+      // gọi backend ký (POST)
+      log("Gọi server ký license...");
+      const res = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deviceId, activationKey })
+      });
+      const js = await res.json().catch(() => ({}));
+      if (!res.ok) { log("Sign lỗi: " + JSON.stringify(js), "err"); return; }
+
+      const license = js.license;
+      log("Nhận license OK.");
+
+      // ghi license xuống ESP32
+      await sendLine("LIC:" + license);
+      const ack = await readLine(5000);
+      if (ack === "[OK]") { log("ESP32 xác nhận license hợp lệ.", "ok"); }
+      else { log("ESP32 từ chối license: " + ack, "err"); return; }
+    }
+
+    async function reboot() {
+      await sendLine("REBOOT");
+      log("Đã gửi lệnh reboot.");
+    }
+
+    $("#btnConnect").onclick = () => openSerial().catch(e => log(String(e), "err"));
+    $("#btnGetDid").onclick = () => getDid().catch(e => log(String(e), "err"));
+    $("#btnActivate").onclick = () => activate().catch(e => log(String(e), "err"));
+    $("#btnReboot").onclick = () => reboot().catch(e => log(String(e), "err"));
+
+    // đóng serial khi rời trang
+    window.addEventListener("beforeunload", async () => {
+      try {
+        readLoopAbort?.abort();
+        await reader?.releaseLock();
+        await writer?.releaseLock();
+        await port?.close();
+      } catch { }
+    });
+  </script>
+</body>
+
+</html>
