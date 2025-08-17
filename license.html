@@ -84,24 +84,38 @@ function setStatusUI(isSigned, reason="") {
 // --- hàng đợi chờ dòng phù hợp ---
 const waiters = [];
 function notifyLine(line){
-  // cập nhật UI nếu là STATUS hoặc DID
-  if (line.startsWith("STATUS:")) {
-    if (/SIGNED/i.test(line)) setStatusUI(true);
-    else {
-      const m = line.match(/^STATUS:\s*UNSIGNED\s*\((.+)\)/i);
-      setStatusUI(false, m ? m[1] : "");
-    }
+  // 1) Dòng STATUS: ... từ firmware
+  //    - Ký:     "STATUS: SIGNED"
+  //    - Chưa ký: "STATUS: UNSIGNED (reason)"
+  let m;
+  if ((m = line.match(/^STATUS:\s*SIGNED\b/i))) {
+    setStatusUI(true);
+  } else if ((m = line.match(/^STATUS:\s*UNSIGNED(?:\s*\((.*)\))?/i))) {
+    const reason = m[1] ? m[1] : "";
+    setStatusUI(false, reason);
   }
+
+  // 2) Dòng ngắn không có "STATUS:" (ví dụ "[OK]" rồi "SIGNED" / "UNSIGNED: x")
+  else if (/^SIGNED\b/i.test(line)) {
+    setStatusUI(true);
+  } else if ((m = line.match(/^UNSIGNED\b(?::\s*(.*))?/i))) {
+    const reason = m[1] ? m[1] : "";
+    setStatusUI(false, reason);
+  }
+
+  // 3) DID
   if (line.startsWith("DID:")) {
     const did = line.replace(/^DID:\s*/i,"").trim();
     $("#inpDid").value = did.toUpperCase();
   }
 
+  // đánh thức các waiter
   for (let i = waiters.length - 1; i >= 0; i--) {
     const { re, resolve } = waiters[i];
     if (re.test(line)) { waiters.splice(i,1); resolve(line); }
   }
 }
+
 function waitForLine(re, timeoutMs=5000){
   return new Promise((resolve, reject) => {
     const timer = setTimeout(()=>{
