@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESP32 License Activator</title>
+
+  <!-- Theme của bạn -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Bổ sung rất nhẹ cho khung log & input */
+    .field {
+      display: flex;
+      gap: .75rem;
+      align-items: center;
+    }
+
+    .field input {
+      flex: 1;
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .field input[readonly] {
+      opacity: .9
+    }
+
+    .badge-mini {
+      font-size: .8rem;
+      padding: .25rem .6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-mini.ok {
+      color: var(--accent-success);
+      border-color: var(--accent-success);
+    }
+
+    .badge-mini.err {
+      color: var(--accent-danger);
+      border-color: var(--accent-danger);
+    }
+
+    #log {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      min-height: 160px;
+      font-family: ui-monospace, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+
+    #statusText {
+      font-weight: 600;
+    }
+
+    .right-panel h3 {
+      margin-bottom: .75rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .toolbar .btn {
+      min-width: 160px;
+    }
+
+    .muted {
+      color: var(--text-secondary);
+    }
+
+    .pill {
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      padding: .25rem .6rem;
+      font-size: .85rem;
+      color: var(--text-secondary);
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .status-dot {
+      width: .6rem;
+      height: .6rem;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: .4rem;
+      background: var(--accent-danger);
+    }
+
+    .status-dot.ok {
+      background: var(--accent-success);
+    }
+
+    .lang-switch {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: .45rem .6rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <img src="/img/logo.png" alt="Logo">
+          <div class="logo-text">
+            <h1 id="appTitle">MochiNav License Activator</h1>
+            <p class="tagline" id="appTagline">Secure activation for your devices</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main-content">
+      <div class="content-grid">
+        <!-- Left -->
+        <aside class="left-panel">
+          <!-- Trạng thái -->
+          <section class="status-section">
+            <div class="status-card">
+              <div class="status-icon">🔒</div>
+              <h3 id="statusHeading">Status</h3>
+              <p class="muted">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">UNSIGNED</span>
+              </p>
+            </div>
+          </section>
+
+          <!-- Kết nối & thao tác -->
+          <section class="activation-section">
+            <div class="activation-card">
+              <h3 id="deviceActionsTitle">Device actions</h3>
+
+              <div class="toolbar" style="margin-bottom:1rem;">
+                <button id="btnConnect" class="btn btn-primary">🔌 <span data-i18n="connect">Connect
+                    ESP32</span></button>
+                <button id="btnGetDid" class="btn btn" disabled>🆔 <span data-i18n="getDid">Get Device
+                    ID</span></button>
+              </div>
+
+              <div class="field" style="margin-bottom:.75rem;">
+                <input id="inpDid" placeholder="Device ID" readonly />
+                <span id="didBadge" class="badge-mini">DID</span>
+              </div>
+
+              <div class="field" style="margin-bottom:1rem;">
+                <input id="inpKey" placeholder="Enter activation key" />
+              </div>
+
+              <div class="toolbar">
+                <button id="btnActivate" class="btn btn-primary" disabled>✅ <span
+                    data-i18n="activate">Activate</span></button>
+                <button id="btnReboot" class="btn" disabled>🔄 <span data-i18n="reboot">Reboot</span></button>
+              </div>
+            </div>
+          </section>
+        </aside>
+
+        <!-- Right -->
+        <section class="right-panel">
+          <h3 id="logTitle">Activity</h3>
+          <div id="log" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <h3 id="footerTitle">Help & Notes</h3>
+        <div class="footer-links">
+          <span class="footer-link">ℹ️ <span id="footHint">Use Chromium-based browsers for Web Serial.</span></span>
+        </div>
+        <div class="footer-text">© 2025 — Secure Licensing</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    /* ===================== i18n (VI/EN + auto) ===================== */
+    const I18N = {
+      en: {
+        appTitle: "MochiNav License Activator",
+        appTagline: "Secure activation for your devices",
+        status: "Status",
+        connect: "Connect ESP32",
+        getDid: "Get Device ID",
+        activate: "Activate",
+        reboot: "Reboot",
+        deviceActions: "Device actions",
+        activity: "Activity",
+        help: "Help & Notes",
+        footHint: "Use Chromium-based browsers for Web Serial.",
+        unsigned: "UNSIGNED",
+        unsignedReason: reason => `UNSIGNED${reason ? ` (${reason})` : ''}`,
+        signed: "SIGNED",
+        mac: did => `MAC: ${did}`,
+        connected: "Connected to ESP32",
+        signing: "Signing...",
+        signOk: "License activated",
+        signFail: "Activation failed",
+        needDid: "Please get Device ID first.",
+        needKey: "Please enter activation key.",
+        endpoint: "/sign",
+        placeholderDid: "Device ID",
+        placeholderKey: "Enter activation key"
+      },
+      vi: {
+        appTitle: "MochiNav License Activator",
+        appTagline: "Kích hoạt an toàn cho thiết bị của bạn",
+        status: "Trạng thái",
+        connect: "Kết nối ESP32",
+        getDid: "Lấy Device ID",
+        activate: "Kích hoạt",
+        reboot: "Khởi động lại",
+        deviceActions: "Thao tác thiết bị",
+        activity: "Nhật ký",
+        help: "Hỗ trợ & Ghi chú",
+        footHint: "Khuyến nghị dùng trình duyệt Chromium để Web Serial hoạt động ổn định.",
+        unsigned: "CHƯA KÝ",
+        unsignedReason: reason => `CHƯA KÝ${reason ? ` (${reason})` : ''}`,
+        signed: "ĐÃ KÝ",
+        mac: did => `MAC: ${did}`,
+        connected: "Đã kết nối ESP32",
+        signing: "Đang ký...",
+        signOk: "Ký thành công",
+        signFail: "Ký thất bại",
+        needDid: "Hãy lấy Device ID trước.",
+        needKey: "Hãy nhập activation key.",
+        endpoint: "/sign",
+        placeholderDid: "Device ID",
+        placeholderKey: "Nhập activation key"
+      }
+    };
+    function detectLang() {
+      const uiSel = localStorage.getItem("ui_lang");
+      if (uiSel && uiSel !== "auto") return uiSel;
+      const nav = (navigator.language || "en").toLowerCase();
+      return nav.startsWith("vi") ? "vi" : "en";
+    }
+    let LANG = detectLang();
+    function t(key, ...args) {
+      const pack = I18N[LANG] || I18N.en;
+      const v = pack[key];
+      return typeof v === "function" ? v(...args) : (v ?? key);
+    }
+    function applyI18N() {
+      document.documentElement.lang = (LANG === "vi" ? "vi" : "en");
+      // Static texts
+      $("#appTitle").textContent = t("appTitle");
+      $("#appTagline").textContent = t("appTagline");
+      $("#statusHeading").textContent = t("status");
+      $("#deviceActionsTitle").textContent = t("deviceActions");
+      $("#logTitle").textContent = t("activity");
+      $("#footerTitle").textContent = t("help");
+      $("#footHint").textContent = t("footHint");
+      $("#endpointBadge").textContent = t("endpoint");
+
+      // Buttons
+      $('[data-i18n="connect"]').textContent = t("connect");
+      $('[data-i18n="getDid"]').textContent = t("getDid");
+      $('[data-i18n="activate"]').textContent = t("activate");
+      $('[data-i18n="reboot"]').textContent = t("reboot");
+
+      // Placeholders
+      $("#inpDid").placeholder = t("placeholderDid");
+      $("#inpKey").placeholder = t("placeholderKey");
+    }
+
+    /* ===================== Web Serial + Logic ===================== */
+    const WORKER_URL = "https://license-signer.tandev.workers.dev/sign";
+    let port, reader, writer;
+
+    // shorthands
+    const $ = s => document.querySelector(s);
+    const $log = () => document.querySelector("#log");
+    const statusDot = $("#statusDot");
+    const statusText = $("#statusText");
+    const progressFill = $("#progressFill");
+
+    // Minimal logger (lọc)
+    function logInfo(txt) {
+      const t = new Date().toLocaleTimeString();
+      $log().innerHTML += `[${t}] ${txt}\n`;
+      $log().scrollTop = $log().scrollHeight;
+    }
+
+    let lastStatus = "";   // "SIGNED" | "UNSIGNED"
+    let lastDid = "";
+
+    function setStatusUI(isSigned, reason = "") {
+      statusDot.classList.toggle("ok", isSigned);
+      statusText.textContent = isSigned ? t("signed") : t("unsignedReason", reason);
+    }
+    function logStatus(isSigned, reason = "") {
+      const next = isSigned ? "SIGNED" : "UNSIGNED";
+      if (next === lastStatus && (!reason || reason === '')) return;
+      lastStatus = next;
+      logInfo(isSigned ? `✅ ${t("signed")}` : `⚠️ ${t("unsignedReason", reason)}`);
+    }
+    function logDid(did) {
+      if (did && did !== lastDid) {
+        lastDid = did;
+        logInfo("🆔 " + t("mac", did));
+      }
+    }
+    function logSigning() { logInfo("🔐 " + t("signing")); progressFill.style.width = "50%"; }
+    function logSignedOk() { logInfo("🎉 " + t("signOk")); progressFill.style.width = "100%"; setTimeout(() => progressFill.style.width = "0%", 1200); }
+    function logSignedErr() { logInfo("❌ " + t("signFail")); progressFill.style.width = "0%"; }
+
+    // Waiters
+    const waiters = [];
+    function notifyLine(line) {
+      if (line.startsWith("STATUS:")) {
+        if (/SIGNED/i.test(line)) { setStatusUI(true); logStatus(true); }
+        else {
+          const m = line.match(/^STATUS:\s*UNSIGNED\s*\((.+)\)/i);
+          const reason = m ? m[1] : "";
+          setStatusUI(false, reason);
+          logStatus(false, reason);
+        }
+      }
+      if (line.startsWith("DID:")) {
+        const did = line.replace(/^DID:\s*/i, "").trim().toUpperCase();
+        $("#inpDid").value = did;
+        $("#didBadge").className = "badge-mini ok";
+        logDid(did);
+      }
+      for (let i = waiters.length - 1; i >= 0; i--) {
+        const { re, resolve } = waiters[i];
+        if (re.test(line)) { waiters.splice(i, 1); resolve(line); }
+      }
+    }
+    function waitForLine(re, timeoutMs = 5000) {
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          const idx = waiters.findIndex(w => w.resolve === resolve);
+          if (idx >= 0) waiters.splice(idx, 1);
+          reject(new Error("timeout: " + re));
+        }, timeoutMs);
+        waiters.push({ re, resolve: (line) => { clearTimeout(timer); resolve(line); } });
+      });
+    }
+
+    // Read pump
+    let pumpRunning = false;
+    async function startReadPump() {
+      if (pumpRunning) return;
+      pumpRunning = true;
+      const dec = new TextDecoder();
+      let buf = "";
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          if (!value) continue;
+          buf += dec.decode(value);
+          let i;
+          while ((i = buf.indexOf("\n")) >= 0) {
+            let line = buf.slice(0, i).replace(/\r/g, "").trim();
+            buf = buf.slice(i + 1);
+            if (!line) continue;
+            notifyLine(line);
+          }
+        }
+      } catch (e) { } finally { pumpRunning = false; }
+    }
+
+    // Serial helpers
+    async function openSerial() {
+      if (!("serial" in navigator)) { alert("Web Serial not supported."); return; }
+      port = await navigator.serial.requestPort();
+      await port.open({ baudRate: 115200 });
+      try { await port.setSignals?.({ dataTerminalReady: true, requestToSend: false }); } catch { }
+      reader = port.readable.getReader();
+      writer = port.writable.getWriter();
+      startReadPump();
+
+      logInfo("🔌 " + t("connected"));
+      $("#btnGetDid").disabled = false;
+      $("#btnActivate").disabled = false;
+      $("#btnReboot").disabled = false;
+
+      // Ask status & DID
+      await sendLine("HELLO");
+      waitForLine(/^STATUS:/i, 1500).catch(() => { });
+      waitForLine(/^DID:/i, 1500).catch(() => { });
+    }
+    async function sendLine(line) {
+      const enc = new TextEncoder();
+      await writer.write(enc.encode(line + "\r\n"));
+    }
+
+    // Actions
+    async function getDid() {
+      await sendLine("GETDID");
+      try {
+        const didLine = await waitForLine(/^DID:\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 2000);
+        const m = didLine.match(/^DID:\s*([0-9A-F]{2}(?::[0-9A-F]{2}){5})$/i);
+        const did = (m ? m[1] : "").toUpperCase();
+        if (did) { $("#inpDid").value = did; $("#didBadge").className = "badge-mini ok"; logDid(did); }
+      } catch { }
+    }
+
+    async function activate() {
+      const deviceId = $("#inpDid").value.trim();
+      const activationKey = $("#inpKey").value.trim();
+      if (!deviceId) { alert(t("needDid")); return; }
+      if (!activationKey) { alert(t("needKey")); return; }
+
+      logSigning();
+      const res = await fetch("https://license-signer.tandev.workers.dev/sign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deviceId, activationKey })
+      });
+      const js = await res.json().catch(() => ({}));
+      if (!res.ok) { logSignedErr(); return; }
+
+      const license = js.license;
+      await sendLine("LIC:" + license);
+
+      try {
+        const ok = await waitForLine(/^\[(OK|ERR:.*)\]$/i, 5000);
+        if (/^\[OK\]$/i.test(ok)) { setStatusUI(true); logSignedOk(); }
+        else { logSignedErr(); }
+      } catch { logSignedErr(); }
+    }
+
+    async function reboot() {
+      await sendLine("REBOOT");
+      logInfo("🔄 Reboot");
+    }
+
+    // Bindings
+    $("#btnConnect").onclick = () => openSerial().catch(() => { });
+    $("#btnGetDid").onclick = () => getDid();
+    $("#btnActivate").onclick = () => activate();
+    $("#btnReboot").onclick = () => reboot();
+
+    // Language selector
+    const langSelect = $("#langSelect");
+    function initLangUI() {
+      // preselect
+      const saved = localStorage.getItem("ui_lang") || "auto";
+      langSelect.value = saved;
+      // resolve lang from selector
+      const calcLang = () => {
+        const v = langSelect.value;
+        localStorage.setItem("ui_lang", v);
+        LANG = (v === "auto") ? detectLang() : v;
+        applyI18N();
+        // Refresh status text with current language
+        const isSigned = lastStatus === "SIGNED";
+        setStatusUI(isSigned);
+      };
+      langSelect.addEventListener("change", calcLang);
+      calcLang();
+    }
+
+    // Init
+    applyI18N();
+    initLangUI();
+
+    window.addEventListener("beforeunload", async () => {
+      try { await reader?.releaseLock(); await writer?.releaseLock(); await port?.close(); } catch { }
+    });
+  </script>
+</body>
+
+</html>
