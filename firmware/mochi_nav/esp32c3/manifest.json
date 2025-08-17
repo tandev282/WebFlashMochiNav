@@ -1,6 +1,6 @@
 {
   "name": "MochiNav Firmware - ESP32-C3",
-  "version": "3.5.0",
+  "version": "5.5.0",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,
   "builds": [

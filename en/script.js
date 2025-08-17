@@ -466,6 +466,213 @@ function initializePopups() {
   }
 }
 
+
+const WORKER_URL = "https://license-signer.tandev.workers.dev/sign";
+let port, reader, writer;
+let currentMac = ""; // Store MAC to use when signing
+
+// --- UI utilities ---
+const $ = s => document.querySelector(s);
+const escapeHtml = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const log = (m, cls = "") => {
+  const el = $("#log");
+  const t = new Date().toLocaleTimeString();
+  el.innerHTML += `<div class="${cls}">[${t}] ${escapeHtml(m)}</div>`;
+  el.scrollTop = el.scrollHeight;
+};
+
+// --- UI update ---
+function setStatusUI(isSigned, reason = "") {
+  const badge = $("#statusBadge");
+  if (isSigned) {
+    badge.className = "badge ok";
+    badge.textContent = "SIGNED • Full features";
+  } else {
+    badge.className = "badge err";
+    badge.textContent = reason ? `NOT SIGNED • ${reason}` : "NOT SIGNED";
+  }
+}
+
+// Update header title with MAC
+function setMacTitle(mac) {
+  currentMac = (mac || "").toUpperCase();
+  $("#title").textContent = currentMac ? `MAC: ${currentMac}` : "MAC: Not connected";
+}
+
+// --- line waiters ---
+const waiters = [];
+function notifyLine(line) {
+  let m;
+
+  // 1) Update license status
+  if ((m = line.match(/^STATUS:\s*SIGNED\b/i))) {
+    setStatusUI(true);
+  } else if ((m = line.match(/^STATUS:\s*UNSIGNED(?:\s*\((.*)\))?/i))) {
+    const reason = m[1] ? m[1] : "";
+    setStatusUI(false, reason);
+  } else if (/^SIGNED\b/i.test(line)) {
+    setStatusUI(true);
+  } else if ((m = line.match(/^UNSIGNED\b(?::\s*(.*))?/i))) {
+    const reason = m[1] ? m[1] : "";
+    setStatusUI(false, reason);
+  }
+
+  // 2) Extract DID/MAC to show in title
+  if ((m = line.match(/^(?:DID|MAC):\s*([0-9A-F]{2}(?::[0-9A-F]{2}){5})$/i))) {
+    setMacTitle(m[1]);
+  }
+
+  // 3) Resolve pending waiters
+  for (let i = waiters.length - 1; i >= 0; i--) {
+    const { re, resolve } = waiters[i];
+    if (re.test(line)) { waiters.splice(i, 1); resolve(line); }
+  }
+}
+
+function waitForLine(re, timeoutMs = 5000) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      const idx = waiters.findIndex(w => w.resolve === resolve);
+      if (idx >= 0) waiters.splice(idx, 1);
+      reject(new Error("Timeout waiting for line: " + re));
+    }, timeoutMs);
+    waiters.push({ re, resolve: (line) => { clearTimeout(timer); resolve(line); } });
+  });
+}
+
+// --- read pump: read serial & notify lines ---
+let pumpRunning = false;
+async function startReadPump() {
+  if (pumpRunning) return;
+  pumpRunning = true;
+  const dec = new TextDecoder();
+  let buf = "";
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      buf += dec.decode(value);
+      let i;
+      while ((i = buf.indexOf("\n")) >= 0) {
+        let line = buf.slice(0, i).replace(/\r/g, "").trim();
+        buf = buf.slice(i + 1);
+        if (!line) continue;
+        log("<< " + line);
+        notifyLine(line);
+      }
+    }
+  } catch (e) {
+    // ignore
+  } finally { pumpRunning = false; }
+}
+
+// --- serial open / write ---
+async function openSerial() {
+  if (!("serial" in navigator)) { alert("Your browser does not support Web Serial."); return; }
+  port = await navigator.serial.requestPort();
+  await port.open({ baudRate: 115200 });
+
+  // ESP32-S3 USB-CDC usually requires DTR=true
+  try { await port.setSignals?.({ dataTerminalReady: true, requestToSend: false }); } catch { }
+
+  reader = port.readable.getReader();
+  writer = port.writable.getWriter();
+  startReadPump();
+
+  log("Serial connected.");
+  $("#btnGetDid").disabled = false;
+  $("#btnActivate").disabled = false;
+  $("#btnReboot").disabled = false;
+
+  // On connect: request HELLO to fetch STATUS + MAC
+  await sendLine("HELLO");
+  waitForLine(/^STATUS:/i, 1500).catch(() => {});
+  waitForLine(/^(?:DID|MAC):\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 1500).catch(() => {});
+}
+
+async function sendLine(line) {
+  const enc = new TextEncoder();
+  await writer.write(enc.encode(line + "\r\n")); // CRLF
+  log(">> " + line);
+}
+
+// --- business logic ---
+async function getDid() {
+  const MAX_TRY = 2;
+  for (let attempt = 1; attempt <= MAX_TRY; attempt++) {
+    await sendLine("GETDID");
+    try {
+      const line = await waitForLine(/^(?:DID|MAC):\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 2000);
+      const m = line.match(/^(?:DID|MAC):\s*([0-9A-F]{2}(?::[0-9A-F]{2}){5})$/i);
+      const mac = m[1].toUpperCase();
+      setMacTitle(mac);
+      log("MAC: " + mac, "ok");
+      return mac;
+    } catch (e) {
+      log(`MAC not found (attempt ${attempt})`, "err");
+    }
+  }
+  throw new Error("No MAC/DID received from ESP32");
+}
+
+function showPayload(license) {
+  try {
+    const payloadB64 = license.split(".")[0];
+    const json = JSON.parse(atob(payloadB64));
+    log("Payload: " + JSON.stringify(json, null, 2), "ok");
+  } catch (e) { log("Payload decode error: " + e, "err"); }
+}
+
+async function activate() {
+  const activationKey = $("#inpKey").value.trim();
+  if (!currentMac) { alert("Please click 'Connect' or 'Get MAC' first."); return; }
+  if (!activationKey) { alert("Enter activation key!"); return; }
+
+  log("Requesting signing server...");
+  const res = await fetch(WORKER_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ deviceId: currentMac, activationKey })
+  });
+  const js = await res.json().catch(() => ({}));
+  if (!res.ok) { log("Signing error: " + JSON.stringify(js), "err"); return; }
+
+  const license = js.license;
+  log("License received OK.");
+  showPayload(license);
+
+  await sendLine("LIC:" + license);
+
+  try {
+    const ok = await waitForLine(/^\[(OK|ERR:.*)\]$/i, 5000);
+    if (/^\[OK\]$/i.test(ok)) {
+      log("ESP32 accepted the license.", "ok");
+      setStatusUI(true);
+    } else {
+      log("ESP32 rejected the license: " + ok, "err");
+    }
+  } catch {
+    log("No response from ESP32 after sending license.", "err");
+  }
+}
+
+async function reboot() { await sendLine("REBOOT"); }
+
+// --- bind events ---
+$("#btnConnect").onclick  = () => openSerial().catch(e => log(String(e), "err"));
+$("#btnGetDid").onclick   = () => getDid().catch(e => log(String(e), "err"));
+$("#btnActivate").onclick = () => activate().catch(e => log(String(e), "err"));
+$("#btnReboot").onclick   = () => reboot().catch(e => log(String(e), "err"));
+
+// --- cleanup on page close ---
+window.addEventListener("beforeunload", async () => {
+  try { await reader?.releaseLock(); await writer?.releaseLock(); await port?.close(); } catch { }
+  setMacTitle(""); // reset title
+  setStatusUI(false, "Not connected");
+});
+
+
 // Initialize app when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   initializeApp()

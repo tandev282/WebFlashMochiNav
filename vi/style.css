@@ -1763,10 +1763,150 @@ esp-web-install-button {
 }
 
 /* Main guide tabs (MochiNav / Xiaozhi) */
-.main-guide-tab-content { 
+.main-guide-tab-content {
   display: none;
 }
-.main-guide-tab-content.active { 
+
+.main-guide-tab-content.active {
   display: block;
   animation: fadeIn 0.5s ease;
+}
+
+/* === Tab 4 License - Dark theme === */
+.license-scope {
+  color: var(--text, #e5eef7);
+  padding-top: 8px;
+}
+
+.license-scope .header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.license-scope #title {
+  margin: 0;
+  font-size: 28px;
+  color: var(--heading, #e6f0ff);
+}
+
+.license-scope .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: var(--chip, #1f2937);
+  color: var(--muted-fg, #cbd5e1);
+  border: 1px solid var(--chip-border, #2a3646);
+  white-space: nowrap;
+}
+
+.license-scope .badge.muted {
+  opacity: .95;
+}
+
+.license-scope .badge.ok {
+  background: #146c43;
+  color: #fff;
+  border-color: #146c43;
+}
+
+.license-scope .row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.license-scope input,
+.license-scope textarea {
+  flex: 1;
+  background: var(--bg-input, #0f172a);
+  color: var(--text, #e5eef7);
+  border: 1px solid var(--border, #2a3646);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.license-scope input::placeholder,
+.license-scope textarea::placeholder {
+  color: #9aa7b2;
+}
+
+.license-scope button {
+  height: 40px;
+  line-height: 1;
+  padding: 10px 14px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid var(--btn-border, #2a3646);
+  background: var(--btn-bg, #1f2937);
+  color: var(--btn-fg, #e5e7eb);
+  transition: transform .02s ease, filter .15s ease;
+}
+
+.license-scope button:hover {
+  filter: brightness(1.08);
+}
+
+.license-scope button:active {
+  transform: translateY(1px);
+}
+
+.license-scope button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.license-scope #btnConnect {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+  color: #fff;
+}
+
+.license-scope #btnActivate {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #fff;
+}
+
+.license-scope #btnReboot {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+.license-scope #log {
+  margin-top: 12px;
+  padding: 16px;
+  min-height: 180px;
+  max-height: 320px;
+  overflow: auto;
+  border-radius: 12px;
+  background: var(--bg-card, #0e1620);
+  border: 1px solid var(--border, #2a3646);
+  color: #d1e7ff;
+}
+
+.license-scope hr {
+  border: 0;
+  height: 1px;
+  background: var(--border, #2a3646);
+  margin: 18px 0;
+}
+
+@media (max-width:560px) {
+  .license-scope #title {
+    font-size: 22px;
+  }
+
+  .license-scope .badge {
+    height: 24px;
+    font-size: 11px;
+    padding: 0 8px;
+  }
 }
