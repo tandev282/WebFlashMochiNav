@@ -13,9 +13,9 @@
 <div id="fbJoinPopup" class="popup-overlay" style="display: none;">
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
-        <h3>🌟 Gia Nhập Nhóm Facebook ChatBot AI VN</h3>
-        <p>Hãy gia nhập nhóm Facebook của chúng tôi để nhận hỗ trợ và cập nhật thông tin mới nhất!</p>
-        <p>Đã có phiên bản ChatBot AI bản 1.8.8 mới nhất, hỗ trợ ESP32 S3 DevKit, ESP32 S3 SuperMini</p>
+        <h3>🌟 Gia Nhập Nhóm Facebook</h3>
+        <p>Đã có phiên bản MochiNav V5.5.0 mới nhất, có full âm thanh emoji</p>
+        <p>Chi tiết tại Tab: Hướng dẫn sử dụng</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
             Tham gia
         </a>
@@ -115,7 +115,7 @@
                         <div class="main-guide-tab-content active" id="mochinav-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="tab0">v5.0.0 có gì ???</button>
+                                <button class="tab-btn active" data-tab="tab0">v5.5.0 có gì ???</button>
                                 <button class="tab-btn" data-tab="tab1">Sơ Đồ</button>
                                 <button class="tab-btn" data-tab="tab2">Key</button>
                                 <button class="tab-btn" data-tab="tab3">Chức Năng</button>
@@ -128,7 +128,7 @@
                                 <div class="tab-pane active" id="tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>MochiNav V5.0.0</h3>
+                                            <h3>MochiNav V5.5.0</h3>
                                             <ul>
                                                 <li><strong>Kết nối:</strong> <br> 1. Thêm chức năng cho phép chỉnh thời
                                                     gian tự động tắt BLE khi không
@@ -371,7 +371,7 @@
 
                                             <!-- Hình ảnh sơ đồ -->
                                             <div class="diagram-container">
-                                                <img src="../esp32_diagram.png" alt="Sơ đồ đấu nối ESP32"
+                                                <img src="../img/esp32_diagram.png" alt="Sơ đồ đấu nối ESP32"
                                                     class="wiring-diagram">
                                             </div>
 
@@ -722,27 +722,74 @@
                                     </div>
                                 </div>
 
-
-
                                 <!-- Tab 5: Hướng dẫn sử dụng -->
                                 <div class="tab-pane" id="tab5">
                                     <div class="app-section">
-                                        <div class="app-card">
-                                            <div class="app-download">
-                                                <h4>Tải App MochiNav</h4>
-                                                <div class="app-stores">
-                                                    <a href="https://play.google.com/store/apps/details?id=com.fbiego.chronos&pcampaignid=web_share"
-                                                        class="app-store-btn">
-                                                        <span class="app-store-icon">📱</span>
-                                                        <span class="app-store-text">Google Play</span>
-                                                    </a>
+                                        <div class="activation-card">
+
+                                            <div class="app-stores">
+                                                <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
+                                                    class="app-store-btn">
+                                                    <span class="app-store-icon">📱</span>
+                                                    <span class="app-store-text">Hướng dẫn tải sử dụng App</span>
+                                                </a>
+                                            </div>
+
+                                            <h3>Hướng Dẫn Thêm Âm Thanh Vào Thiết Bị MochiNav</h3>
+
+                                            <!-- Bước 4 -->
+                                            <div class="step-container">
+                                                <div class="step-number">1</div>
+                                                <div class="step-content">
+                                                    <h4>Tải file "audio.bin"</h4>
+                                                    <p>Tải file "audio.bin", file này chứa 70 âm thanh biểu cảm cho
+                                                        chương trình MochiNav</p>
+
+                                                    <div class="code-block">
+                                                        https://drive.google.com/file/d/1AKimL1F7CmGlhl2KzCSxHRFqif1tny8u/view?usp=sharing
+                                                    </div>
                                                 </div>
-                                                <div class="app-stores">
-                                                    <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
-                                                        class="app-store-btn">
-                                                        <span class="app-store-icon">📱</span>
-                                                        <span class="app-store-text">Hướng dẫn sử dụng App</span>
-                                                    </a>
+                                            </div>
+
+                                            <!-- Bước 1 -->
+                                            <div class="step-container">
+                                                <div class="step-number">2</div>
+                                                <div class="step-content">
+                                                    <h4>Chọn ổ đĩa và Format</h4>
+                                                    <p>Chọn ổ đĩa thẻ nhớ -> chuột phải chọn Format</p>
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/sd1.jpg" alt="Sơ đồ đấu nối ESP32" width="50%">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Bước 2 -->
+                                            <div class="step-container">
+                                                <div class="step-number">3</div>
+                                                <div class="step-content">
+                                                    <h4>Format</h4>
+                                                    <p>File system: chọn FAT32</p>
+                                                    <p>Format options: bỏ tích Quick Format "Để nó định dạng lại toàn bộ
+                                                        thẻ nhớ"</p>
+                                                    <p>Nhấn Start để bắt đầu</p>
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/sd2.png" alt="Sơ đồ đấu nối ESP32" width="50%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Bước 3 -->
+                                            <div class="step-container">
+                                                <div class="step-number">4</div>
+                                                <div class="step-content">
+                                                    <h4>Copy File Audio.bin</h4>
+                                                    <p>Copy file "audio.bin" đã tải ở bước 1, vào thẳng thẻ nhớ, không
+                                                        cần tạo thư mục. Bắt buộc tên file phải là "audio.bin"</p>
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/sd4.png" alt="Sơ đồ đấu nối ESP32"
+                                                            width="100%">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -13,11 +13,11 @@
 <div id="fbJoinPopup" class="popup-overlay" style="display: none;">
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
-        <h3>🌟 Join the ChatBot AI VN Facebook Group</h3>
-        <p>Join our Facebook group to get support and the latest updates!</p>
-        <p>The latest ChatBot AI version 1.8.8 is available, supporting ESP32 S3 DevKit, ESP32 S3 SuperMini</p>
+        <h3>🌟 Join Facebook Group</h3>
+        <p>The latest MochiNav V5.5.0 version is available, with full emoji sounds</p>
+        <p>Details in Tab: User Guide</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
-            Join Now
+            Join
         </a>
     </div>
 </div>
@@ -116,7 +116,7 @@
                         <div class="main-guide-tab-content active" id="mochinav-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="tab0">What's New in v5.0.0???</button>
+                                <button class="tab-btn active" data-tab="tab0">What's New in v5.5.0???</button>
                                 <button class="tab-btn" data-tab="tab1">Diagram</button>
                                 <button class="tab-btn" data-tab="tab2">Key</button>
                                 <button class="tab-btn" data-tab="tab3">Features</button>
@@ -130,7 +130,7 @@
                                 <div class="tab-pane active" id="tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>MochiNav V5.0.0</h3>
+                                            <h3>MochiNav V5.5.0</h3>
                                             <ul>
                                                 <li><strong>Connection:</strong><br> 1. Added a feature to adjust the
                                                     auto-off time for BLE when there is no connection with the phone: 5,
@@ -703,31 +703,82 @@
 
 
 
-                                <!-- Tab 5: Hướng dẫn sử dụng -->
+                                <!-- Tab 5: User Guide -->
                                 <div class="tab-pane" id="tab5">
                                     <div class="app-section">
-                                        <div class="app-card">
-                                            <!-- Download App -->
-                                            <div class="app-download">
-                                                <h4>Download MochiNav App</h4>
-                                                <div class="app-stores">
-                                                    <a href="https://play.google.com/store/apps/details?id=com.fbiego.chronos&pcampaignid=web_share"
-                                                        class="app-store-btn">
-                                                        <span class="app-store-icon">📱</span>
-                                                        <span class="app-store-text">Google Play</span>
-                                                    </a>
+                                        <div class="activation-card">
+
+                                            <div class="app-stores">
+                                                <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
+                                                    class="app-store-btn">
+                                                    <span class="app-store-icon">📱</span>
+                                                    <span class="app-store-text">App Download & Usage Guide</span>
+                                                </a>
+                                            </div>
+
+                                            <h3>Instructions for Adding Audio to the MochiNav Device</h3>
+
+                                            <!-- Step 1 -->
+                                            <div class="step-container">
+                                                <div class="step-number">1</div>
+                                                <div class="step-content">
+                                                    <h4>Download the "audio.bin" file</h4>
+                                                    <p>Download the "audio.bin" file, which contains 70 expressive
+                                                        sounds for the MochiNav program</p>
+
+                                                    <div class="code-block">
+                                                        https://drive.google.com/file/d/1AKimL1F7CmGlhl2KzCSxHRFqif1tny8u/view?usp=sharing
+                                                    </div>
                                                 </div>
-                                                <div class="app-stores">
-                                                    <a href="https://docs.google.com/document/d/e/2PACX-1vRE5IhT1z8NFdOhktLGh9G8WROhoHWpKxCAa9U4Cyn3GQfs0AoP5btDYxrBuC6MGvypkNgcNVmSmzXm/pub?embedded=true"
-                                                        class="app-store-btn">
-                                                        <span class="app-store-icon">📱</span>
-                                                        <span class="app-store-text">App User Guide</span>
-                                                    </a>
+                                            </div>
+
+                                            <!-- Step 2 -->
+                                            <div class="step-container">
+                                                <div class="step-number">2</div>
+                                                <div class="step-content">
+                                                    <h4>Select the Drive and Format</h4>
+                                                    <p>Select the memory card drive -> right-click and choose Format</p>
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/sd1.jpg" alt="ESP32 wiring diagram"
+                                                            width="50%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 3 -->
+                                            <div class="step-container">
+                                                <div class="step-number">3</div>
+                                                <div class="step-content">
+                                                    <h4>Format</h4>
+                                                    <p>File system: choose FAT32</p>
+                                                    <p>Format options: uncheck Quick Format "to fully reformat the
+                                                        memory card"</p>
+                                                    <p>Click Start to begin</p>
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/sd2.png" alt="ESP32 wiring diagram"
+                                                            width="50%">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Step 4 -->
+                                            <div class="step-container">
+                                                <div class="step-number">4</div>
+                                                <div class="step-content">
+                                                    <h4>Copy the Audio.bin File</h4>
+                                                    <p>Copy the "audio.bin" file downloaded in Step 1 directly to the
+                                                        memory card (do not create a folder). The file name must be
+                                                        "audio.bin"</p>
+                                                    <div class="image-placeholder">
+                                                        <img src="../img/sd4.png" alt="ESP32 wiring diagram"
+                                                            width="100%">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> <!-- end tab5 -->
+
 
                             </div>
                         </div>
