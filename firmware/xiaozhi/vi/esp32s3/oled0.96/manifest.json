@@ -1,6 +1,6 @@
 {
   "name": "Xiaozhi Firmware - ESP32-S3 OLED 0.96 - VI",
-  "version": "1.7.6",
+  "version": "1.8.8",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,
   "builds": [
