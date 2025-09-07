@@ -1,13 +1,16 @@
 {
   "name": "Xiaozhi Firmware - ESP32-S3 OLED 0.96 - VI",
-  "version": "1.8.8",
+  "version": "1.9.1",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "parts": [
-        { "path": "xiaozhi_esp32s3_oled0.96.bin", "offset": 0 }
+        {
+          "path": "xiaozhi_esp32s3_oled0.96.bin",
+          "offset": 0
+        }
       ]
     }
   ]
