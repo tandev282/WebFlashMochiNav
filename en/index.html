@@ -14,6 +14,7 @@
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
         <h3>🌟 Join Facebook Group</h3>
+        <p>New version ChatBot AI Ver 1.9.1</p>
         <p>The latest MochiNav V5.5.0 version is available, with full emoji sounds</p>
         <p>Details in Tab: User Guide</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
@@ -94,6 +95,7 @@
                     <div class="step-content">
                         <h4>Instructions for flashing MochiNav code</h4>
                         <ul>
+                            <li><strong>Please use a computer to load the program</strong></li>
                             <li><strong>Hold down the BOOT button on the ESP32 / ESP32-C3 and connect the cable to your
                                     computer</strong></li>
                             <li><strong>Select the correct chip and click Connect</strong></li>
@@ -108,7 +110,8 @@
                     <div class="guide-section">
                         <!-- Main Tab for MochiNav and Xiaozhi -->
                         <div class="main-guide-tabs">
-                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav (Need Key)</button>
+                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav (Need
+                                Key)</button>
                             <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">Chat Bot AI (No Key)</button>
                         </div>
 
@@ -699,6 +702,17 @@
 
                                         <div id="log"></div>
                                     </div>
+
+                                    <br>
+
+                                    <!-- Important Note -->
+                                    <div class="important-notes">
+                                        <h4>⚠️ Note</h4>
+                                        <ul>
+                                            <li><strong>If you don't have a key and still spam the activation, we will
+                                                    put the esp32 chip on the block list after 5 attempts</strong></li>
+                                        </ul>
+                                    </div>
                                 </div>
 
 
@@ -787,7 +801,7 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">What’s new in v1.8.8 ???</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">What’s new in v1.9.1 ???</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Diagram</button>
                                 <button class="tab-btn" data-tab="xz-tab2">Activation</button>
                             </div>
@@ -799,8 +813,11 @@
                                 <div class="tab-pane active" id="xz-tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>Chat Bot AI (Xiaozhi) v1.8.8</h3>
+                                            <h3>Chat Bot AI (Xiaozhi) v1.9.1</h3>
                                             <ul>
+                                            <li><strong>1.8.9 -> 1.9.1:</strong> Details at <div class="code-block">
+https://github.com/78/xiaozhi-esp32/compare/v1.8.9...v1.9.1</div>
+</li>
                                                 <li><strong>Language & firmware structure:</strong> Auto-detect EN/VI
                                                     based on browser.
                                                     For example: <code>https://tandev.click/vi/</code> will load
@@ -816,7 +833,7 @@
                                                 <li><strong>OLED:</strong> Choose the correct size 0.91"/0.96" (I2C
                                                     SSD1306).
                                                 </li>
-                                                <li><strong>Github:</strong>Here is the official Open source Git link if
+                                                <li><strong>Github:</strong> Here is the official Open source Git link if
                                                     you want to tinker: <div class="code-block">
                                                         https://github.com/78/xiaozhi-esp32</div>
                                                 </li>
@@ -840,13 +857,12 @@
                                 <div class="tab-pane" id="xz-tab1">
                                     <div class="wiring-section">
                                         <!-- Chip Type Tabs -->
-                                        <div class="chip-type-tabs">
+                                         <div class="chip-type-tabs">
                                             <button class="chip-tab-btn active" data-chip-tab="xz-esp32s3">ESP32-S3
-                                                DevKit</button>
-                                            <button class="chip-tab-btn" data-chip-tab="xz-esp32s3mini">ESP32-S3 Super
-                                                Mini</button>
+                                                DevKit - WakeUp Words (Hi, Lily - Hi, ESP)</button>
+                                            <button class="chip-tab-btn" data-chip-tab="xz-esp32s3mini">ESP32-S3
+                                                Super Mini - No WakeUp Words</button>
                                         </div>
-
                                         <!-- ESP32-S3 DevKit -->
                                         <div class="wiring-card chip-tab-content active" id="xz-esp32s3-content">
                                             <h3>ESP32-S3 DevKit Wiring Diagram</h3>
@@ -1060,11 +1076,11 @@
                                                             <td>GND</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GPIO10</td>
+                                                            <td>GPIO9</td>
                                                             <td>SCL</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GPIO9</td>
+                                                            <td>GPIO8</td>
                                                             <td>SDA</td>
                                                         </tr>
                                                     </tbody>
@@ -1160,17 +1176,17 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td>GPIO40</td>
+                                                            <td>GPIO10</td>
                                                             <td>Button 1</td>
                                                             <td>Increase Volume</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GPIO39</td>
+                                                            <td>GPIO11</td>
                                                             <td>Button 2</td>
                                                             <td>Decrease Volume</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GPIO01</td>
+                                                            <td>GPIO1</td>
                                                             <td>Button 3</td>
                                                             <td>Wake Up</td>
                                                         </tr>

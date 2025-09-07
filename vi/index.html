@@ -14,6 +14,7 @@
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
         <h3>🌟 Gia Nhập Nhóm Facebook</h3>
+        <p>Đã có phiên bản mới ChatBot AI Ver 1.9.1</p>
         <p>Đã có phiên bản MochiNav V5.5.0 mới nhất, có full âm thanh emoji</p>
         <p>Chi tiết tại Tab: Hướng dẫn sử dụng</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
@@ -93,6 +94,7 @@
                     <div class="step-content">
                         <h4>Hướng dẫn nạp code MochiNav</h4>
                         <ul>
+                            <li><strong>Vui lòng sử dụng máy tính để nạp chương trình</strong></li>
                             <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 và gim cáp kết nối với máy tính</strong>
                             </li>
                             <li><strong>Chọn chip phù hợp và nhấn kết nối</strong></li>
@@ -107,8 +109,10 @@
                     <div class="guide-section">
                         <!-- Main Tab for MochiNav and Xiaozhi -->
                         <div class="main-guide-tabs">
-                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav (Cần Key)</button>
-                            <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">Chat Bot AI (Không Cần Key)</button>
+                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav (Cần
+                                Key)</button>
+                            <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">Chat Bot AI (Không Cần
+                                Key)</button>
                         </div>
 
                         <!-- Tab Content for MochiNav -->
@@ -722,6 +726,17 @@
                                     </div>
                                 </div>
 
+                                <br>
+
+                                <!-- Lưu ý quan trọng -->
+                                <div class="important-notes">
+                                    <h4>⚠️ Lưu Ý</h4>
+                                    <ul>
+                                        <li><strong>Nếu bạn chưa có key mà vẫn spam kích hoạt, chúng tôi sẽ đưa chip
+                                                esp32 vào danh sách chặn sau 5 lần thử</strong></li>
+                                    </ul>
+                                </div>
+
                                 <!-- Tab 5: Hướng dẫn sử dụng -->
                                 <div class="tab-pane" id="tab5">
                                     <div class="app-section">
@@ -803,7 +818,7 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">v1.8.8 có gì ???</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">v1.9.1 có gì ???</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ</button>
                                 <button class="tab-btn" data-tab="xz-tab2">Kích Hoạt</button>
                             </div>
@@ -814,8 +829,12 @@
                                 <div class="tab-pane active" id="xz-tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>Chat Bot AI (Xiaozhi) v1.8.8</h3>
+                                            <h3>Chat Bot AI (Xiaozhi) v1.9.1</h3>
                                             <ul>
+                                                <li><strong>1.8.9 -> 1.9.1:</strong> Chi tiết tại <div class="code-block">
+                                                       https://github.com/78/xiaozhi-esp32/compare/v1.8.9...v1.9.1</div>
+                                                </li>
+
                                                 <li><strong>Ngôn ngữ & cấu trúc firmware:</strong> Tự phát hiện
                                                     EN/VI
                                                     theo trình duyệt: ví dụ https://tandev.click/vi/ sẽ là firmware
@@ -829,7 +848,7 @@
                                                     SSD1306)
                                                 </li>
 
-                                                <li><strong>Github:</strong>Đây là link Git chính chủ Open source
+                                                <li><strong>Github:</strong> Đây là link Git chính chủ Open source
                                                     nếu mọi người muốn vọc vạch: <div class="code-block">
                                                         https://github.com/78/xiaozhi-esp32</div>
                                                 </li>
@@ -854,10 +873,9 @@
                                         <!-- Chip Type Tabs -->
                                         <div class="chip-type-tabs">
                                             <button class="chip-tab-btn active" data-chip-tab="xz-esp32s3">ESP32-S3
-                                                DevKit</button>
+                                                DevKit - WakeUp Words (Hi, Lily - Hi, ESP)</button>
                                             <button class="chip-tab-btn" data-chip-tab="xz-esp32s3mini">ESP32-S3
-                                                Super
-                                                Mini</button>
+                                                Super Mini - No WakeUp Words</button>
                                         </div>
 
                                         <!-- ESP32-S3 DevKit -->
@@ -1076,11 +1094,11 @@
                                                             <td>GND</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GPIO10</td>
+                                                            <td>GPIO9</td>
                                                             <td>SCL</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GPIO9</td>
+                                                            <td>GPIO8</td>
                                                             <td>SDA</td>
                                                         </tr>
                                                     </tbody>
@@ -1176,12 +1194,12 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td>GPIO40</td>
+                                                            <td>GPIO10</td>
                                                             <td>Nút nhấn 1</td>
                                                             <td>Tăng âm lượng</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GPIO39</td>
+                                                            <td>GPIO11</td>
                                                             <td>Nút nhấn 2</td>
                                                             <td>Giảm âm lượng</td>
                                                         </tr>
