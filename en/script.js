@@ -41,12 +41,22 @@ function initializeApp() {
 }
 
 function getXiaozhiLang() {
-  const lang = (navigator.language || navigator.userLanguage || 'vi').toLowerCase()
+  // Ưu tiên đọc từ path: /en/ hoặc /vi/ (không cần dấu / cuối)
+  // Ví dụ khớp: /en, /en/, /en/something, /vi, /vi/, /vi/abc
+  const path = (typeof location !== "undefined" ? location.pathname : "") || "";
+  const m = path.match(/^\/(en|vi)(?:\/|$)/i);
+  if (m && m[1]) return m[1].toLowerCase();
+
   // Cho phép override thủ công nếu cần: window.XIAOZHI_LANG = 'en' | 'vi'
   if (typeof window !== "undefined" && (window.XIAOZHI_LANG === "en" || window.XIAOZHI_LANG === "vi")) {
-    return window.XIAOZHI_LANG
+    return window.XIAOZHI_LANG;
   }
-  return lang.startsWith('en') ? 'en' : 'vi'
+
+  // Fallback cuối: đọc từ thẻ <html lang="..."> nếu có, mặc định 'vi'
+  const htmlLang = (document.documentElement.getAttribute("lang") || "").toLowerCase();
+  if (htmlLang === "en" || htmlLang === "vi") return htmlLang;
+
+  return "vi";
 }
 
 
