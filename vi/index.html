@@ -14,7 +14,8 @@
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
         <h3>🌟 Gia Nhập Nhóm Facebook</h3>
-        <p>Đã có phiên bản mới ChatBot AI Ver 1.9.1</p>
+        <p>Đã có phiên bản mới ChatBot AI Ver 2.0.1</p>
+        <p>Ở phiên bản này đã thêm bật/tắt đèn, sửa lỗi, fix font,....</p>
         <p>Đã có phiên bản MochiNav V5.5.0 mới nhất, có full âm thanh emoji</p>
         <p>Chi tiết tại Tab: Hướng dẫn sử dụng</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
@@ -95,7 +96,8 @@
                         <h4>Hướng dẫn nạp code MochiNav</h4>
                         <ul>
                             <li><strong>Vui lòng sử dụng máy tính để nạp chương trình</strong></li>
-                            <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 và gim cáp kết nối với máy tính</strong>
+                            <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 / ESP32 S3 và gim cáp kết nối với máy
+                                    tính</strong>
                             </li>
                             <li><strong>Chọn chip phù hợp và nhấn kết nối</strong></li>
                             <li><strong>Chọn cổng COM của chip và nhấn Kết nối -> Install -> Install -> chờ nạp xong
@@ -818,7 +820,7 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">v1.9.1 có gì ???</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">v2.0.1 có gì ???</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ</button>
                                 <button class="tab-btn" data-tab="xz-tab2">Kích Hoạt</button>
                             </div>
@@ -829,13 +831,16 @@
                                 <div class="tab-pane active" id="xz-tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>Chat Bot AI (Xiaozhi) v1.9.1</h3>
+                                            <h3>Chat Bot AI (Xiaozhi) v2.0.1</h3>
                                             <ul>
-                                                <li><strong>1.8.9 -> 1.9.1:</strong> Chi tiết tại <div
+                                                <li><strong>1.9.1 -> 2.0.1:</strong> Chi tiết tại <div
                                                         class="code-block">
-                                                        https://github.com/78/xiaozhi-esp32/compare/v1.8.9...v1.9.1
+                                                        https://github.com/78/xiaozhi-esp32/compare/v2.0.0...v2.0.1
                                                     </div>
                                                 </li>
+
+                                                <li><strong>Thêm tính năng:</strong> Bật/tắt đèn LED bằng GPIO, sửa lỗi, sửa font
+                                                    chữ,...
 
                                                 <li><strong>Ngôn ngữ & cấu trúc firmware:</strong> Tự phát hiện
                                                     EN/VI
@@ -940,16 +945,18 @@
                                                             <td>LRCLK</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>3V3</td>
+                                                            <td>5V</td>
                                                             <td>VIN</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GAIN</td>
+
                                                             <td>GND</td>
+                                                            <td>GAIN</td>
                                                         </tr>
                                                         <tr>
+
+                                                            <td>5V</td>
                                                             <td>SD</td>
-                                                            <td>VIN</td>
                                                         </tr>
                                                         <tr>
                                                             <td>GND</td>
@@ -1020,6 +1027,11 @@
                                                             <td>GPIO0</td>
                                                             <td>Nút nhấn 3</td>
                                                             <td>Đánh thức</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO18</td>
+                                                            <td>LED</td>
+                                                            <td>Đèn</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -1129,16 +1141,16 @@
                                                             <td>LRCLK</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>3V3</td>
+                                                            <td>5V</td>
                                                             <td>VIN</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GAIN</td>
                                                             <td>GND</td>
+                                                            <td>GAIN</td>
                                                         </tr>
                                                         <tr>
+                                                            <td>5V</td>
                                                             <td>SD</td>
-                                                            <td>VIN</td>
                                                         </tr>
                                                         <tr>
                                                             <td>GND</td>
@@ -1209,6 +1221,11 @@
                                                             <td>GPIO01</td>
                                                             <td>Nút nhấn 3</td>
                                                             <td>Đánh thức</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO12</td>
+                                                            <td>LED</td>
+                                                            <td>Đèn</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

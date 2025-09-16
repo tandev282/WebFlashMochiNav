@@ -14,7 +14,8 @@
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
         <h3>🌟 Join Facebook Group</h3>
-        <p>New version ChatBot AI Ver 1.9.1</p>
+        <p>New version ChatBot AI Ver 2.0.1 is available</p>
+        <p>In this version, we have added turning on/off lights, fixing errors, fixing fonts,....</p>
         <p>The latest MochiNav V5.5.0 version is available, with full emoji sounds</p>
         <p>Details in Tab: User Guide</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
@@ -801,7 +802,7 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">What’s new in v1.9.1 ???</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">What’s new in v2.0.1 ???</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Diagram</button>
                                 <button class="tab-btn" data-tab="xz-tab2">Activation</button>
                             </div>
@@ -813,34 +814,34 @@
                                 <div class="tab-pane active" id="xz-tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>Chat Bot AI (Xiaozhi) v1.9.1</h3>
+                                            <h3>Chat Bot AI (Xiaozhi) v2.0.1</h3>
                                             <ul>
-                                                <li><strong>1.8.9 -> 1.9.1:</strong> Details at <div class="code-block">
-                                                        https://github.com/78/xiaozhi-esp32/compare/v1.8.9...v1.9.1
+                                                <li><strong>1.9.1 -> 2.0.1:</strong> Details at <div class="code-block">
+                                                        https://github.com/78/xiaozhi-esp32/compare/v2.0.0...v2.0.1
                                                     </div>
                                                 </li>
-                                                <li><strong>Language & firmware structure:</strong> Auto-detect EN/VI
-                                                    based on browser.
-                                                    For example: <code>https://tandev.click/vi/</code> will load
-                                                    Vietnamese firmware,
-                                                    <code>https://tandev.click/en/</code> will load English firmware.
+
+                                                <li><strong>Add features:</strong> Turn on/off LED by GPIO, fix errors,
+                                                    fix fonts,...
+
+                                                <li><strong>Language & firmware structure:</strong> Automatically detect
+                                                    EN/VI
+                                                    by browser: for example https://tandev.click/vi/ will be Vietnamese
+                                                    firmware, https://tandev.click/en/ will be English firmware
                                                 </li>
 
                                                 <li><strong>Supported chips:</strong> ESP32-S3 DevKit, ESP32-S3 Super
                                                     Mini
-                                                    (make sure to select the correct board when flashing).
+                                                    (choose the right type when loading)</li>
+                                                <li><strong>OLED:</strong> Choose the right size 0.91"/0.96" (I2C
+                                                    SSD1306)
                                                 </li>
 
-                                                <li><strong>OLED:</strong> Choose the correct size 0.91"/0.96" (I2C
-                                                    SSD1306).
-                                                </li>
-                                                <li><strong>Github:</strong> Here is the official Open source Git link
-                                                    if
-                                                    you want to tinker: <div class="code-block">
+                                                <li><strong>Github:</strong> Here is the official Git link Open source
+                                                    if you want to tinker: <div class="code-block">
                                                         https://github.com/78/xiaozhi-esp32</div>
                                                 </li>
                                             </ul>
-
                                             <div class="important-notes">
                                                 <h4>📌 Notes</h4>
                                                 <ul>
@@ -925,16 +926,16 @@
                                                             <td>LRCLK</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>3V3</td>
+                                                            <td>5V</td>
                                                             <td>VIN</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GAIN</td>
                                                             <td>GND</td>
+                                                            <td>GAIN</td>
                                                         </tr>
                                                         <tr>
+                                                            <td>5V</td>
                                                             <td>SD</td>
-                                                            <td>VIN</td>
                                                         </tr>
                                                         <tr>
                                                             <td>GND</td>
@@ -1005,6 +1006,11 @@
                                                             <td>GPIO0</td>
                                                             <td>Button 3</td>
                                                             <td>Wake Up</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO18</td>
+                                                            <td>LED</td>
+                                                            <td>LED</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -1111,16 +1117,17 @@
                                                             <td>LRCLK</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>3V3</td>
+                                                            <td>5V</td>
                                                             <td>VIN</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>GAIN</td>
+
                                                             <td>GND</td>
+                                                            <td>GAIN</td>
                                                         </tr>
                                                         <tr>
+                                                            <td>5V</td>
                                                             <td>SD</td>
-                                                            <td>VIN</td>
                                                         </tr>
                                                         <tr>
                                                             <td>GND</td>
@@ -1191,6 +1198,11 @@
                                                             <td>GPIO1</td>
                                                             <td>Button 3</td>
                                                             <td>Wake Up</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO12</td>
+                                                            <td>LED</td>
+                                                            <td>LED</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

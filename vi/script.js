@@ -25,8 +25,9 @@ const chipOptions = {
     { chip: "esp32c3", label: "ESP32-C3" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Mini" },
+    { chip: "esp32s3", label: "ESP32-S3 (WakeUp Word)" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Mini (No WakeUp Word)" },
+    { chip: "esp32s3_zero", label: "ESP32-S3 Zero (WakeUp Word) - Comming Soon" },
   ],
 }
 

@@ -25,8 +25,9 @@ const chipOptions = {
     { chip: "esp32c3", label: "ESP32-C3" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Mini" },
+    { chip: "esp32s3", label: "ESP32-S3 (WakeUp Word)" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Mini (No WakeUp Word)" },
+    { chip: "esp32s3_zero", label: "ESP32-S3 Zero (WakeUp Word) - Comming Soon" },
   ],
 }
 
@@ -597,8 +598,8 @@ async function openSerial() {
 
   // On connect: request HELLO to fetch STATUS + MAC
   await sendLine("HELLO");
-  waitForLine(/^STATUS:/i, 1500).catch(() => {});
-  waitForLine(/^(?:DID|MAC):\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 1500).catch(() => {});
+  waitForLine(/^STATUS:/i, 1500).catch(() => { });
+  waitForLine(/^(?:DID|MAC):\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 1500).catch(() => { });
 }
 
 async function sendLine(line) {
@@ -670,10 +671,10 @@ async function activate() {
 async function reboot() { await sendLine("REBOOT"); }
 
 // --- bind events ---
-$("#btnConnect").onclick  = () => openSerial().catch(e => log(String(e), "err"));
-$("#btnGetDid").onclick   = () => getDid().catch(e => log(String(e), "err"));
+$("#btnConnect").onclick = () => openSerial().catch(e => log(String(e), "err"));
+$("#btnGetDid").onclick = () => getDid().catch(e => log(String(e), "err"));
 $("#btnActivate").onclick = () => activate().catch(e => log(String(e), "err"));
-$("#btnReboot").onclick   = () => reboot().catch(e => log(String(e), "err"));
+$("#btnReboot").onclick = () => reboot().catch(e => log(String(e), "err"));
 
 // --- cleanup on page close ---
 window.addEventListener("beforeunload", async () => {
