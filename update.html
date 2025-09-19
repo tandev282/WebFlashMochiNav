@@ -77,11 +77,6 @@
       display: none !important;
     }
 
-    #versions label {
-      display: block;
-      margin: .25rem 0;
-    }
-
     .progress {
       height: 8px;
       background: var(--bg-tertiary);
@@ -118,6 +113,103 @@
     .err {
       color: #ef4444;
     }
+
+    /* ===== phiên bản dạng hàng có nút cài đặt ===== */
+    .version-list {
+      display: grid;
+      gap: .5rem;
+    }
+
+    .version-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .8rem 1rem;
+      border: 1px dashed var(--border-color);
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+    }
+
+    .version-name {
+      font-weight: 700;
+    }
+
+    .inline-install {
+      background: var(--gradient-primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .55rem .9rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .versions-wrap {
+      margin-top: .5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+
+    .ver-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: .9rem 1rem;
+      transition: all .3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ver-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 3px;
+      width: 100%;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: transform .3s ease;
+    }
+
+    .ver-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .ver-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .ver-name {
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    /* Nút cài đặt nhỏ gọn nhưng vẫn “đầm” */
+    .ver-install-btn {
+      border: none;
+      border-radius: 10px;
+      padding: .55rem .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      transition: all .25s ease;
+    }
+
+    .ver-install-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-primary);
+      color: #fff;
+    }
   </style>
 </head>
 
@@ -136,12 +228,17 @@
 
       <div id="deviceInfo" class="result">Chưa kết nối.</div>
 
-      <div id="versions" class="result hidden"></div>
-      <div class="progress"><span id="bar"></span></div>
+      <div id="versions" class="result hidden">
+        <!-- sẽ render các .version-item vào đây -->
+        <div class="version-list" id="versionList"></div>
+      </div>
 
+      <div class="progress"><span id="bar"></span></div>
       <div id="log" class="log hidden"></div>
 
+      <!-- nút tổng cập nhật không còn cần; để hidden đề phòng dùng lại -->
       <button id="btnUpdate" class="btn-primary hidden">⚡ Cập nhật</button>
+
       <div class="center" style="margin-top:.75rem">
         <esp-web-install-button id="installBtn" class="hidden"></esp-web-install-button>
       </div>
@@ -153,14 +250,68 @@
     const btnConnect = $("#btnConnect");
     const btnCheckUpdate = $("#btnCheckUpdate");
     const btnFactoryReset = $("#btnFactoryReset");
-    const btnUpdate = $("#btnUpdate");
     const installBtn = $("#installBtn");
     const deviceInfo = $("#deviceInfo");
-    const versionsDiv = $("#versions");
+    const versionsBox = $("#versions");
+    const versionList = $("#versionList");
     const logBox = $("#log");
     const bar = document.querySelector(".progress > span");
 
-    let chipType = null;      // "zero" | "mini"
+
+    async function listVersions() {
+      const releases = await fetchReleases();
+      let items = [];
+
+      releases.forEach(r => {
+        r.assets?.forEach(a => {
+          if (chipType === "zero" && a.name.endsWith(".json") && a.name.includes("zero")) {
+            const ver = (a.name.match(/xiaozhi-zero-(.+)\.json/) || [])[1];
+            if (ver) items.push({ version: ver, url: a.browser_download_url });
+          }
+          if (chipType === "mini" && a.name.endsWith(".json") && a.name.includes("mini")) {
+            const ver = (a.name.match(/xiaozhi-mini-(.+)\.json/) || [])[1];
+            if (ver) items.push({ version: ver, url: a.browser_download_url });
+          }
+        });
+      });
+
+      if (items.length === 0) {
+        versionsDiv.textContent = "Không tìm thấy bản firmware cho loại chip này.";
+        versionsDiv.classList.remove("hidden");
+        return;
+      }
+
+      // Build compact list with hover
+      versionsDiv.innerHTML = `
+      <div class="versions-wrap">
+        ${items.map(i => `
+          <div class="ver-card" data-manifest="${i.url}">
+            <span class="ver-name">v${i.version}</span>
+            <button class="ver-install-btn">Cài đặt</button>
+          </div>
+        `).join("")}
+      </div>
+    `;
+      versionsDiv.classList.remove("hidden");
+      btnUpdate.classList.add("hidden");          // không dùng nút Update tổng nữa
+      installBtn.classList.add("hidden");         // ẩn đến khi bấm “Cài đặt”
+
+      // Delegate click: bấm vào nút “Cài đặt” của từng dòng
+      versionsDiv.querySelectorAll(".ver-install-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const card = e.currentTarget.closest(".ver-card");
+          const manifestUrl = card?.dataset.manifest;
+          if (!manifestUrl) return;
+
+          installBtn.manifest = manifestUrl;
+          installBtn.setAttribute("erase-first", "");
+          installBtn.classList.remove("hidden");
+          installBtn.click();
+        });
+      });
+    }
+
+    let chipType = null; // "zero" | "mini"
     let lastLog = "";
 
     // ===== UI helpers =====
@@ -179,7 +330,7 @@
       return { version, board };
     }
 
-    // Reset NHẸ chỉ EN (DTR), KHÔNG kéo IO0 (RTS) để không vào download mode khi detect
+    // reset nhẹ: chỉ EN (DTR), không kéo IO0 (RTS)
     async function pulseResetEN(port) {
       try {
         await port.setSignals({ dataTerminalReady: false, requestToSend: false });
@@ -191,10 +342,7 @@
     }
 
     async function connectAndDetect() {
-      if (!("serial" in navigator)) {
-        setInfo("Trình duyệt không hỗ trợ Web Serial. Hãy dùng Chrome/Edge.", "err");
-        return;
-      }
+      if (!("serial" in navigator)) { setInfo("Trình duyệt không hỗ trợ Web Serial. Hãy dùng Chrome/Edge.", "err"); return; }
       setProgress(5);
       lastLog = ""; logBox.textContent = ""; showLog(true);
       setInfo("Yêu cầu quyền truy cập cổng serial...");
@@ -206,7 +354,6 @@
       await pulseResetEN(port);
       setProgress(35);
 
-      // đọc log ~3.5s
       const reader = port.readable.getReader();
       const decoder = new TextDecoder();
       const t0 = Date.now(); const timeoutMs = 3500;
@@ -218,99 +365,87 @@
         }
       } finally { try { reader.releaseLock(); } catch (e) { } }
 
-      // chỉ giữ phần boot (trước khi app spam)
       const cutIdx = lastLog.indexOf("main_task: Calling app_main()");
       const bootLog = cutIdx > -1 ? lastLog.slice(0, cutIdx) : lastLog;
 
-      // parse & hiển thị
       const { version, board } = parseDeviceInfo(bootLog);
       setInfo(`Phiên bản hiện tại: ${version}\nThiết bị: ${board}`, "ok");
 
-      // đóng port (esp-web-tools sẽ tự điều khiển lại khi flash)
       try { await port.close(); } catch (e) { }
 
-      // mở nút kiểm tra cập nhật
       btnConnect.textContent = "🔄 Kết nối lại";
       btnCheckUpdate.classList.remove("hidden");
       btnFactoryReset.classList.remove("hidden");
       setProgress(60);
     }
 
-    // ===== GitHub Releases -> list manifests theo chip =====
+    // ===== GitHub releases -> danh sách manifest theo tag (CORS-safe) =====
     async function fetchReleases() {
       const res = await fetch("https://api.github.com/repos/tandev282/xiaozhi-update/releases");
       if (!res.ok) throw new Error("GitHub API error: " + res.status);
       return res.json();
     }
-
-    function toItemsFromReleases(releases, type) {
-      // gom các file .json đúng chip; rút version từ tên file
+    const normVer = v => (v || "").toString().trim().replace(/^v/i, "");
+    function toItemsFromReleases(rels, chip) {
+      const want = chip === "zero" ? "zero" : "mini";
       const items = [];
-      for (const r of releases) {
-        for (const a of r.assets || []) {
-          const isJson = a.name.toLowerCase().endsWith(".json");
-          const isZero = /xiaozhi-zero-(.+)\.json$/i.exec(a.name);
-          const isMini = /xiaozhi-mini-(.+)\.json$/i.exec(a.name);
-          if (!isJson) continue;
-          if (type === "zero" && isZero) {
-            items.push({ version: isZero[1], url: a.browser_download_url, relDate: r.published_at || r.created_at || "" });
-          }
-          if (type === "mini" && isMini) {
-            items.push({ version: isMini[1], url: a.browser_download_url, relDate: r.published_at || r.created_at || "" });
-          }
-        }
+      for (const r of rels) {
+        const v = normVer(r.tag_name || r.name || "");
+        if (!v) continue;
+        const json = `xiaozhi-${want}-${v}.json`;
+        const url = `https://cdn.jsdelivr.net/gh/tandev282/xiaozhi-update@${v}/${json}`;
+        items.push({ version: v, url, relDate: r.published_at || r.created_at || "" });
       }
-      // sort: mới → cũ (theo ngày release, fallback theo version string)
-      items.sort((a, b) => (new Date(b.relDate) - new Date(a.relDate)) || (b.version.localeCompare(a.version, undefined, { numeric: true, sensitivity: "base" })));
-      return items;
+      return items.sort(
+        (a, b) => (new Date(b.relDate) - new Date(a.relDate)) ||
+          b.version.localeCompare(a.version, undefined, { numeric: true, sensitivity: "base" })
+      );
     }
 
     async function listVersions() {
       if (!chipType) { setInfo("Chưa xác định loại chip. Hãy Kết nối trước.", "warn"); return; }
       setProgress(70);
-      versionsDiv.classList.remove("hidden");
-      versionsDiv.textContent = "⏳ Đang tải danh sách bản cập nhật từ GitHub...";
+      versionsBox.classList.remove("hidden");
+      versionList.innerHTML = "⏳ Đang tải danh sách bản cập nhật từ GitHub...";
 
       try {
         const releases = await fetchReleases();
         const items = toItemsFromReleases(releases, chipType);
+        if (!items.length) { versionList.textContent = "Không tìm thấy bản firmware cho loại chip này."; return; }
 
-        if (!items.length) {
-          versionsDiv.textContent = "Không tìm thấy bản firmware cho loại chip này.";
-          return;
-        }
+        // render dạng HÀNG: tên phiên bản (trái) + nút Cài đặt (phải)
+        versionList.innerHTML = items.map(i => `
+          <div class="version-item" data-url="${i.url}">
+            <span class="version-name">v${i.version}</span>
+            <button class="inline-install" data-url="${i.url}">Cài đặt</button>
+          </div>
+        `).join("");
 
-        versionsDiv.innerHTML = items.map(
-          (i, idx) => `<label><input type="radio" name="fwver" value="${i.url}" ${idx === 0 ? "checked" : ""}> ${i.version}</label>`
-        ).join("<br>");
-
-        btnUpdate.classList.remove("hidden");
         setProgress(85);
       } catch (e) {
         console.error(e);
-        versionsDiv.textContent = "⚠️ Lỗi khi tải release GitHub.";
+        versionList.textContent = "⚠️ Lỗi khi tải release GitHub.";
       }
     }
 
-    // ===== Flash qua esp-web-tools install-button (manifest .json) =====
-    btnUpdate.addEventListener("click", () => {
-      const sel = document.querySelector('input[name="fwver"]:checked');
-      if (!sel) { alert("Chọn một phiên bản!"); return; }
-      const manifestUrl = sel.value;
+    // Nhấn nút "Cài đặt" tại từng dòng → flash bản tương ứng
+    versionList.addEventListener("click", (ev) => {
+      const btn = ev.target.closest(".inline-install");
+      if (!btn) return;
+      const manifestUrl = btn.dataset.url;
+      if (!manifestUrl) return;
 
-      // Giao cho install-button: nó sẽ tự kéo IO0 & EN để vào bootloader và flash .bin trong manifest
+      // giao cho esp-web-tools
       installBtn.manifest = manifestUrl;
       installBtn.setAttribute("erase-first", "");
       installBtn.classList.remove("hidden");
-
-      // Tự động bấm nút cài đặt để mượt hơn (người dùng vẫn sẽ thấy UI xác nhận của esp-web-tools)
       installBtn.click();
       setProgress(100);
     });
 
     // ===== Factory reset (placeholder) =====
     btnFactoryReset.addEventListener("click", () => {
-      alert("Khôi phục cài đặt gốc: hãy chọn bản factory trong danh sách và nhấn Cập nhật.");
+      alert("Khôi phục cài đặt gốc: hãy chọn phiên bản factory trong danh sách và bấm Cài đặt.");
     });
 
     // ===== Wire buttons =====

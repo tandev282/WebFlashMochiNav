@@ -25,11 +25,19 @@ const chipOptions = {
     { chip: "esp32c3", label: "ESP32-C3" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3 (WakeUp Word)" },
+    { chip: "esp32s3", label: "ESP32-S3 (WakeUp Word) - Hi, Lily" },
     { chip: "esp32s3_mini", label: "ESP32-S3 Mini (No WakeUp Word)" },
-    { chip: "esp32s3_zero", label: "ESP32-S3 Zero (WakeUp Word) - Comming Soon" },
+    { chip: "esp32s3_zero", label: "ESP32-S3 Zero (WakeUp Word) - Hi, Lily" },
   ],
 }
+
+// Map thư mục & tiền tố tên file cho từng chip Xiaozhi
+const XIAOZHI_CHIP_MAP = {
+  esp32s3: { dir: "esp32s3", filePrefix: "xiaozhi_esp32s3" },
+  esp32s3_mini: { dir: "esp32s3mini", filePrefix: "xiaozhi_esp32s3mini" },
+  esp32s3_zero: { dir: "esp32s3zero", filePrefix: "xiaozhi_esp32s3zero" }, // NEW
+};
+
 
 function initializeApp() {
   try {
@@ -72,18 +80,14 @@ function generateFirmwarePath(fw, chip, oled = null) {
     binaryFileName = `mochi_nav_${chip}.bin`
     folderPath = `../firmware/${fw}/${chip}`
   } else if (fw === "xiaozhi") {
-    const lang = getXiaozhiLang()
-    const chipDir = chip === "esp32s3_mini" ? "esp32s3mini" : chip
+    const lang = getXiaozhiLang();
+    const map = XIAOZHI_CHIP_MAP[chip];
+    if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chip}`);
 
-    // Tên file giữ nguyên quy ước cũ
-    if (chip === "esp32s3_mini") {
-      binaryFileName = `xiaozhi_esp32s3mini_oled${oled}.bin`
-    } else {
-      binaryFileName = `xiaozhi_esp32s3_oled${oled}.bin`
-    }
-
-    // ĐƯỜNG DẪN MỚI: thêm {lang}
-    folderPath = `../firmware/${fw}/${lang}/${chipDir}/oled${oled}`
+    // Tên file theo chip cụ thể
+    binaryFileName = `${map.filePrefix}_oled${oled}.bin`;
+    // Đường dẫn có ngôn ngữ + thư mục chip riêng
+    folderPath = `../firmware/${fw}/${lang}/${map.dir}/oled${oled}`;
   }
 
   return {
@@ -177,10 +181,13 @@ function setupEspWebToolsWithManifest(chipType) {
   if (selectedFw === "mochi_nav") {
     manifestPath = `../firmware/${selectedFw}/${chipType}/manifest.json`
   } else if (selectedFw === "xiaozhi") {
-    const lang = getXiaozhiLang()
-    const chipDir = chipType === "esp32s3_mini" ? "esp32s3mini" : chipType
-    manifestPath = `../firmware/${selectedFw}/${lang}/${chipDir}/oled${selectedOled}/manifest.json`
+    const lang = getXiaozhiLang();
+    const map = XIAOZHI_CHIP_MAP[chipType];
+    if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chipType}`);
+
+    manifestPath = `../firmware/${selectedFw}/${lang}/${map.dir}/oled${selectedOled}/manifest.json`;
   }
+
 
 
   // Reset container content to show ESP Web Tools button
