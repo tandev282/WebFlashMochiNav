@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update Firmware | TanDev</title>
+
+  <!-- esp-web-tools -->
+  <script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
+
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    h1 {
+      margin-bottom: .75rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .muted {
+      color: var(--text-secondary);
+    }
+
+    .controls {
+      margin-top: 1.25rem;
+      display: flex;
+      gap: .75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: #fff;
+      padding: .85rem 1.25rem;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      padding: .85rem 1.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 1rem;
+      padding: .75rem 1rem;
+      border-radius: 10px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      white-space: pre-wrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #versions label {
+      display: block;
+      margin: .25rem 0;
+    }
+
+    .progress {
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: .5rem;
+    }
+
+    .progress>span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: var(--accent-primary);
+      transition: width .3s;
+    }
+
+    .log {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      max-height: 260px;
+      overflow: auto;
+      margin-top: .5rem;
+    }
+
+    .ok {
+      color: #22c55e;
+    }
+
+    .warn {
+      color: #f59e0b;
+    }
+
+    .err {
+      color: #ef4444;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <div class="card">
+      <h1>Trình cập nhật firmware</h1>
+      <p class="muted">Kết nối thiết bị ESP32-S3, nhận diện loại chip và phiên bản hiện tại. Sau đó chọn firmware từ
+        GitHub.</p>
+
+      <div class="controls">
+        <button id="btnConnect" class="btn-primary">🔌 Kết nối</button>
+        <button id="btnCheckUpdate" class="btn-secondary hidden">🔍 Kiểm tra cập nhật</button>
+        <button id="btnFactoryReset" class="btn-secondary hidden">♻️ Khôi phục cài đặt gốc</button>
+      </div>
+
+      <div id="deviceInfo" class="result">Chưa kết nối.</div>
+
+      <div id="versions" class="result hidden"></div>
+      <div class="progress"><span id="bar"></span></div>
+
+      <div id="log" class="log hidden"></div>
+
+      <button id="btnUpdate" class="btn-primary hidden">⚡ Cập nhật</button>
+      <div class="center" style="margin-top:.75rem">
+        <esp-web-install-button id="installBtn" class="hidden"></esp-web-install-button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const btnConnect = $("#btnConnect");
+    const btnCheckUpdate = $("#btnCheckUpdate");
+    const btnFactoryReset = $("#btnFactoryReset");
+    const btnUpdate = $("#btnUpdate");
+    const installBtn = $("#installBtn");
+    const deviceInfo = $("#deviceInfo");
+    const versionsDiv = $("#versions");
+    const logBox = $("#log");
+    const bar = document.querySelector(".progress > span");
+
+    let chipType = null;      // "zero" | "mini"
+    let lastLog = "";
+
+    // ===== UI helpers =====
+    function setProgress(p) { bar.style.width = (p || 0) + "%"; }
+    function setInfo(msg, kind = "") { deviceInfo.textContent = msg; deviceInfo.className = "result " + (kind || ""); }
+    function showLog(show) { logBox.classList.toggle("hidden", !show); }
+    function appendLog(txt) { lastLog += txt; logBox.textContent = lastLog; logBox.scrollTop = logBox.scrollHeight; }
+
+    // ===== Detect helpers =====
+    function parseDeviceInfo(log) {
+      const verMatch = log.match(/App version:\s+([^\n]+)/i);
+      const version = verMatch ? verMatch[1].trim() : "Không rõ";
+      const has2MB = /esp_psram:\s+Found\s+2MB/i.test(log);
+      const board = has2MB ? "ESP32-S3 Zero (2MB PSRAM)" : "ESP32-S3 Super Mini (no PSRAM)";
+      chipType = has2MB ? "zero" : "mini";
+      return { version, board };
+    }
+
+    // Reset NHẸ chỉ EN (DTR), KHÔNG kéo IO0 (RTS) để không vào download mode khi detect
+    async function pulseResetEN(port) {
+      try {
+        await port.setSignals({ dataTerminalReady: false, requestToSend: false });
+        await new Promise(r => setTimeout(r, 100));
+        await port.setSignals({ dataTerminalReady: true, requestToSend: false });
+        await new Promise(r => setTimeout(r, 120));
+        await port.setSignals({ dataTerminalReady: false, requestToSend: false });
+      } catch (e) { console.warn("pulseResetEN:", e); }
+    }
+
+    async function connectAndDetect() {
+      if (!("serial" in navigator)) {
+        setInfo("Trình duyệt không hỗ trợ Web Serial. Hãy dùng Chrome/Edge.", "err");
+        return;
+      }
+      setProgress(5);
+      lastLog = ""; logBox.textContent = ""; showLog(true);
+      setInfo("Yêu cầu quyền truy cập cổng serial...");
+      const port = await navigator.serial.requestPort({});
+      await port.open({ baudRate: 115200 });
+      setProgress(20);
+
+      setInfo("Đang reset để đọc log khởi động...", "warn");
+      await pulseResetEN(port);
+      setProgress(35);
+
+      // đọc log ~3.5s
+      const reader = port.readable.getReader();
+      const decoder = new TextDecoder();
+      const t0 = Date.now(); const timeoutMs = 3500;
+      try {
+        while (Date.now() - t0 < timeoutMs) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          if (value) appendLog(decoder.decode(value));
+        }
+      } finally { try { reader.releaseLock(); } catch (e) { } }
+
+      // chỉ giữ phần boot (trước khi app spam)
+      const cutIdx = lastLog.indexOf("main_task: Calling app_main()");
+      const bootLog = cutIdx > -1 ? lastLog.slice(0, cutIdx) : lastLog;
+
+      // parse & hiển thị
+      const { version, board } = parseDeviceInfo(bootLog);
+      setInfo(`Phiên bản hiện tại: ${version}\nThiết bị: ${board}`, "ok");
+
+      // đóng port (esp-web-tools sẽ tự điều khiển lại khi flash)
+      try { await port.close(); } catch (e) { }
+
+      // mở nút kiểm tra cập nhật
+      btnConnect.textContent = "🔄 Kết nối lại";
+      btnCheckUpdate.classList.remove("hidden");
+      btnFactoryReset.classList.remove("hidden");
+      setProgress(60);
+    }
+
+    // ===== GitHub Releases -> list manifests theo chip =====
+    async function fetchReleases() {
+      const res = await fetch("https://api.github.com/repos/tandev282/xiaozhi-update/releases");
+      if (!res.ok) throw new Error("GitHub API error: " + res.status);
+      return res.json();
+    }
+
+    function toItemsFromReleases(releases, type) {
+      // gom các file .json đúng chip; rút version từ tên file
+      const items = [];
+      for (const r of releases) {
+        for (const a of r.assets || []) {
+          const isJson = a.name.toLowerCase().endsWith(".json");
+          const isZero = /xiaozhi-zero-(.+)\.json$/i.exec(a.name);
+          const isMini = /xiaozhi-mini-(.+)\.json$/i.exec(a.name);
+          if (!isJson) continue;
+          if (type === "zero" && isZero) {
+            items.push({ version: isZero[1], url: a.browser_download_url, relDate: r.published_at || r.created_at || "" });
+          }
+          if (type === "mini" && isMini) {
+            items.push({ version: isMini[1], url: a.browser_download_url, relDate: r.published_at || r.created_at || "" });
+          }
+        }
+      }
+      // sort: mới → cũ (theo ngày release, fallback theo version string)
+      items.sort((a, b) => (new Date(b.relDate) - new Date(a.relDate)) || (b.version.localeCompare(a.version, undefined, { numeric: true, sensitivity: "base" })));
+      return items;
+    }
+
+    async function listVersions() {
+      if (!chipType) { setInfo("Chưa xác định loại chip. Hãy Kết nối trước.", "warn"); return; }
+      setProgress(70);
+      versionsDiv.classList.remove("hidden");
+      versionsDiv.textContent = "⏳ Đang tải danh sách bản cập nhật từ GitHub...";
+
+      try {
+        const releases = await fetchReleases();
+        const items = toItemsFromReleases(releases, chipType);
+
+        if (!items.length) {
+          versionsDiv.textContent = "Không tìm thấy bản firmware cho loại chip này.";
+          return;
+        }
+
+        versionsDiv.innerHTML = items.map(
+          (i, idx) => `<label><input type="radio" name="fwver" value="${i.url}" ${idx === 0 ? "checked" : ""}> ${i.version}</label>`
+        ).join("<br>");
+
+        btnUpdate.classList.remove("hidden");
+        setProgress(85);
+      } catch (e) {
+        console.error(e);
+        versionsDiv.textContent = "⚠️ Lỗi khi tải release GitHub.";
+      }
+    }
+
+    // ===== Flash qua esp-web-tools install-button (manifest .json) =====
+    btnUpdate.addEventListener("click", () => {
+      const sel = document.querySelector('input[name="fwver"]:checked');
+      if (!sel) { alert("Chọn một phiên bản!"); return; }
+      const manifestUrl = sel.value;
+
+      // Giao cho install-button: nó sẽ tự kéo IO0 & EN để vào bootloader và flash .bin trong manifest
+      installBtn.manifest = manifestUrl;
+      installBtn.setAttribute("erase-first", "");
+      installBtn.classList.remove("hidden");
+
+      // Tự động bấm nút cài đặt để mượt hơn (người dùng vẫn sẽ thấy UI xác nhận của esp-web-tools)
+      installBtn.click();
+      setProgress(100);
+    });
+
+    // ===== Factory reset (placeholder) =====
+    btnFactoryReset.addEventListener("click", () => {
+      alert("Khôi phục cài đặt gốc: hãy chọn bản factory trong danh sách và nhấn Cập nhật.");
+    });
+
+    // ===== Wire buttons =====
+    btnConnect.addEventListener("click", connectAndDetect);
+    btnCheckUpdate.addEventListener("click", listVersions);
+  </script>
+</body>
+
+</html>
