@@ -1,24 +1,22 @@
-const $ = (s) => document.querySelector(s);
-const btnConnect = $("#btnConnect");
-const btnCheckUpdate = $("#btnCheckUpdate");
-const btnFactoryReset = $("#btnFactoryReset");
-const installBtn = $("#installBtn");
-const deviceInfo = $("#deviceInfo");
-const versionsBox = $("#versions");
-const versionList = $("#versionList");
-const logBox = $("#log");
-const logCard = document.querySelector("#logCard");
-
+const btnConnectUpdate = document.getElementById('btnConnectUpdate');
+const btnCheckUpdate = document.getElementById('btnCheckUpdate');
+const btnFactoryReset = document.getElementById('btnFactoryReset');
+const installBtn = document.getElementById('installBtn');   // nếu có dùng
+const deviceInfo = document.getElementById('deviceInfo');
+const versionsBox = document.getElementById('versions');
+const versionList = document.getElementById('versionList');
+const logBox = document.getElementById('log');
+const logCard = document.getElementById('logCard');
 
 function showDetecting(on, msg) {
     const overlay = document.getElementById('detecting');
     if (msg) overlay.querySelector('.msg').textContent = msg;
     if (on) {
         overlay.classList.add('show');
-        btnConnect.setAttribute('disabled', 'disabled');
+        btnConnectUpdate.setAttribute('disabled', 'disabled');
     } else {
         overlay.classList.remove('show');
-        btnConnect.removeAttribute('disabled');
+        btnConnectUpdate.removeAttribute('disabled');
     }
 }
 
@@ -173,7 +171,7 @@ async function connectAndDetect() {
         return;
     }
 
-    btnConnect.setAttribute('disabled', 'disabled');
+    btnConnectUpdate.setAttribute('disabled', 'disabled');
 
     setProgress(5);
     lastLog = ""; logBox.textContent = ""; showLog(true);
@@ -184,7 +182,7 @@ async function connectAndDetect() {
         port = await navigator.serial.requestPort({});
     } catch (e) {
         setInfo("Bạn đã hủy chọn cổng hoặc quyền truy cập serial bị từ chối.", "warn");
-        btnConnect.removeAttribute('disabled');
+        btnConnectUpdate.removeAttribute('disabled');
         return;
     }
 
@@ -217,13 +215,13 @@ async function connectAndDetect() {
 
         try { await port.close(); } catch (_) { }
 
-        btnConnect.textContent = "🔄 Kết nối lại";
+        btnConnectUpdate.textContent = "🔄 Kết nối lại";
         btnCheckUpdate.classList.remove("hidden");
         btnFactoryReset.classList.remove("hidden");
         setProgress(60);
     } finally {
         showDetecting(false);
-        btnConnect.removeAttribute('disabled');
+        btnConnectUpdate.removeAttribute('disabled');
     }
 }
 
@@ -287,5 +285,5 @@ btnFactoryReset.addEventListener("click", () => {
     alert("Đang phát triển tính năng này. Vui lòng chờ bản cập nhật sau.");
 });
 
-btnConnect.addEventListener("click", connectAndDetect);
+btnConnectUpdate.addEventListener("click", connectAndDetect);
 btnCheckUpdate.addEventListener("click", listVersions);

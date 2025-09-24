@@ -25,8 +25,8 @@ const chipOptions = {
     { chip: "esp32c3", label: "ESP32-C3" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3 (WakeUp Word) - Hi, Lily" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Mini (No WakeUp Word)" },
+    { chip: "esp32s3", label: "ESP32-S3 N16R8 (WakeUp Word) - Hi, Lily" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Mini (No WakeUp)" },
     { chip: "esp32s3_zero", label: "ESP32-S3 Zero (WakeUp Word) - Hi, Lily" },
   ],
 }
@@ -692,7 +692,6 @@ window.addEventListener("beforeunload", async () => {
   setMacTitle(""); // về MAC: Chưa kết nối
   setStatusUI(false, "Chưa kết nối");
 });
-
 
 
 // Initialize app when DOM is loaded

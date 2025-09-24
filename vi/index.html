@@ -7,6 +7,7 @@
     <title>TanDev</title>
     <script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/update.css" />
 </head>
 
 <!-- Popup gia nhập nhóm FB -->
@@ -50,7 +51,7 @@
                         <h2>Chọn Firmware</h2>
                         <div class="fw-grid-horizontal">
                             <button class="fw-button" data-fw="mochi_nav">MochiNav (Cần Key)</button>
-                            <button class="fw-button" data-fw="xiaozhi">Chat Bot AI (Không Cần Key)</button>
+                            <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Không Cần Key)</button>
                         </div>
                     </section>
                     <!-- Chip Selection after FW -->
@@ -116,6 +117,9 @@
                                 Key)</button>
                             <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">Chat Bot AI (Không Cần
                                 Key)</button>
+                            <button class="main-guide-tab-btn" data-main-tab="update-tab">Update ChatBot AI -
+                                TanDev</button>
+
                         </div>
 
                         <!-- Tab Content for MochiNav -->
@@ -1488,6 +1492,44 @@
                             </div>
                         </div>
 
+                        <div class="main-guide-tab-content" id="update-tab">
+                            <div class="tab-content">
+                                <div class="card">
+                                    <h1>Cập nhật ChatBot AI</h1>
+                                    <p class="muted">Trang cập nhật firmware cho thiết bị Chatbot AI của TanDev —
+                                        chỉ dành cho khách hàng đã mua sản
+                                        phẩm.</p>
+
+                                    <div class="controls">
+                                        <button id="btnConnectUpdate" class="btn-primary">🔌 Kết nối</button>
+                                        <button id="btnCheckUpdate" class="btn-secondary hidden">🔍 Kiểm tra cập
+                                            nhật</button>
+                                        <button id="btnFactoryReset" class="btn-secondary hidden">♻️ Khôi phục cài
+                                            đặt gốc</button>
+                                    </div>
+
+                                    <div id="deviceInfo" class="result">Chưa kết nối.</div>
+
+                                    <div id="versions" class="result hidden">
+                                        <h3>Chọn phiên bản để cài đặt:</h3> <br>
+                                        <div class="version-list" id="versionList"></div>
+                                    </div>
+
+                                    <div id="logCard" class="result hidden" style="display:none">
+                                        <div id="log" class="log">
+                                            <div id="logLines" class="log-lines"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div id="detecting">
+                                    <div class="box">
+                                        <div class="spinner"></div>
+                                        <div class="msg">Đang nhận diện chip…</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1517,6 +1559,7 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="../update.js"></script>
 </body>
 
 </html>
