@@ -694,8 +694,261 @@ window.addEventListener("beforeunload", async () => {
 });
 
 
+// Lấy tất cả ảnh cần bật viewer
+const thumbs = document.querySelectorAll('.wiring-diagram');
+const viewer = document.getElementById('imgViewer');
+const stage = document.getElementById('ivStage');
+const imgEl = document.getElementById('ivImg');
+const btnClose = document.getElementById('ivClose');
+
+let natW = 0, natH = 0;          // kích thước ảnh gốc
+let baseScale = 1;               // scale vừa khung
+let scale = 1;                   // scale hiện tại
+let minScale = 0.2, maxScale = 8;
+
+let posX = 0, posY = 0;          // vị trí pan hiện tại
+let startX = 0, startY = 0;      // khi bắt đầu kéo
+let startPosX = 0, startPosY = 0;
+let dragging = false;
+
+// Multi-touch / pinch
+const pointers = new Map();
+let pinchStartDist = 0;
+let pinchStartScale = 1;
+let pinchStartMid = { x: 0, y: 0 };
+let lastTapTime = 0;
+
+// Mở viewer
+function openViewer(src, alt) {
+  imgEl.src = src;
+  imgEl.alt = alt || '';
+  viewer.classList.remove('hidden');
+  viewer.setAttribute('aria-hidden', 'false');
+
+  // Chờ ảnh load để tính fit
+  imgEl.onload = () => {
+    natW = imgEl.naturalWidth;
+    natH = imgEl.naturalHeight;
+    fitToScreen();
+    applyTransform(true);
+  };
+  disableScroll();
+}
+
+// Đóng viewer
+function closeViewer() {
+  viewer.classList.add('hidden');
+  viewer.setAttribute('aria-hidden', 'true');
+  imgEl.src = '';
+  enableScroll();
+  resetState();
+}
+
+function resetState() {
+  scale = 1; baseScale = 1; posX = 0; posY = 0;
+  pointers.clear();
+  pinchStartDist = 0;
+}
+
+// Tính scale vừa khung
+function fitToScreen() {
+  const vw = stage.clientWidth;
+  const vh = stage.clientHeight;
+  baseScale = Math.min(vw / natW, vh / natH);
+  scale = baseScale;
+  posX = 0; posY = 0;
+}
+
+// Áp transform (translate + scale)
+function applyTransform(snap = false) {
+  const t = `translate(${posX}px, ${posY}px) scale(${scale})`;
+  imgEl.style.transform = t;
+  imgEl.style.transition = snap ? 'transform 120ms ease-out' : 'none';
+}
+
+// Giới hạn pan để không mất ảnh (đơn giản)
+function clampPan() {
+  const vw = stage.clientWidth, vh = stage.clientHeight;
+  const w = natW * scale, h = natH * scale;
+  const maxX = Math.max(0, (w - vw) / 2);
+  const maxY = Math.max(0, (h - vh) / 2);
+  posX = Math.min(maxX, Math.max(-maxX, posX));
+  posY = Math.min(maxY, Math.max(-maxY, posY));
+}
+
+// Zoom quanh một điểm (clientX/Y)
+function zoomAt(delta, cx, cy) {
+  const prevScale = scale;
+  const zoom = Math.exp(delta); // mượt mà
+  scale = Math.min(maxScale, Math.max(minScale, scale * zoom));
+  // Giữ điểm (cx,cy) cố định tương đối khi zoom
+  const rect = imgEl.getBoundingClientRect();
+  const imgCX = cx - rect.left;
+  const imgCY = cy - rect.top;
+  const nx = (imgCX - rect.width / 2);
+  const ny = (imgCY - rect.height / 2);
+  const k = scale / prevScale - 1;
+  posX -= nx * k;
+  posY -= ny * k;
+
+  clampPan();
+  applyTransform();
+}
+
+// Sự kiện click vào thumbnail
+thumbs.forEach(el => {
+  el.style.cursor = 'zoom-in';
+  el.addEventListener('click', () => openViewer(el.src, el.alt));
+});
+
+// Đóng
+btnClose.addEventListener('click', closeViewer);
+viewer.addEventListener('click', (e) => {
+  // click nền (không phải ảnh) thì đóng
+  if (e.target === viewer || e.target === stage) closeViewer();
+});
+
+// Wheel zoom (desktop)
+stage.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = -e.deltaY * 0.0015; // âm là zoom in
+  zoomAt(delta, e.clientX, e.clientY);
+}, { passive: false });
+
+// Double click / double tap: toggle fit <-> 2x
+stage.addEventListener('dblclick', (e) => {
+  e.preventDefault();
+  if (scale <= baseScale * 1.05) {
+    scale = Math.min(maxScale, baseScale * 2);
+  } else {
+    scale = baseScale; posX = 0; posY = 0;
+  }
+  clampPan();
+  applyTransform(true);
+});
+
+// Single-tap double detection (mobile)
+stage.addEventListener('pointerup', (e) => {
+  const now = Date.now();
+  if (now - lastTapTime < 300 && pointers.size === 0) {
+    // xử lý như dblclick
+    if (scale <= baseScale * 1.05) {
+      scale = Math.min(maxScale, baseScale * 2);
+    } else {
+      scale = baseScale; posX = 0; posY = 0;
+    }
+    clampPan();
+    applyTransform(true);
+  }
+  lastTapTime = now;
+});
+
+// Drag / Pan + Pinch bằng Pointer Events
+stage.addEventListener('pointerdown', (e) => {
+  stage.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1) {
+    dragging = true;
+    stage.classList.add('dragging');
+    startX = e.clientX; startY = e.clientY;
+    startPosX = posX; startPosY = posY;
+  } else if (pointers.size === 2) {
+    // bắt đầu pinch
+    const [p1, p2] = [...pointers.values()];
+    pinchStartDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    pinchStartScale = scale;
+    pinchStartMid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+  }
+});
+
+stage.addEventListener('pointermove', (e) => {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if (pointers.size === 1 && dragging) {
+    posX = startPosX + (e.clientX - startX);
+    posY = startPosY + (e.clientY - startY);
+    clampPan();
+    applyTransform();
+  } else if (pointers.size === 2) {
+    const [p1, p2] = [...pointers.values()];
+    const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    if (pinchStartDist > 0) {
+      const factor = dist / pinchStartDist;
+      const targetScale = Math.min(maxScale, Math.max(minScale, pinchStartScale * factor));
+      // zoom quanh midpoint ban đầu
+      const rect = imgEl.getBoundingClientRect();
+      const prevScale = scale;
+      scale = targetScale;
+
+      const cx = pinchStartMid.x, cy = pinchStartMid.y;
+      const imgCX = cx - rect.left;
+      const imgCY = cy - rect.top;
+      const nx = (imgCX - rect.width / 2);
+      const ny = (imgCY - rect.height / 2);
+      const k = scale / prevScale - 1;
+      posX -= nx * k;
+      posY -= ny * k;
+
+      // Pan theo dịch chuyển midpoint hiện tại so với ban đầu
+      const curMid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+      posX += (curMid.x - pinchStartMid.x);
+      posY += (curMid.y - pinchStartMid.y);
+
+      clampPan();
+      applyTransform();
+    }
+  }
+});
+
+stage.addEventListener('pointerup', (e) => {
+  stage.releasePointerCapture?.(e.pointerId);
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) {
+    pinchStartDist = 0;
+  }
+  if (pointers.size === 0) {
+    dragging = false;
+    stage.classList.remove('dragging');
+  }
+});
+
+stage.addEventListener('pointercancel', (e) => {
+  pointers.delete(e.pointerId);
+  dragging = false;
+  stage.classList.remove('dragging');
+  pinchStartDist = 0;
+});
+
+// Đóng bằng ESC
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !viewer.classList.contains('hidden')) {
+    closeViewer();
+  }
+});
+
+// Helper: khóa cuộn nền khi mở modal
+let scrollY = 0;
+function disableScroll() {
+  scrollY = window.scrollY || document.documentElement.scrollTop;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.left = '0'; document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+function enableScroll() {
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  window.scrollTo(0, scrollY);
+}
+
+
 // Initialize app when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   initializeApp()
   initializePopups()
 })
+

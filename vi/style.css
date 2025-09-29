@@ -1910,3 +1910,77 @@ esp-web-install-button {
     padding: 0 8px;
   }
 }
+
+.iv.hidden {
+  display: none;
+}
+
+/* Overlay */
+.iv {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  user-select: none;
+  touch-action: none;
+  /* để xử lý pinch/drag bằng Pointer Events */
+}
+
+/* Thanh công cụ */
+.iv__toolbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font: 500 14px/1.2 system-ui, sans-serif;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+
+.iv__btn {
+  margin-left: auto;
+  pointer-events: auto;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.iv__btn:hover {
+  background: rgba(255, 255, 255, .12);
+}
+
+.iv__hint {
+  opacity: .85;
+}
+
+/* Sân khấu giữ ảnh */
+.iv__stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  cursor: grab;
+}
+
+.iv__stage.dragging {
+  cursor: grabbing;
+}
+
+/* Ảnh được transform */
+#ivImg {
+  will-change: transform;
+  transform-origin: 50% 50%;
+  max-width: none;
+  max-height: none;
+  /* để tự tính scale */
+  image-rendering: -webkit-optimize-contrast;
+  -ms-interpolation-mode: nearest-neighbor;
+}

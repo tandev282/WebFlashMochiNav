@@ -15,10 +15,9 @@
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
         <h3>🌟 Gia Nhập Nhóm Facebook</h3>
-        <p>Đã có phiên bản mới ChatBot AI Ver 2.0.1</p>
-        <p>Ở phiên bản này đã thêm bật/tắt đèn, sửa lỗi, fix font,....</p>
-        <p>Đã có phiên bản MochiNav V5.5.0 mới nhất, có full âm thanh emoji</p>
-        <p>Chi tiết tại Tab: Hướng dẫn sử dụng</p>
+        <p>ChatBot AI : Đã vẽ lại sơ đồ chi tiết rõ nét hơn</p>
+        <p>Tham gia nhóm Xiaozhi để được hỗ trợ</p>
+        <p>MochiNav: Đã có phiên bản V5.5.0 mới nhất, có full âm thanh emoji. Chi tiết tại Tab: Hướng dẫn sử dụng</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
             Tham gia
         </a>
@@ -886,9 +885,9 @@
                                         <!-- Chip Type Tabs -->
                                         <div class="chip-type-tabs">
                                             <button class="chip-tab-btn active" data-chip-tab="xz-esp32s3">ESP32-S3
-                                                DevKit - WakeUp Words (Hi, Lily - Hi, ESP)</button>
+                                                N16R8</button>
                                             <button class="chip-tab-btn" data-chip-tab="xz-esp32s3mini">ESP32-S3
-                                                Super Mini - No WakeUp Words</button>
+                                                Super Mini / ESP32 S3 Zero</button>
                                         </div>
 
                                         <!-- ESP32-S3 DevKit -->
@@ -1089,9 +1088,14 @@
 
                                         <!-- ESP32-S3 Super Mini -->
                                         <div class="wiring-card chip-tab-content" id="xz-esp32s3mini-content">
-                                            <h3>Sơ Đồ Đấu Nối ESP32-S3 Super Mini</h3>
+                                            <h3>Sơ Đồ Đấu Nối ESP32-S3 Super Mini / ESP32 S3 Zero dùng chung</h3>
                                             <div class="diagram-container">
-                                                <img src="../img/xiaozhi_esp32-s3_supermini.png"
+                                                <img src="../img/xiaozhi_zero.png" alt="Sơ đồ đấu nối ESP32-S3 Zero"
+                                                    class="wiring-diagram">
+                                            </div>
+
+                                            <div class="diagram-container">
+                                                <img src="../img/xiaozhi_mini.png"
                                                     alt="Sơ đồ đấu nối ESP32-S3 Super Mini" class="wiring-diagram">
                                             </div>
 
@@ -1120,6 +1124,43 @@
                                                         <tr>
                                                             <td>GPIO8</td>
                                                             <td>SDA</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- ESP32 with MIC INMP441 -->
+                                                <h5>ESP32-S3 - Microphone INMP441</h5>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESP32-S3</th>
+                                                            <th>INMP441</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>GND</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3V3</td>
+                                                            <td>VCC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO2</td>
+                                                            <td>WS</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO3</td>
+                                                            <td>SCK</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GPIO4</td>
+                                                            <td>SD</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GND</td>
+                                                            <td>L/R</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -1165,42 +1206,6 @@
                                                     </tbody>
                                                 </table>
 
-                                                <!-- ESP32 with MIC INMP441 -->
-                                                <h5>ESP32-S3 - Microphone INMP441</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>INMP441</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VCC</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO2</td>
-                                                            <td>WS</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO3</td>
-                                                            <td>SCK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO4</td>
-                                                            <td>SD</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>L/R</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
 
                                                 <!-- ESP32 with Buttons -->
                                                 <h5>ESP32-S3 - Nút Nhấn</h5>
@@ -1556,6 +1561,19 @@
                 <p class="footer-text">© 2025 MochiNav - TanDev</p>
             </div>
         </footer>
+
+
+        <!-- Image Viewer Modal -->
+        <div id="imgViewer" class="iv hidden" aria-hidden="true">
+            <div class="iv__toolbar">
+                <span class="iv__hint">Cuộn để zoom · kéo để di chuyển · nhấp đúp để đặt lại</span>
+                <button id="ivClose" class="iv__btn" aria-label="Đóng (Esc)">✕</button>
+            </div>
+            <div class="iv__stage" id="ivStage">
+                <img id="ivImg" alt="">
+            </div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
