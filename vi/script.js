@@ -26,7 +26,7 @@ const chipOptions = {
   ],
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 (WakeUp Word) - Hi, Lily" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Mini (No WakeUp)" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Mini (WakeUp Word) - Hi, Lily" },
     { chip: "esp32s3_zero", label: "ESP32-S3 Zero (WakeUp Word) - Hi, Lily" },
   ],
 }
@@ -170,7 +170,6 @@ function showFirmwareNotAvailableMessage() {
       <div class="not-available-icon">⚠️</div>
       <h4>Firmware Chưa Sẵn Sàng</h4>
       <p>Hiện tại firmware <strong>${firmwareName}</strong> cho chip <strong>${chipName}</strong>${oledInfo} đang được phát triển.</p>
-      <p class="coming-soon">Nhắn tin Zalo hoặc Facebook để nhận file chương trình mới nhất! 🚀</p>
     </div>
   `
 }

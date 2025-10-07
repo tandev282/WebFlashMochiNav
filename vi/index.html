@@ -47,10 +47,10 @@
                     <!-- Chip Selection -->
                     <!-- Firmware Selection -->
                     <section class="chip-selection">
-                        <h2>Chọn Firmware</h2>
+                        <h2>Chọn Chương Trình Cần Nạp</h2>
                         <div class="fw-grid-horizontal">
                             <button class="fw-button" data-fw="mochi_nav">MochiNav (Có phí)</button>
-                            <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Miễn phí)</button>
+                            <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Miễn phí) <br> Nhạc Việt Nam</button>
                         </div>
                     </section>
                     <!-- Chip Selection after FW -->
@@ -65,7 +65,8 @@
                         <div class="chip-grid-horizontal" id="oledGrid">
                             <button class="oled-button" data-oled="0.91">OLED 0.91inch 128x32</button>
                             <button class="oled-button" data-oled="0.96">OLED 0.96inch 128x64</button>
-                            <button class="oled-button" data-oled="1.3">OLED 1.3inch 128x64</button>
+                            <button class="oled-button" data-oled="1.3">OLED 1.3inch 128x64 <br>(Chưa có nhạc
+                                việt)</button>
                         </div>
                     </section>
 
@@ -94,7 +95,7 @@
                     </section>
 
                     <div class="step-content">
-                        <h4>Hướng dẫn nạp code MochiNav</h4>
+                        <h4>Hướng dẫn nạp firmware </h4>
                         <ul>
                             <li><strong>Vui lòng sử dụng máy tính để nạp chương trình</strong></li>
                             <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 / ESP32 S3 và gim cáp kết nối với máy
@@ -112,10 +113,10 @@
                     <div class="guide-section">
                         <!-- Main Tab for MochiNav and Xiaozhi -->
                         <div class="main-guide-tabs">
-                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav (Cần
-                                Key)</button>
-                            <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">Chat Bot AI (Không Cần
-                                Key)</button>
+                            <button class="main-guide-tab-btn active" data-main-tab="mochinav-tab">MochiNav (Có
+                                Phí)</button>
+                            <button class="main-guide-tab-btn" data-main-tab="xiaozhi-tab">ChatBot AI (Miễn
+                                Phí)</button>
                             <button class="main-guide-tab-btn" data-main-tab="update-tab">Update ChatBot AI -
                                 TanDev</button>
 
@@ -139,6 +140,9 @@
                                     <div class="update-section">
                                         <div class="update-card">
                                             <h3>MochiNav V5.5.0</h3>
+                                            <img src="../img/mochinav.jpg" alt="MochiNav" class="update-image"
+                                                style="display:block;margin:16px auto;max-width:200px;width:100%;height:auto;">
+
                                             <ul>
                                                 <li><strong>Kết nối:</strong> <br> 1. Thêm chức năng cho phép chỉnh thời
                                                     gian tự động tắt BLE khi không
@@ -204,31 +208,6 @@
                                                     <li>Khuyến nghị cập nhật để nhận được các tính năng mới nhất</li>
                                                 </ul>
                                             </div>
-                                            <div class="feature-request-form">
-                                                <h4>📬 Gửi Yêu Cầu Tính Năng</h4>
-                                                <p>Nếu bạn có ý tưởng hoặc tính năng muốn bổ sung trong phiên bản tiếp
-                                                    theo,
-                                                    hãy gửi tại đây:</p>
-                                                <form id="requestForm">
-                                                    <div class="form-group">
-                                                        <label for="name">Tên bạn:</label>
-                                                        <input type="text" id="name" name="name"
-                                                            placeholder="Nhập tên của bạn" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="content">Nội dung yêu cầu:</label>
-                                                        <textarea id="content" name="content" rows="4"
-                                                            placeholder="Chi tiết ý tưởng hoặc đề xuất..."
-                                                            required></textarea>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit" class="btn btn-primary">📤 Gửi yêu
-                                                            cầu</button>
-                                                    </div>
-                                                </form>
-                                                <div id="formMessage"></div>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -824,9 +803,10 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">v2.0.1 có gì ???</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">Phiên bản music Việt Nam</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ</button>
-                                <button class="tab-btn" data-tab="xz-tab2">Kích Hoạt</button>
+                                <button class="tab-btn" data-tab="xz-tab2">Link Mua Linh Kiện</button>
+                                <button class="tab-btn" data-tab="xz-tab3">Kích Hoạt</button>
                             </div>
 
                             <!-- Tab Content -->
@@ -835,31 +815,13 @@
                                 <div class="tab-pane active" id="xz-tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>Chat Bot AI (Xiaozhi) v2.0.1</h3>
+                                            <h3>Chat Bot AI (Xiaozhi) phiên bản music Việt Nam</h3>
+                                            <img src="../img/chatbot.jpg" alt="MochiNav" class="update-image"
+                                                style="display:block;margin:16px auto;max-width:200px;width:100%;height:auto;">
                                             <ul>
-                                                <li><strong>1.9.1 -> 2.0.1:</strong> Chi tiết tại <div
-                                                        class="code-block">
-                                                        https://github.com/78/xiaozhi-esp32/compare/v2.0.0...v2.0.1
-                                                    </div>
+                                                <li><strong>Nhạc Việt:</strong> Bạn cần cài đặt fimware của tôi và xóa
+                                                    Music trong MCP của Console web xiaozhi.me để sử dụng tính năng này
                                                 </li>
-
-                                                <li><strong>Thêm tính năng:</strong> Bật/tắt đèn LED bằng GPIO, sửa lỗi,
-                                                    sửa font
-                                                    chữ,...
-
-                                                <li><strong>Ngôn ngữ & cấu trúc firmware:</strong> Tự phát hiện
-                                                    EN/VI
-                                                    theo trình duyệt: ví dụ https://tandev.click/vi/ sẽ là firmware
-                                                    tiếng việt , https://tandev.click/en/ sẽ là firmware tiếng anh
-                                                </li>
-
-                                                <li><strong>Hỗ trợ chip:</strong> ESP32-S3 DevKit, ESP32-S3 Super
-                                                    Mini
-                                                    (chọn đúng loại khi nạp)</li>
-                                                <li><strong>OLED:</strong> Chọn đúng kích cỡ 0.91"/0.96" (I2C
-                                                    SSD1306)
-                                                </li>
-
                                                 <li><strong>Github:</strong> Đây là link Git chính chủ Open source
                                                     nếu mọi người muốn vọc vạch: <div class="code-block">
                                                         https://github.com/78/xiaozhi-esp32</div>
@@ -1289,8 +1251,163 @@
                                     </div>
                                 </div>
 
+                                <!-- xz-tab2: Link mua linh kiện -->
+                                <div class="tab-pane active" id="xz-tab2">
+                                    <section class="links-section">
+                                        <div class="links-card">
+                                            <h3>📌 TỔNG HỢP LINK MUA LINH KIỆN DIY CHATBOT AI (ESP32-S3)</h3>
+
+                                            <!-- 1) Main board -->
+                                            <div class="parts-group">
+                                                <h4>1) Main board</h4>
+                                                <ul class="parts-list">
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/ox4HP3L"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">ESP32-S3 Zero</span>
+                                                            <span class="part-note">Hỗ trợ WakeUp Words, nhưng đôi khi
+                                                                sóng WiFi kém</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/z7UPdiZ"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">ESP32-S3 DevKit N16R8 Đen</span>
+                                                            <span class="part-note">Hỗ trợ WakeUp Words, custom WakeUp
+                                                                Words</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/GTSkCAE"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">ESP32-S3 SuperMini</span>
+                                                            <span class="part-note">Hỗ trợ WakeUp Words</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- 2) Màn hình hiển thị -->
+                                            <div class="parts-group">
+                                                <h4>2) Màn hình hiển thị</h4>
+                                                <ul class="parts-list">
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/vStJEos"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">TFT LCD SPI
+                                                                (0.96/1.3/1.44/1.8")</span>
+                                                            <span class="part-note">Màn hình màu SPI</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/Npc987L"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">OLED 0.96" I2C 4 pin
+                                                                (128×64)</span>
+                                                            <span class="part-note">SSD1306, hiển thị rõ nét</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/7298dGn"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">OLED 0.91" I2C 4 pin
+                                                                (128×32)</span>
+                                                            <span class="part-note">SSD1306, siêu gọn</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- 3) Âm thanh -->
+                                            <div class="parts-group">
+                                                <h4>3) Âm thanh (mic + âm thanh + loa)</h4>
+                                                <ul class="parts-list">
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/zjCZQky"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">Mic I2S INMP441</span>
+                                                            <span class="part-note">Mic số, thu ổn định</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/cgSo1zu"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">I2S DAC MAX98357A 3W</span>
+                                                            <span class="part-note">Giải mã I2S + khuếch đại</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/u73CvGr"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">Loa tròn 8Ω 1W</span>
+                                                            <span class="part-note">Nhiều kích cỡ</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- 4) Nguồn & sạc pin -->
+                                            <div class="parts-group">
+                                                <h4>4) Nguồn & sạc pin</h4>
+                                                <ul class="parts-list">
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/Mcy1PpM"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">Module sạc Type-C 5V 2A</span>
+                                                            <span class="part-note">Sạc – cấp nguồn tiện lợi</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/nzwWP5C"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">TP4056 (sạc Li-ion)</span>
+                                                            <span class="part-note">Có/không bảo vệ tuỳ lựa chọn</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/9xbAXCZ"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">Pin Lithium 3.7V</span>
+                                                            <span class="part-note">Nhiều dung lượng</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- 5) Phụ kiện -->
+                                            <div class="parts-group">
+                                                <h4>5) Phụ kiện</h4>
+                                                <ul class="parts-list">
+                                                    <li>
+                                                        <a class="part-link" href="https://vn.shp.ee/V2PH2KG"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <span class="part-title">Nút nhấn 6×6mm (tact switch)</span>
+                                                            <span class="part-note">Bấm bền – rẻ</span>
+                                                            <span class="part-go">Mua →</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </section>
+                                </div>
+
+
                                 <!-- Tab 4: Kích Hoạt Chương Trình -->
-                                <div class="tab-pane" id="xz-tab2">
+                                <div class="tab-pane" id="xz-tab3">
                                     <div class="activation-section">
                                         <div class="activation-card">
                                             <h3>Hướng Dẫn Kích Hoạt Chương Trình</h3>

@@ -1984,3 +1984,85 @@ esp-web-install-button {
   image-rendering: -webkit-optimize-contrast;
   -ms-interpolation-mode: nearest-neighbor;
 }
+
+/* --- Parts / Links catalogue --- */
+.links-section {
+  display: block;
+}
+
+.links-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.links-card h3 {
+  text-align: center;
+  color: var(--accent-primary);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.parts-group + .parts-group {
+  margin-top: 1.25rem;
+}
+
+.parts-group h4 {
+  color: var(--accent-secondary);
+  font-size: 1.05rem;
+  margin: 0.75rem 0 0.75rem;
+}
+
+.parts-list {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.part-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.75rem;
+  align-items: center;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  text-decoration: none;
+  transition: all .2s ease;
+}
+
+.part-title {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.part-note {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  grid-column: 1 / span 1;
+}
+
+.part-go {
+  color: var(--accent-primary);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.part-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(14,165,233,0.08) 100%);
+}
+
+@media (max-width: 560px) {
+  .parts-list {
+    grid-template-columns: 1fr;
+  }
+}
