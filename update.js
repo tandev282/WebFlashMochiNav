@@ -8,6 +8,45 @@ const versionList = document.getElementById('versionList');
 const logBox = document.getElementById('log');
 const logCard = document.getElementById('logCard');
 
+
+// === utils: strip markdown + rút gọn mô tả từ release body ===
+function stripMarkdown(md = "") {
+    if (!md) return "";
+    // code fence
+    md = md.replace(/```[\s\S]*?```/g, "");
+    // inline code
+    md = md.replace(/`[^`]*`/g, "");
+    // images ![alt](url)
+    md = md.replace(/!\[[^\]]*\]\([^)]+\)/g, "");
+    // links [text](url)
+    md = md.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+    // headings/quotes/emphasis
+    md = md.replace(/^>+\s?/gm, "");
+    md = md.replace(/^#+\s?/gm, "");
+    md = md.replace(/(\*\*|__)(.*?)\1/g, "$2");
+    md = md.replace(/(\*|_)(.*?)\1/g, "$2");
+    // lists/tables markers
+    md = md.replace(/^\s*[-*+]\s+/gm, "");
+    md = md.replace(/^\s*\d+\.\s+/gm, "");
+    // collapse whitespace
+    md = md.replace(/\r\n?/g, "\n").replace(/[ \t]+\n/g, "\n");
+    return md.trim();
+}
+
+function pickFirstParagraph(text = "") {
+    if (!text) return "";
+    const cleaned = stripMarkdown(text);
+    // lấy đoạn đầu tiên (tới dòng trống hoặc ~180 ký tự)
+    const para = cleaned.split(/\n{2,}/)[0].trim();
+    return para || cleaned.split("\n")[0].trim();
+}
+
+function ellipsis(s = "", max = 160) {
+    s = (s || "").trim();
+    return s.length > max ? (s.slice(0, max - 1).trimEnd() + "…") : s;
+}
+
+
 function showDetecting(on, msg) {
     const overlay = document.getElementById('detecting');
     if (msg) overlay.querySelector('.msg').textContent = msg;
@@ -232,6 +271,7 @@ async function fetchReleases() {
 }
 
 const normVer = v => (v || "").toString().trim().replace(/^v/i, "");
+
 function toItemsFromReleases(rels, chip) {
     const want = chip === "zero" ? "zero" : "mini";
     const items = [];
@@ -240,10 +280,21 @@ function toItemsFromReleases(rels, chip) {
         if (!v) continue;
         const json = `xiaozhi-${want}-${v}.json`;
         const url = `https://cdn.jsdelivr.net/gh/tandev282/xiaozhi-update@${v}/${json}`;
-        items.push({ version: v, url, relDate: r.published_at || r.created_at || "" });
+
+        // Lấy mô tả ngắn từ release body (Describe this release)
+        const shortDesc = ellipsis(pickFirstParagraph(r.body || r.name || ""), 180);
+
+        items.push({
+            version: v,
+            url,
+            relDate: r.published_at || r.created_at || "",
+            desc: shortDesc,
+            relUrl: r.html_url || ""
+        });
     }
     return items.sort(
-        (a, b) => (new Date(b.relDate) - new Date(a.relDate)) ||
+        (a, b) =>
+            (new Date(b.relDate) - new Date(a.relDate)) ||
             b.version.localeCompare(a.version, undefined, { numeric: true, sensitivity: "base" })
     );
 }
@@ -260,18 +311,18 @@ async function listVersions() {
         if (!items.length) { versionList.textContent = "Không tìm thấy bản firmware cho thiết bị này."; return; }
 
         versionList.innerHTML = items.map(i => `
-          <esp-web-install-button
-            class="ver-install"
-            manifest="${i.url}"
-            erase-first
-          >
-            <!-- Cả card là vùng click cài đặt -->
-            <div class="version-item" slot="activate">
-              <span class="version-name">v${i.version}</span>
-              <span class="inline-install">Cài đặt</span>
-            </div>
-          </esp-web-install-button>
-        `).join("");
+  <esp-web-install-button
+    class="ver-install"
+    manifest="${i.url}"
+    erase-first
+  >
+    <div class="version-item" slot="activate">
+      <span class="version-name">v${i.version}</span>
+      ${i.desc}
+      <span class="inline-install">Cài đặt</span>
+    </div>
+  </esp-web-install-button>
+`).join("");
 
 
         setProgress(85);

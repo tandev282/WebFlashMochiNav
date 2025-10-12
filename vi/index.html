@@ -14,10 +14,11 @@
 <div id="fbJoinPopup" class="popup-overlay" style="display: none;">
     <div class="popup-box">
         <button id="closePopupBtn" class="close-btn">X</button>
-        <h3>🌟 Gia Nhập Nhóm Facebook Xiaozhi VN - Để được hướng dẫn chi tiết</h3>
-        <p>ChatBot AI : Đã vẽ lại sơ đồ chi tiết rõ nét hơn</p>
-        <p>Tham gia nhóm Xiaozhi để được hỗ trợ</p>
-        <p>MochiNav: Đã có phiên bản V5.5.0 mới nhất, có full âm thanh emoji. Chi tiết tại Tab: Hướng dẫn sử dụng</p>
+        <h3>🌟Nhóm Facebook Xiaozhi VN <br> Để được hướng dẫn chi tiết</h3>
+        <p>ChatBot AI : Cập nhật Firmware 2.0.3 - Nhạc Việt, Tin tức,
+            Giá vàng, Báo thức, Đếm ngược</p>
+        <p>Hãy vào đúng web là https://tandev.click/vi/</p>
+        <p>MOCHINAV VÀ CHATBOT AI LÀ 2 SẢN PHẨM KHÁC NHAU, XIN ĐỪNG NHẦM LẪN!!!</p>
         <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
             Tham gia
         </a>
@@ -50,7 +51,8 @@
                         <h2>Chọn Chương Trình Cần Nạp</h2>
                         <div class="fw-grid-horizontal">
                             <button class="fw-button" data-fw="mochi_nav">MochiNav (Có phí)</button>
-                            <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Miễn phí) <br> Nhạc Việt Nam</button>
+                            <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Miễn phí) <br> Nhạc Việt, Tin tức,
+                                Giá vàng, Báo thức, Đếm ngược</button>
                         </div>
                     </section>
                     <!-- Chip Selection after FW -->
@@ -63,10 +65,9 @@
                     <section class="chip-selection" id="oledSelection" style="display: none;">
                         <h2>Chọn Màn Hình OLED</h2>
                         <div class="chip-grid-horizontal" id="oledGrid">
-                            <button class="oled-button" data-oled="0.91">OLED 0.91inch 128x32</button>
-                            <button class="oled-button" data-oled="0.96">OLED 0.96inch 128x64</button>
-                            <button class="oled-button" data-oled="1.3">OLED 1.3inch 128x64 <br>(Chưa có nhạc
-                                việt)</button>
+                            <button class="oled-button" data-oled="0.91">OLED 0.91inch</button>
+                            <button class="oled-button" data-oled="0.96">OLED 0.96inch</button>
+                            <button class="oled-button" data-oled="1.3">OLED 1.3inch</button>
                         </div>
                     </section>
 
@@ -98,8 +99,8 @@
                         <h4>Hướng dẫn nạp firmware </h4>
                         <ul>
                             <li><strong>Vui lòng sử dụng máy tính để nạp chương trình</strong></li>
-                            <li><strong>Nhấn giữ nút BOOT trên ESP32 / ESP32 C3 / ESP32 S3 và gim cáp kết nối với máy
-                                    tính</strong>
+                            <li><strong>Nhấn giữ nút BOOT và gim cáp kết nối với máy
+                                    tính nếu bị lỗi trong quá trình nạp</strong>
                             </li>
                             <li><strong>Chọn chip phù hợp và nhấn kết nối</strong></li>
                             <li><strong>Chọn cổng COM của chip và nhấn Kết nối -> Install -> Install -> chờ nạp xong
@@ -803,7 +804,8 @@
                         <div class="main-guide-tab-content" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">Phiên bản music Việt Nam</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">Nhạc Việt, Tin tức, Giá vàng, Báo
+                                    thức, Đếm ngược</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ</button>
                                 <button class="tab-btn" data-tab="xz-tab2">Link Mua Linh Kiện</button>
                                 <button class="tab-btn" data-tab="xz-tab3">Kích Hoạt</button>
@@ -815,12 +817,28 @@
                                 <div class="tab-pane active" id="xz-tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>Chat Bot AI (Xiaozhi) phiên bản music Việt Nam</h3>
+                                            <h3>Chat Bot AI (Xiaozhi) Nhạc Việt, Tin tức, Giá vàng, Báo thức, Đếm ngược
+                                            </h3>
                                             <img src="../img/chatbot.jpg" alt="MochiNav" class="update-image"
                                                 style="display:block;margin:16px auto;max-width:200px;width:100%;height:auto;">
                                             <ul>
                                                 <li><strong>Nhạc Việt:</strong> Bạn cần cài đặt fimware của tôi và xóa
                                                     Music trong MCP của Console web xiaozhi.me để sử dụng tính năng này
+                                                </li>
+                                                <li><strong>Tin tức:</strong> Các chủ đề hỗ trợ: tin mới nhất, tin nổi
+                                                    bật, thế giới, thời sự, thể thao, pháp luật, khoa học công nghệ
+                                                </li>
+                                                <li><strong>Giá vàng:</strong> Lấy giá vàng realtime từ SJC
+                                                </li>
+                                                <li><strong>Báo thức:</strong> Đặt báo thức, kiểm tra danh sách báo
+                                                    thức, xóa báo thức theo số thứ tự hoặc thời gian.
+                                                </li>
+                                                <li><strong>Đếm ngược:</strong> Đặt đếm ngược, kiểm tra danh sách đếm
+                                                    ngược, xóa đếm ngược theo số thứ tự hoặc thời gian.
+                                                </li>
+                                                <li><strong>Lưu Ý:</strong> Báo thức chỉ lưu khi thiết bị được bật
+                                                    nguồn, không lưu khi tắt nguồn hoàn toàn, và chỉ hoạt động 1 lần duy
+                                                    nhất sau đó sẽ tự mất đi.
                                                 </li>
                                                 <li><strong>Github:</strong> Đây là link Git chính chủ Open source
                                                     nếu mọi người muốn vọc vạch: <div class="code-block">
@@ -1404,8 +1422,6 @@
                                         </div>
                                     </section>
                                 </div>
-
-
                                 <!-- Tab 4: Kích Hoạt Chương Trình -->
                                 <div class="tab-pane" id="xz-tab3">
                                     <div class="activation-section">
@@ -1618,9 +1634,11 @@
                             <div class="tab-content">
                                 <div class="card">
                                     <h1>Cập nhật ChatBot AI</h1>
-                                    <p class="muted">Trang cập nhật firmware cho thiết bị Chatbot AI của TanDev —
+                                    <p class="muted">Trang cập nhật firmware cho thiết bị Chatbot AI —
                                         chỉ dành cho khách hàng đã mua sản
-                                        phẩm.</p>
+                                        phẩm bên TanDev</p>
+                                    <p class="muted">Thiết bị sẽ không hoạt động nếu không phải thiết bị được mua từ
+                                        TanDev</p>
 
                                     <div class="controls">
                                         <button id="btnConnectUpdate" class="btn-primary">🔌 Kết nối</button>

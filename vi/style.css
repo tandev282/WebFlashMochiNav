@@ -2066,3 +2066,11 @@ esp-web-install-button {
     grid-template-columns: 1fr;
   }
 }
+.version-item { display: grid; gap: 4px; }
+.version-name { font-weight: 700; }
+.version-desc {
+  font-size: 0.9rem;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+.version-desc a { text-decoration: underline; }
