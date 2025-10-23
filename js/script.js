@@ -58,7 +58,7 @@ function generateFirmwarePath(fw, chip, oled = null) {
   if (fw === "mochi_nav") {
     // MochiNav: mochi_nav_esp32.bin, mochi_nav_esp32c3.bin
     binaryFileName = `mochi_nav_${chip}.bin`
-    folderPath = `../firmware/${fw}/${chip}`
+    folderPath = `/firmware/${fw}/${chip}`
   } else if (fw === "xiaozhi") {
     const map = XIAOZHI_CHIP_MAP[chip];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chip}`);
@@ -66,7 +66,7 @@ function generateFirmwarePath(fw, chip, oled = null) {
     // Tên file theo chip cụ thể
     binaryFileName = `${map.filePrefix}_oled${oled}.bin`;
     // Đường dẫn có ngôn ngữ + thư mục chip riêng
-    folderPath = `../firmware/${fw}/${map.dir}/oled${oled}`;
+    folderPath = `/firmware/${fw}/${map.dir}/oled${oled}`;
   }
 
   return {
@@ -249,11 +249,11 @@ function setupEspWebToolsWithManifest(chipType) {
   let manifestPath = "";
 
   if (selectedFw === "mochi_nav") {
-    manifestPath = `../firmware/${selectedFw}/${chipType}/manifest.json`;
+    manifestPath = `/firmware/${selectedFw}/${chipType}/manifest.json`;
   } else if (selectedFw === "xiaozhi") {
     const map = XIAOZHI_CHIP_MAP[chipType];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chipType}`);
-    manifestPath = `../firmware/${selectedFw}/${map.dir}/oled${selectedOled}/manifest.json`;
+    manifestPath = `/firmware/${selectedFw}/${map.dir}/oled${selectedOled}/manifest.json`;
   }
 
   // Reset container với nút Kết nối + nút Tải FW
