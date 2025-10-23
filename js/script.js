@@ -25,9 +25,9 @@ const chipOptions = {
     { chip: "esp32c3", label: "ESP32-C3" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3 N16R8 or Mạch Tím (WakeUp) - Hi, Lily" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Mini (WakeUp) - Hi, Lily" },
-    { chip: "esp32s3_zero", label: "ESP32-S3 Zero (WakeUp) - Hi, Lily" },
+    { chip: "esp32s3", label: "ESP32-S3 N16R8 / ESP32-S3 Mạch Tím - Hi, Lily" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Super Mini - Hi, Lily" },
+    { chip: "esp32s3_zero", label: "ESP32-S3 Zero - Hi, Lily" },
   ],
 }
 
@@ -153,41 +153,154 @@ function showFirmwareNotAvailableMessage() {
   `
 }
 
+// === DOWNLOAD FW: dùng manifest; fallback file .bin cùng folder ===
+async function downloadSelectedFirmware(manifestPath, chipType) {
+  // Resolve URL tuyệt đối từ manifestPath (dù bạn dùng đường dẫn tương đối)
+  const manifestUrl = new URL(manifestPath, document.baseURI).href;
+  const baseDir = manifestUrl.substring(0, manifestUrl.lastIndexOf("/") + 1);
+
+  // Helper: tạo URL cùng thư mục manifest
+  const sameDir = (name) => new URL(name.replace(/^\.\//, ""), baseDir).href;
+
+  // Helper: kiểm tra tồn tại file mà không tải toàn bộ (HEAD; có server không hỗ trợ HEAD -> fallback GET nhẹ)
+  const exists = async (url) => {
+    try {
+      let r = await fetch(url, { method: "HEAD", cache: "no-cache" });
+      if (r.ok) return true;
+      // Live Server đôi khi không hỗ trợ HEAD → thử GET 1 lần
+      r = await fetch(url, { method: "GET", cache: "no-cache" });
+      return r.ok;
+    } catch {
+      return false;
+    }
+  };
+
+  try {
+    // 1) Cố đọc manifest
+    let manifest = null;
+    try {
+      const res = await fetch(manifestUrl, { cache: "no-cache" });
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+      manifest = await res.json();
+    } catch (e) {
+      console.warn("[FW] Không đọc/parse được manifest, sẽ fallback tên file mặc định:", e);
+    }
+
+    // 2) Nếu có 'parts' → chọn file chính từ parts
+    if (manifest) {
+      const builds = Array.isArray(manifest.builds) ? manifest.builds : null;
+      let parts = null;
+
+      if (builds && builds.length) {
+        const pickByChip = (needle) =>
+          builds.find((b) => (b.chipFamily || "").toLowerCase().includes((needle || "").toLowerCase()));
+        const build = pickByChip("esp32-s3") || pickByChip(chipType) || builds[0];
+        parts = build && Array.isArray(build.parts) ? build.parts : null;
+      } else if (Array.isArray(manifest.parts)) {
+        parts = manifest.parts;
+      }
+
+      if (parts && parts.length) {
+        // Ưu tiên file có tên hợp lý; nếu không có, chọn part offset lớn nhất
+        const mainPart =
+          parts.find((p) => /\/?(xiaozhi|firmware|factory|application|app)\.bin$/i.test(p.path || "")) ||
+          parts.slice().sort((a, b) => (a.offset || 0) - (b.offset || 0)).pop() ||
+          parts[0];
+
+        if (mainPart?.path) {
+          const fileUrl = sameDir(String(mainPart.path));
+          const filename = String(mainPart.path).split("/").pop() || "firmware.bin";
+          const a = document.createElement("a");
+          a.href = fileUrl;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          return; // xong
+        }
+      }
+    }
+
+    // 3) Fallback: thử những tên file phổ biến trong cùng thư mục manifest
+    const guesses = ["xiaozhi.bin", "firmware.bin", "application.bin", "app.bin", "factory.bin"];
+    for (const name of guesses) {
+      const url = sameDir(name);
+      // Có thể bỏ exists() để click luôn; nhưng check trước cho sạch
+      if (await exists(url)) {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        return; // xong
+      }
+    }
+
+    throw new Error("Không tìm thấy file .bin cạnh manifest.");
+  } catch (err) {
+    console.error("[FW] Download failed:", err);
+    alert("Không thể tải FW từ manifest.\n" + err.message);
+  }
+}
+
+
 function setupEspWebToolsWithManifest(chipType) {
-  let manifestPath = ""
+  let manifestPath = "";
 
   if (selectedFw === "mochi_nav") {
-    manifestPath = `../firmware/${selectedFw}/${chipType}/manifest.json`
+    manifestPath = `../firmware/${selectedFw}/${chipType}/manifest.json`;
   } else if (selectedFw === "xiaozhi") {
     const map = XIAOZHI_CHIP_MAP[chipType];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chipType}`);
-
     manifestPath = `../firmware/${selectedFw}/${map.dir}/oled${selectedOled}/manifest.json`;
   }
 
-
-
-  // Reset container content to show ESP Web Tools button
-  const espWebToolsContainer = document.getElementById("espWebToolsContainer")
+  // Reset container với nút Kết nối + nút Tải FW
+  const espWebToolsContainer = document.getElementById("espWebToolsContainer");
   espWebToolsContainer.innerHTML = `
-    <esp-web-install-button class="invisible" id="installButton"></esp-web-install-button>
-  `
+  <div style="
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    align-items:center;
+    gap:12px;
+  ">
+    <esp-web-install-button class="invisible" id="installButton" style="justify-self:start;">
+      <button slot="activate" class="btn btn-primary">Cài Đặt Ngay</button>
+    </esp-web-install-button>
 
-  // Re-get the button element after innerHTML reset
-  const newInstallButton = document.getElementById("installButton")
-  newInstallButton.manifest = manifestPath
-  newInstallButton.setAttribute("erase-first", "")
-  newInstallButton.classList.remove("invisible")
-
-  newInstallButton.innerHTML = `
-    <button slot="activate" class="btn btn-primary" style="margin: 0 auto; display: block;">
-      Kết nối
+    <!-- đổi btn-outline -> btn-primary để giống hệt -->
+    <button id="downloadFwBtn" class="btn btn-primary" style="justify-self:end;">
+      Tải Firmware (.bin)
     </button>
-  `
 
-  // Remove existing listeners to prevent duplicates
-  newInstallButton.removeEventListener("state-changed", handleFlashStateChange)
-  newInstallButton.addEventListener("state-changed", handleFlashStateChange)
+    <small id="fwUpdateStamp"
+      style="grid-column:1 / -1; text-align:center; margin-top:4px; font-size:12px; color: #d1d5db;">
+    </small>
+  </div>
+`;
+
+
+  // Re-get elements
+  const newInstallButton = document.getElementById("installButton");
+  newInstallButton.manifest = manifestPath;
+  newInstallButton.setAttribute("erase-first", "");
+  newInstallButton.classList.remove("invisible");
+
+  // Thời gian bạn tự điền
+  const fwUpdatedAt = "20:00 - 23-10-2025";
+  document.getElementById("fwUpdateStamp").textContent =
+    `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
+
+  // Nút tải FW
+  document.getElementById("downloadFwBtn").onclick =
+    () => downloadSelectedFirmware(manifestPath, chipType);
+
+
+  // Listener trạng thái flash
+  newInstallButton.removeEventListener("state-changed", handleFlashStateChange);
+  newInstallButton.addEventListener("state-changed", handleFlashStateChange);
+
 }
 
 function handleFlashStateChange(event) {

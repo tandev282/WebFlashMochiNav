@@ -250,7 +250,7 @@ async function connectAndDetect() {
         const bootLog = cutIdx > -1 ? lastLog.slice(0, cutIdx) : lastLog;
 
         const { version, board } = parseDeviceInfo(bootLog);
-        setInfo(`Thiết bị: ${board}\nPhiên bản hiện tại: ${version}`, "ok");
+        setInfo(`Thiết bị: ESP32 S3 Super Mini\nPhiên bản hiện tại: ${version}`, "ok");
 
         try { await port.close(); } catch (_) { }
 
