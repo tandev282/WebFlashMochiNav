@@ -2245,3 +2245,61 @@ h1 {
 .log-line.n {
   border-left: 3px solid rgba(255, 255, 255, .12);
 }
+
+/* Bố cục 2 cột: trái = thông tin, phải = 2 nút cài đặt */
+.version-item {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  column-gap: 16px;
+  row-gap: 8px;
+  align-items: start;
+}
+
+/* Khối tiêu đề + ghi chú ở cột trái */
+.version-head {
+  grid-column: 1;
+}
+
+.version-desc {
+  grid-column: 1;
+}
+
+/* Tên ver to hơn, đậm hơn */
+.version-name {
+  display: block;
+  font-size: 1.25rem;
+  /* to hơn */
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* “(ghi chú phát hành)” xuống dòng, nhỏ hơn và thẳng hàng với tên ver */
+.version-head .muted {
+  display: block;
+  /* ép xuống dòng */
+  font-size: .92rem;
+  margin-top: 2px;
+}
+
+/* Cột phải: 2 nút xếp dọc, ép sát mép phải */
+.btn-row {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  /* chiếm chiều cao của tiêu đề + mô tả */
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-end;
+  /* sát mép phải */
+  gap: .5rem;
+  justify-self: end;
+  align-self: start;
+}
+
+/* (tuỳ chọn) đồng bộ style nút bên trong web component */
+esp-web-install-button::part(button) {
+  font: inherit;
+  padding: .6rem 1rem;
+  border-radius: .6rem;
+  border: none;
+  cursor: pointer;
+}
