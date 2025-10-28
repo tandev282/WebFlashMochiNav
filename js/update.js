@@ -119,7 +119,7 @@ function versionCardHTML(item) {
     // Nếu thiếu 1 trong 2 manifest (tag cũ), vẫn render nút còn lại
     const miniBtn = item.miniManifest
         ? `<esp-web-install-button manifest="${item.miniManifest}" erase-first>
-         <button slot="activate" class="btn-primary">⚙️ Cài đặt FW 1</button>
+         <button slot="activate" class="btn-primary">⚙️ Cài đặt FW 1 (Ưu tiên)</button>
        </esp-web-install-button>`
         : `<button class="btn-primary" disabled title="Không có manifest Mini">⚙️ Cài đặt FW 1</button>`;
 
@@ -161,7 +161,7 @@ async function listVersions() {
         }
 
         versionList.innerHTML = pairs.map(versionCardHTML).join("");
-        deviceInfo.textContent = "1. Nếu nạp xong thiết bị bị nháy nháy màn hình, hãy thử nạp bản firmware còn lại. \n2. Khi nạp xong, vui lòng khởi động lại thiết bị nếu nó không hiển thị gì (có tiếng nhưng tối thui màn hình).";
+        deviceInfo.textContent = "1. Nếu nạp Fw1 thiết bị bị nháy nháy màn hình, hãy thử nạp bản firmware Fw2. \n2. Khi nạp xong, vui lòng khởi động lại thiết bị nếu nó không hiển thị gì (có tiếng nhưng tối thui màn hình).";
         deviceInfo.className = "result ok";
     } catch (err) {
         console.error(err);
