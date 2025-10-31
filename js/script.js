@@ -1036,9 +1036,354 @@ function enableScroll() {
 }
 
 
+
+// ====== GET MAC bằng cách đọc LOG boot: "wifi:mode : sta (...)" =============
+// ============ CONNECT → GET MAC (read-first-then-reset) ======================
+const UNLINK_BOOTLOG = {
+  baud: 115200,
+  attemptTimeoutMs: 7000,
+  reWifiModeSta: /wifi\s*:\s*mode\s*:\s*sta\s*\(\s*([0-9a-f]{2}([:\-])[0-9a-f]{2}(?:\2[0-9a-f]{2}){4})\s*\)/i,
+  reAnyMac: /([0-9a-f]{2}([:\-])[0-9a-f]{2}(?:\2[0-9a-f]{2}){4})/i,
+};
+
+let _unlink_port = null;
+let _unlink_readerStop = null;
+let _unlink_runningReader = false;
+
+function _unlink_sanitizeLogChunk(s) {
+  if (!s) return "";
+  s = s.replace(/\x1B\[[0-9;]*[A-Za-z]/g, "");
+  s = s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
+  return s;
+}
+function _unlink_sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function _unlink_notify(msg, type = "info") {
+  if (typeof showNotification === "function") showNotification(msg, type);
+  const el = document.getElementById("unlinkResult");
+  if (el) { el.textContent = msg; el.style.color = (type === "error") ? "#ef4444" : ""; }
+}
+
+// Popup progress + nút Hủy/Restart
+function _unlink_showProgress(text = "Đang lấy MAC thiết bị…") {
+  let el = document.getElementById("unlinkProgressModal");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "unlinkProgressModal";
+    el.style.position = "fixed";
+    el.style.inset = "0";
+    el.style.background = "rgba(0,0,0,0.5)";
+    el.style.display = "flex";
+    el.style.alignItems = "center";
+    el.style.justifyContent = "center";
+    el.style.zIndex = "9999";
+    el.innerHTML = `
+      <div style="background:#111;border:1px solid #333;border-radius:12px;padding:20px 24px;max-width:480px;width:92%;color:#fff;text-align:center;font-size:15px;line-height:1.5">
+        <div style="margin-bottom:10px;font-weight:600">Đang lấy MAC thiết bị</div>
+        <div id="unlinkProgressText" style="opacity:.9;margin-bottom:14px">${text}</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <button id="unlinkProgressRestart" class="btn-secondary" style="padding:8px 14px;border-radius:8px">↻ Khởi động lại & bắt lại</button>
+          <button id="unlinkProgressCancel"  class="btn-secondary" style="padding:8px 14px;border-radius:8px">Hủy</button>
+        </div>
+      </div>`;
+    document.body.appendChild(el);
+  } else {
+    const t = document.getElementById("unlinkProgressText");
+    if (t) t.textContent = text;
+    el.style.display = "flex";
+  }
+}
+function _unlink_hideProgress() {
+  const el = document.getElementById("unlinkProgressModal");
+  if (el) el.style.display = "none";
+}
+
+async function _unlink_resetPulse(port) {
+  try {
+    await port.setSignals({ dataTerminalReady: false, requestToSend: true });
+    await _unlink_sleep(40);
+    await port.setSignals({ dataTerminalReady: true, requestToSend: false });
+    await _unlink_sleep(80);
+    await port.setSignals({ dataTerminalReady: false, requestToSend: false });
+  } catch (_) { }
+}
+
+// Bắt đầu reader liên tục, trả về { stop() }
+function _unlink_startReader(port, onData) {
+  const textDecoder = new TextDecoderStream();
+  const closedPromise = port.readable.pipeTo(textDecoder.writable).catch(() => { });
+  const reader = textDecoder.readable.getReader();
+  _unlink_runningReader = true;
+
+  (async () => {
+    try {
+      while (_unlink_runningReader) {
+        const { value, done } = await reader.read();
+        if (done || !_unlink_runningReader) break;
+        if (value) onData(_unlink_sanitizeLogChunk(value));
+      }
+    } catch { } finally {
+      try { reader.releaseLock(); } catch { }
+      try { await closedPromise; } catch { }
+      _unlink_runningReader = false;
+    }
+  })();
+
+  return {
+    stop: async () => {
+      _unlink_runningReader = false;
+      try { reader.cancel(); } catch { }
+    }
+  };
+}
+
+// KẾT NỐI: requestPort + open, đổi nút thành "↻ Get MAC"
+async function unlinkConnectSerial() {
+  if (!navigator.serial) {
+    _unlink_notify("Trình duyệt không hỗ trợ Web Serial. Vui lòng dùng Chrome/Edge trên máy tính.", "error");
+    return;
+  }
+  try {
+    _unlink_port = await navigator.serial.requestPort();
+    await _unlink_port.open({ baudRate: UNLINK_BOOTLOG.baud });
+
+    const btn = document.getElementById("btnGetMac");
+    if (btn) {
+      btn.textContent = "↻ Get MAC";
+      btn.title = "Bấm để đọc log & reset để lấy MAC";
+      // gỡ handler cũ (connect) rồi gắn handler get mac
+      btn.replaceWith(btn.cloneNode(true));
+      const btn2 = document.getElementById("btnGetMac");
+      btn2.addEventListener("click", unlinkGetMacFlow);
+    }
+    _unlink_notify("Đã kết nối cổng serial. Sẵn sàng lấy MAC.");
+
+  } catch (err) {
+    _unlink_notify(`Không thể kết nối: ${err.message || err}`, "error");
+  }
+}
+
+// GET MAC: bật đọc trước → reset → đợi regex → điền input
+async function unlinkGetMacFlow() {
+  const macInput = document.getElementById("unlinkMac");
+  if (!macInput) { _unlink_notify("Không tìm thấy ô MAC Address (#unlinkMac).", "error"); return; }
+  if (!_unlink_port) { _unlink_notify("Chưa kết nối cổng. Hãy bấm 'Kết nối' trước.", "error"); return; }
+
+  let buf = ""; const maxBuf = 8192;
+  const findMac = () => {
+    let m = buf.match(UNLINK_BOOTLOG.reWifiModeSta); if (m && m[1]) return m[1];
+    m = buf.match(UNLINK_BOOTLOG.reAnyMac); if (m && m[1]) return m[1];
+    return null;
+  };
+  const setPopupText = (t) => { const el = document.getElementById("unlinkProgressText"); if (el) el.textContent = t; };
+
+  let abort = false;
+  let resetting = false;
+
+  try {
+    _unlink_showProgress("Đang lấy MAC thiết bị…");
+
+    // Nút Hủy
+    const cancelBtn = document.getElementById("unlinkProgressCancel");
+    if (cancelBtn) cancelBtn.onclick = () => { abort = true; };
+
+    // Nút Khởi động lại
+    const restartBtn = document.getElementById("unlinkProgressRestart");
+    if (restartBtn) restartBtn.onclick = async () => {
+      if (resetting) return;
+      resetting = true;
+      setPopupText("Đang khởi động lại & bắt lại log…");
+      await _unlink_resetPulse(_unlink_port);
+      resetting = false;
+    };
+
+    // 1) Bật reader TRƯỚC
+    _unlink_readerStop?.stop?.();
+    _unlink_readerStop = _unlink_startReader(_unlink_port, (chunk) => {
+      buf += chunk;
+      if (buf.length > maxBuf) buf = buf.slice(-maxBuf);
+    });
+
+    // 2) Cho decoder “ấm máy” chút rồi reset NGAY
+    await _unlink_sleep(40);
+    await _unlink_resetPulse(_unlink_port);
+
+    // 3) Đợi match
+    const t0 = Date.now();
+    while (!abort && (Date.now() - t0) < UNLINK_BOOTLOG.attemptTimeoutMs) {
+      const mac = findMac();
+      if (mac) {
+        const norm = _unlink_normalizeMac(mac);
+        macInput.value = norm;
+        _unlink_notify(`Đã lấy MAC: ${norm}`);
+        setPopupText(`Đã lấy MAC: ${norm}`);
+        await _unlink_sleep(700);
+        _unlink_hideProgress();
+        return;
+      }
+      await _unlink_sleep(35);
+    }
+
+    // Hết hạn 1 lượt → vẫn giữ popup mở, cho người dùng bấm “↻”
+    if (!abort) {
+      setPopupText("Chưa thấy MAC. Bạn có thể bấm “↻ Khởi động lại & bắt lại”.");
+      _unlink_notify("Chưa thấy MAC — bấm ↻ để reset và bắt lại log.", "error");
+    } else {
+      _unlink_hideProgress();
+      _unlink_notify("Đã hủy lấy MAC.", "error");
+    }
+
+  } catch (err) {
+    _unlink_hideProgress();
+    _unlink_notify(`Lỗi lấy MAC: ${err.message || err}`, "error");
+  }
+}
+
+// KHỞI TẠO NÚT: ban đầu là “🔌 Kết nối”, sau khi kết nối sẽ thành “↻ Get MAC”
+function initUnlinkConnectMacButton() {
+  const btn = document.getElementById("btnGetMac");
+  if (!btn) return;
+  if (!navigator.serial) {
+    btn.disabled = true;
+    btn.title = "Yêu cầu Chrome/Edge trên máy tính";
+    return;
+  }
+  btn.textContent = "🔌 Kết nối để lấy MAC";
+  btn.title = "Chọn cổng COM để kết nối";
+  btn.addEventListener("click", unlinkConnectSerial);
+}
+
+// GỌI init … (thêm dòng này trong DOMContentLoaded cùng initUnlinkEmailHandlers)
+/// initUnlinkConnectMacButton();
+
+
+// ====== UNLINK helpers (cập nhật) ======
+// ====== UNLINK helpers (cập nhật) ======
+
+function _unlink_isValidMac(mac) {
+  if (!mac) return false;
+  const v = mac.trim();
+  // AA:BB:CC:DD:EE:FF | AA-BB-CC-DD-EE-FF | AABBCCDDEEFF
+  return /^([0-9A-Fa-f]{2}[:\-]){5}([0-9A-Fa-f]{2})$/.test(v) || /^[0-9A-Fa-f]{12}$/.test(v);
+}
+
+function _unlink_normalizeMac(mac) {
+  let v = mac.replace(/[^0-9A-Fa-f]/g, "").toUpperCase();
+  if (v.length === 12) return v.match(/.{1,2}/g).join(":");
+  return mac.toUpperCase();
+}
+
+// Chỉ cho phép 6 chữ số
+function _unlink_isValidDeviceId(did) {
+  return /^\d{6}$/.test(did);
+}
+
+function _unlink_buildBody(mac, did) {
+  return [
+    "尊敬的 Xiaozhi 支持团队：",
+    "由于我不记得之前用于登录的账户信息，现请求将我的 Xiaozhi 设备从旧账户中解除绑定。",
+    `+ MAC Address：${mac}`,
+    `+ Device ID：${did}`,
+    "请协助将上述设备从旧账户解除绑定；处理完成后，请通过此邮箱回复确认。",
+    "谢谢！"
+  ].join("\n");
+}
+
+// NEW: build subject theo yêu cầu
+function _unlink_buildSubject(mac, did) {
+  return `邮件标题为 【解绑设备，设备ID ${did}，MAC地址 ${mac}】`;
+}
+
+function _unlink_openGmailCompose(to, subject, body) {
+  const url =
+    "https://mail.google.com/mail/?view=cm&fs=1" +
+    `&to=${encodeURIComponent(to)}` +
+    `&su=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+  const win = window.open(url, "_blank", "noopener,noreferrer");
+  return !!win;
+}
+
+function _unlink_openMailto(to, subject, body) {
+  const url = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = url;
+}
+
+// ====== Handler (cập nhật) ======
+function sendUnlinkEmail() {
+  const macInput = document.getElementById("unlinkMac");
+  const didInput = document.getElementById("unlinkDeviceId");
+  const resultEl = document.getElementById("unlinkResult"); // optional
+
+  const macRaw = macInput ? macInput.value.trim() : "";
+  const didRaw = didInput ? didInput.value.trim() : "";
+
+  const say = (msg, type = "info") => {
+    if (typeof showNotification === "function") showNotification(msg, type);
+    if (resultEl) {
+      resultEl.textContent = msg;
+      resultEl.style.color = (type === "error") ? "#ef4444" : "";
+    }
+  };
+
+  if (!macRaw || !didRaw) {
+    say("Vui lòng nhập đầy đủ MAC Address và Device ID.", "error");
+    return;
+  }
+  if (!_unlink_isValidMac(macRaw)) {
+    say("Định dạng MAC không hợp lệ. Ví dụ: AA:BB:CC:DD:EE:FF", "error");
+    return;
+  }
+
+  const mac = _unlink_normalizeMac(macRaw);
+  const deviceId = didRaw.replace(/\s+/g, "");
+  if (!_unlink_isValidDeviceId(deviceId)) {
+    say("Device ID phải gồm đúng 6 chữ số (ví dụ: 123456).", "error");
+    return;
+  }
+
+  const to = "xiaozhi.ai@tenclass.com";
+  const subject = _unlink_buildSubject(mac, deviceId);
+  const body = _unlink_buildBody(mac, deviceId);
+
+  // Ưu tiên DI ĐỘNG: mailto -> mở app Gmail / trình chọn email
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (isMobile) {
+    _unlink_openMailto(to, subject, body);
+    say("Đang mở ứng dụng email để soạn thư…");
+    return;
+  }
+
+  // Ưu tiên DESKTOP: Gmail web -> fallback mailto
+  const opened = _unlink_openGmailCompose(to, subject, body);
+  if (!opened) _unlink_openMailto(to, subject, body);
+  say("Đang mở cửa sổ soạn thư…");
+}
+
+// ====== Init (giữ nguyên nếu bạn đã có) ======
+function initUnlinkEmailHandlers() {
+  const btn = document.getElementById("btnSendUnlinkEmail");
+  const macInput = document.getElementById("unlinkMac");
+  const didInput = document.getElementById("unlinkDeviceId");
+  if (!btn) return;
+
+  btn.addEventListener("click", sendUnlinkEmail);
+  [macInput, didInput].forEach((el) => {
+    if (!el) return;
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendUnlinkEmail();
+    });
+  });
+}
+
+
+
 // Initialize app when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   initializeApp()
   initializePopups()
+  initUnlinkEmailHandlers();
+  initUnlinkConnectMacButton();
+
 })
 

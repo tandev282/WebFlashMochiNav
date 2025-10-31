@@ -158,6 +158,7 @@
                                 Phí) - Không Phải ChatBot</button>
                             <button class="main-guide-tab-btn" data-main-tab="update-tab">Khách Hàng Update Tại
                                 Đây</button>
+                            <button class="main-guide-tab-btn" data-main-tab="unlink-tab">Gỡ Thiết Bị</button>
 
                             <button class="main-guide-tab-btn" data-main-tab="donate-tab">Donate</button>
 
@@ -1725,6 +1726,65 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- TAB: Gỡ liên kết thiết bị khỏi tài khoản -->
+                        <div class="main-guide-tab-content" id="unlink-tab">
+                            <div class="tab-content">
+                                <div class="card">
+                                    <h1>Gỡ liên kết thiết bị khỏi tài khoản</h1>
+                                    <p class="muted">
+                                        1. <strong>DeviceID</strong> lấy ở đâu? Bạn hãy mở ChatBot và nói với nó
+                                        <strong>Mã thiết bị của tôi là
+                                            gì</strong>, nó đọc
+                                        cho bạn nghe.
+                                    </p>
+                                    <p class="muted">
+                                        2. <strong>MAC Address</strong> lấy ở đâu? Bạn chỉ cần kết nối thiết bị với máy
+                                        tính qua cáp USB, nhấn <strong>Kết nối để lấy MAC</strong>, sau đó chọn cổng COM
+                                        thiết bị và nhấn
+                                        <strong>Lấy MAC</strong>.
+                                    </p>
+                                    <p class="muted">
+                                        3. Điền <strong>MAC Address</strong> và <strong>Device ID</strong> của thiết bị
+                                        Xiaozhi,
+                                        sau đó bấm <em>Gửi mail</em> để mở Gmail với mẫu nội dung sẵn có gửi đến
+                                        <strong>xiaozhi.ai@tenclass.com</strong>.
+
+                                    </p>
+                                    <div class="controls" style="gap:12px; flex-wrap:wrap">
+                                        <input id="unlinkMac" type="text" class="input"
+                                            placeholder="MAC Address (ví dụ: AA:BB:CC:DD:EE:FF)" autocomplete="off"
+                                            spellcheck="false"
+                                            pattern="^([0-9A-Fa-f]{2}[:\\-]){5}([0-9A-Fa-f]{2})$|^[0-9A-Fa-f]{12}$"
+                                            title="Nhập dạng AA:BB:CC:DD:EE:FF hoặc AABBCCDDEEFF" />
+                                        <input id="unlinkDeviceId" class="input" placeholder="Device ID (6 chữ số)"
+                                            inputmode="numeric" pattern="^\d{6}$" autocomplete="off" />
+
+                                        <button id="btnGetMac" class="btn-secondary">🔌 Get
+                                            MAC</button>
+                                        <button id="btnSendUnlinkEmail" class="btn-secondary">📧 Gửi mail</button>
+                                    </div>
+
+                                    <div id="unlinkResult" class="result muted">
+                                        Lưu ý: Bạn cần đang đăng nhập Gmail trên trình duyệt để mở cửa sổ soạn thư.
+                                    </div>
+                                    <br>
+
+                                    <div class="important-notes">
+                                        <h4>📌 Lưu ý</h4>
+                                        <ul>
+                                            <li>Chỉ sử dụng khi bạn đã liên kết thiết bị ChatBot Xiaozhi với một tài
+                                                khoản mà
+                                                bây giờ bạn không thể đăng nhập được.
+                                                Việc gỡ liên kết này sẽ giúp bạn có thể đăng ký tài khoản mới và liên
+                                                kết lại
+                                                thiết bị với tài khoản mới.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="main-guide-tab-content" id="donate-tab">
                             <div class="tab-content">

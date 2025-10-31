@@ -2309,3 +2309,15 @@ esp-web-install-button {
     gap: 1.5rem;
   }
 }
+
+.input {
+  padding: 10px 12px;
+  border: 1px solid var(--border, #333);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+}
+
+.result.error {
+  color: #ff6b6b;
+}
