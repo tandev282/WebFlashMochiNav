@@ -1258,7 +1258,6 @@ function initUnlinkConnectMacButton() {
 
 
 // ====== UNLINK helpers (cập nhật) ======
-// ====== UNLINK helpers (cập nhật) ======
 
 function _unlink_isValidMac(mac) {
   if (!mac) return false;
@@ -1291,7 +1290,7 @@ function _unlink_buildBody(mac, did) {
 
 // NEW: build subject theo yêu cầu
 function _unlink_buildSubject(mac, did) {
-  return `邮件标题为 【解绑设备，设备ID ${did}，MAC地址 ${mac}】`;
+  return `【解绑设备，设备ID ${did}，MAC地址 ${mac}】`;
 }
 
 function _unlink_openGmailCompose(to, subject, body) {
