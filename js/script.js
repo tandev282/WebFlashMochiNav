@@ -1272,9 +1272,9 @@ function _unlink_normalizeMac(mac) {
   return mac.toUpperCase();
 }
 
-// Chỉ cho phép 6 chữ số
+// Chỉ cho phép bất kỳ số nào (không giới hạn 6 chữ số)
 function _unlink_isValidDeviceId(did) {
-  return /^\d{6}$/.test(did);
+  return /^\d+$/.test(did);  // Kiểm tra chỉ số, không giới hạn độ dài
 }
 
 function _unlink_buildBody(mac, did) {
