@@ -1278,19 +1278,30 @@ function _unlink_isValidDeviceId(did) {
 }
 
 function _unlink_buildBody(mac, did) {
-  return [
+  const lines = [
     "尊敬的 Xiaozhi 支持团队：",
     "由于我不记得之前用于登录的账户信息，现请求将我的 Xiaozhi 设备从旧账户中解除绑定。",
     `+ MAC Address：${mac}`,
-    `+ Device ID：${did}`,
+  ];
+
+  if (did) {
+    lines.push(`+ Device ID：${did}`);
+  }
+
+  lines.push(
     "请协助将上述设备从旧账户解除绑定；处理完成后，请通过此邮箱回复确认。",
     "谢谢！"
-  ].join("\n");
+  );
+
+  return lines.join("\n");
 }
 
 // NEW: build subject theo yêu cầu
 function _unlink_buildSubject(mac, did) {
-  return `【解绑设备，设备ID ${did}，MAC地址 ${mac}】`;
+  if (did) {
+    return `【解绑设备，设备ID ${did}，MAC地址 ${mac}】`;
+  }
+  return `【解绑设备，MAC地址 ${mac}】`;
 }
 
 function _unlink_openGmailCompose(to, subject, body) {
@@ -1325,19 +1336,21 @@ function sendUnlinkEmail() {
     }
   };
 
-  if (!macRaw || !didRaw) {
-    say("Vui lòng nhập đầy đủ MAC Address và Device ID.", "error");
+  if (!macRaw) {
+    say("Vui lòng nhập MAC Address.", "error");
     return;
   }
+
   if (!_unlink_isValidMac(macRaw)) {
     say("Định dạng MAC không hợp lệ. Ví dụ: AA:BB:CC:DD:EE:FF", "error");
     return;
   }
 
   const mac = _unlink_normalizeMac(macRaw);
-  const deviceId = didRaw.replace(/\s+/g, "");
-  if (!_unlink_isValidDeviceId(deviceId)) {
-    say("Device ID phải gồm đúng 6 chữ số (ví dụ: 123456).", "error");
+  const deviceId = didRaw.replace(/\s+/g, "");  // có thể rỗng
+
+  if (deviceId && !_unlink_isValidDeviceId(deviceId)) {
+    say("Device ID chỉ được chứa các chữ số (0–9).", "error");
     return;
   }
 

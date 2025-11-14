@@ -1733,13 +1733,15 @@
                                 <div class="card">
                                     <h1>Gỡ liên kết thiết bị khỏi tài khoản</h1>
                                     <p class="muted">
-                                        1. <strong>DeviceID</strong> lấy ở đâu? Bạn hãy mở ChatBot và nói với nó
+                                        1. <strong>DeviceID (Có thể có hoặc không)</strong> lấy ở đâu? Bạn hãy mở
+                                        ChatBot và nói với nó
                                         <strong>Mã thiết bị của tôi là
                                             gì</strong>, nó đọc
                                         cho bạn nghe.
                                     </p>
                                     <p class="muted">
-                                        2. <strong>MAC Address</strong> lấy ở đâu? Bạn chỉ cần kết nối thiết bị với máy
+                                        2. <strong>MAC Address (Bắt buộc phải có)</strong> lấy ở đâu? Bạn chỉ cần kết
+                                        nối thiết bị với máy
                                         tính qua cáp USB, nhấn <strong>Kết nối để lấy MAC</strong>, sau đó chọn cổng COM
                                         thiết bị và nhấn
                                         <strong>Lấy MAC</strong>.
@@ -1753,11 +1755,11 @@
                                     </p>
                                     <div class="controls" style="gap:12px; flex-wrap:wrap">
                                         <input id="unlinkMac" type="text" class="input"
-                                            placeholder="MAC Address (ví dụ: AA:BB:CC:DD:EE:FF)" autocomplete="off"
+                                            placeholder="MAC Address (Bắt buộc)" autocomplete="off"
                                             spellcheck="false"
                                             pattern="^([0-9A-Fa-f]{2}[:\\-]){5}([0-9A-Fa-f]{2})$|^[0-9A-Fa-f]{12}$"
                                             title="Nhập dạng AA:BB:CC:DD:EE:FF hoặc AABBCCDDEEFF" />
-                                        <input id="unlinkDeviceId" class="input" placeholder="Device ID"
+                                        <input id="unlinkDeviceId" class="input" placeholder="DeviceID (Có hoặc không)"
                                             inputmode="numeric" autocomplete="off" />
 
                                         <button id="btnGetMac" class="btn-secondary">🔌 Get
