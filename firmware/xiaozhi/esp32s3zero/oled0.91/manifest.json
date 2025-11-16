@@ -1,6 +1,6 @@
 {
-  "name": "Xiaozhi 2.0.3 - ESP32-S3 Zero OLED 0.91 - VI",
-  "version": "2.0.3",
+  "name": "Xiaozhi 2.0.4 - ESP32-S3 Zero OLED 0.91 - VI",
+  "version": "2.0.4",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,
   "builds": [

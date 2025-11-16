@@ -275,7 +275,7 @@ function setupEspWebToolsWithManifest(chipType) {
     </button>
 
     <small id="fwUpdateStamp"
-      style="grid-column:1 / -1; text-align:center; margin-top:4px; font-size:12px; color: #d1d5db;">
+      style="grid-column:1 / -1; text-align:center; margin-top:4px; font-size:14px; color: #d1d5db;">
     </small>
   </div>
 `;
@@ -288,7 +288,7 @@ function setupEspWebToolsWithManifest(chipType) {
   newInstallButton.classList.remove("invisible");
 
   // Thời gian bạn tự điền
-  const fwUpdatedAt = "20:00 - 23-10-2025";
+  const fwUpdatedAt = "20:00 - 16-11-2025";
   document.getElementById("fwUpdateStamp").textContent =
     `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
 

@@ -17,7 +17,7 @@
         <button id="closePopupBtn" class="close-btn" aria-label="Đóng">✕</button>
 
         <div class="popup-header">
-            <h3>🌟 Nhóm Facebook Xiaozhi VN <br>( 10K thành viên )</h3>
+            <h3>🌟 Nhóm Facebook Xiaozhi VN <br>( 15K thành viên )</h3>
         </div>
         <div class="popup-actions">
             <a href="https://www.facebook.com/groups/yourgroup" target="_blank" id="joinButton" class="btn btn-primary">
@@ -29,17 +29,19 @@
             <li class="notice-item">
                 <div class="notice-icon" aria-hidden="true">🎵</div>
                 <div class="notice-content">
-                    <div class="notice-title">Cập nhật và sửa lỗi Firmware 2.0.3</div>
-                    <div class="notice-desc">Thêm phát nhạc Zing Mp3, SoundCloud, Podcast, Full Radio VOV, xổ số,...
+                    <div class="notice-title">Cập nhật Firmware 2.0.4</div>
+                    <div class="notice-desc">Thêm phát audio kể truyện, phát playlist Zing Mp3, thông báo khi phát nhạc
+                        xong, fix lỗi quan trọng...
                     </div>
                 </div>
             </li>
 
-            <li class="notice-item notice-important">
-                <div class="notice-icon" aria-hidden="true">🔗</div>
+            <li class="notice-item">
+                <div class="notice-icon" aria-hidden="true">💸</div>
                 <div class="notice-content">
-                    <div class="notice-title">Thay đổi địa chỉ web</div>
-                    <div class="notice-desc">Địa chỉ web đã bỏ /vi : <strong>https://tandev.click</strong></div>
+                    <div class="notice-title">Donate</div>
+                    <div class="notice-desc">Bạn có thể đóng góp để hỗ trợ mình duy trì và phát triển dự án thông qua
+                        Donate. Xin cảm ơn!</div>
                 </div>
             </li>
 
@@ -49,14 +51,6 @@
                     <div class="notice-title">Quan trọng</div>
                     <div class="notice-desc">MochiNav và ChatBot AI là hai sản phẩm khác nhau – đừng nhầm lẫn key/kích
                         hoạt.</div>
-                </div>
-            </li>
-
-            <li class="notice-item">
-                <div class="notice-icon" aria-hidden="true">📚</div>
-                <div class="notice-content">
-                    <div class="notice-title">Tài liệu/Hướng dẫn</div>
-                    <div class="notice-desc">Sơ đồ đấu nối, các bước nạp, mẹo xử lý lỗi… đều có trong nhóm.</div>
                 </div>
             </li>
         </ul>
@@ -168,8 +162,8 @@
                         <div class="main-guide-tab-content active" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">Thêm Phát nhạc Zing Mp3, SoundCloud,
-                                    Podcast, Full Radio VOV, xổ số,...</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">Chat Bot AI (Xiaozhi) - Firmware
+                                    Version 2.0.4</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ</button>
                                 <button class="tab-btn" data-tab="xz-tab2">Link Mua Linh Kiện</button>
                                 <button class="tab-btn" data-tab="xz-tab3">Kích Hoạt</button>
@@ -181,12 +175,69 @@
                                 <div class="tab-pane active" id="xz-tab0">
                                     <div class="update-section">
                                         <div class="update-card">
-                                            <h3>Chat Bot AI (Xiaozhi) <br>Phát nhạc Zing Mp3, SoundCloud, Podcast, Full
-                                                Radio VOV, xổ số,...
+                                            <h3>Chat Bot AI (Xiaozhi) - Firmware Version 2.0.4
                                             </h3>
                                             <img src="/img/chatbot.jpg" alt="MochiNav" class="update-image"
                                                 style="display:block;margin:16px auto;max-width:200px;width:100%;height:auto;">
                                             <ul>
+                                                <li>
+                                                    <strong>PHÁT NHẠC THEO DANH SÁCH NHẠC / PLAYLIST TỪ ZING MP3
+                                                        (SOUNDCLOUD CHƯA HỖ TRỢ)</strong><br>
+                                                    🎼 <strong>Logic 1: Khi người dùng yêu cầu "playlist"</strong><br>
+                                                    • Có tên playlist → phát playlist theo tên<br>
+                                                    • Có tên ca sĩ → phát playlist theo tên ca sĩ<br>
+                                                    • Có cả playlist + ca sĩ → bỏ qua (tránh lỗi xung đột)<br><br>
+
+                                                    🎧 <strong>Logic 2: Khi yêu cầu theo tên bài hát</strong><br>
+                                                    → Phát đúng 1 bài mong muốn<br><br>
+
+                                                    🎤 <strong>Logic 3: Khi chỉ nói tên ca sĩ (không nhắc
+                                                        playlist)</strong><br>
+                                                    → Gợi ý 5 bài hát tiêu biểu của ca sĩ đó
+                                                </li>
+
+                                                <li>
+                                                    <strong>KỂ TRUYỆN BÉ NGHE (PODCAST)</strong><br>
+                                                    - Tối ưu, fix tính năng kể truyện bé nghe bằng audio (podcast), có
+                                                    tất cả truyện cổ tích, ngụ ngôn Việt Nam... từ ChatBot Maika.
+                                                </li>
+
+                                                <li>
+                                                    <strong>🚀 FIX & NÂNG CẤP HIỆU NĂNG & SỬA LỖI QUAN
+                                                        TRỌNG</strong><br><br>
+
+                                                    🔊 <strong>Tăng âm lượng Radio</strong><br>
+                                                    • Radio to và rõ hơn, không còn quá nhỏ như bản trước.<br><br>
+
+                                                    🖥️ <strong>Fix lỗi đen màn hình LCD</strong><br>
+                                                    • Khắc phục tình trạng màn hình LCD bị đen sau khi reset thiết
+                                                    bị.<br><br>
+
+                                                    📶 <strong>Nhấn giữ nút Wake-up để vào Setup Wi-Fi</strong><br>
+                                                    • Giữ nút Wake-up để vào chế độ cài Wi-Fi nhanh chóng, dễ thao tác
+                                                    hơn.<br><br>
+
+                                                    🎙️ <strong>Giao diện ghi âm ở màn hình cấu hình Wi-Fi</strong><br>
+                                                    • Nhấn 1 lần Wake-up để ghi âm, nhấn lần nữa để phát âm vừa ghi –
+                                                    test MIC.<br><br>
+
+                                                    🔔 <strong>Thông báo tự đọc sau khi phát xong nhạc</strong><br>
+                                                    • Bot tự đọc thông báo khi hết bài, không còn im lặng.<br><br>
+
+                                                    🎫 <strong>Sửa hoàn chỉnh dữ liệu Xổ Số</strong><br>
+                                                    • Về đúng định dạng, không sai kết quả hoặc lỗi hiển thị.<br><br>
+
+                                                    🎵 <strong>Chuyển sang thư viện audio decoder mới</strong><br>
+                                                    • Tương thích tốt hơn, giảm giật lag.<br><br>
+
+                                                    🌈 <strong>Đảo màu cho OLED 1.3 inch</strong><br>
+                                                    • Fix hiển thị bị ngược màu (không có màn test — cần cộng đồng xác
+                                                    nhận).<br><br>
+
+                                                    🎤 <strong>Tăng độ nhạy micro (Mic Gain)</strong><br>
+                                                    • Nhận lệnh tốt hơn, wake up nhạy hơn.
+                                                </li>
+
                                                 <li><strong>Nhạc Zing Mp3:</strong> Bạn cần cài đặt fimware của tôi và
                                                     xóa
                                                     Music trong MCP của Console web xiaozhi.me để sử dụng tính năng này
@@ -1755,8 +1806,7 @@
                                     </p>
                                     <div class="controls" style="gap:12px; flex-wrap:wrap">
                                         <input id="unlinkMac" type="text" class="input"
-                                            placeholder="MAC Address (Bắt buộc)" autocomplete="off"
-                                            spellcheck="false"
+                                            placeholder="MAC Address (Bắt buộc)" autocomplete="off" spellcheck="false"
                                             pattern="^([0-9A-Fa-f]{2}[:\\-]){5}([0-9A-Fa-f]{2})$|^[0-9A-Fa-f]{12}$"
                                             title="Nhập dạng AA:BB:CC:DD:EE:FF hoặc AABBCCDDEEFF" />
                                         <input id="unlinkDeviceId" class="input" placeholder="DeviceID (Có hoặc không)"
