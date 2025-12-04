@@ -1,0 +1,17 @@
+{
+  "name": "Xiaozhi 2.0.5 - ESP Hi - ESP32-C3",
+  "version": "2.0.5",
+  "home_assistant_domain": "esphome",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "xiaozhi_esp32c3esphi_oled0.5.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

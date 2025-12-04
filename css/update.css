@@ -1565,14 +1565,35 @@ esp-web-install-button {
   display: block;
 }
 
-/* FW và CHIP chia đôi chiều ngang */
-.fw-grid-horizontal,
-.chip-grid-horizontal {
+/* FW: vẫn 2 nút / hàng, căn hai bên */
+.fw-grid-horizontal {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
   margin-top: 1rem;
 }
+
+.fw-grid-horizontal .fw-button {
+  flex: 1 1 48%;
+}
+
+/* CHIP: 4 chip / hàng, căn từ trái sang phải */
+.chip-grid-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  /* Cho phép xuống dòng */
+  gap: 1rem;
+  justify-content: flex-start;
+  /* Xếp sát bên trái */
+  margin-top: 1rem;
+}
+
+.chip-grid-horizontal .chip-button {
+  flex: 0 0 calc(25% - 0.75rem);
+  /* 4 item / hàng */
+  max-width: calc(25% - 0.75rem);
+}
+
 
 .fw-button,
 .chip-button {
@@ -2302,4 +2323,42 @@ esp-web-install-button::part(button) {
   border-radius: .6rem;
   border: none;
   cursor: pointer;
+}
+
+/* Fix tràn ngang version item trên mobile */
+@media (max-width: 768px) {
+  /* Mỗi item chỉ còn 1 cột, không chia trái/phải nữa */
+  #versions .version-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+    padding: .75rem .75rem;
+  }
+
+  /* Khối nút xuống dưới, full chiều ngang */
+  #versions .btn-row {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    align-items: stretch !important;
+    justify-self: stretch !important;
+    align-self: stretch !important;
+  }
+
+  /* Nút bên trong co full width, không làm tràn */
+  #versions .btn-row esp-web-install-button,
+  #versions .btn-row .btn-primary {
+    width: 100% !important;
+  }
+
+  /* Cho chắc ăn, text trong desc tự xuống dòng */
+  #versions .version-desc {
+    word-break: break-word;
+  }
+}
+
+/* Nếu vẫn còn chút xíu scroll ngang, ép tắt luôn */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
 }

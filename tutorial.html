@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>HƯỚNG DẪN SỬ DỤNG CHATBOT AI (XIAOZHI)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        :root {
+            --main-bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --border: #dddddd;
+            --text: #222222;
+            --muted: #666666;
+            --accent: #1976d2;
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--main-bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== LAYOUT CHÍNH: HEADER TRÊN, DƯỚI LÀ TOC + CONTENT ===== */
+
+        .page {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+            grid-template-rows: auto 1fr;
+            grid-template-areas:
+                "header header"
+                "toc content";
+            gap: 16px;
+        }
+
+        @media (max-width: 899px) {
+            .page {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                grid-template-areas:
+                    "header"
+                    "toc"
+                    "content";
+            }
+        }
+
+        /* Header */
+
+        .header {
+            grid-area: header;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 16px 12px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .header-title-main {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .header-sub {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .header-meta {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .pill {
+            border-radius: 999px;
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            background: #fafafa;
+            color: var(--muted);
+        }
+
+        .pill strong {
+            color: var(--text);
+        }
+
+        .pill-accent {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #e3f2fd;
+        }
+
+        .pill-dot {
+            display: none;
+        }
+
+        .warning {
+            margin-top: 8px;
+            font-size: 13px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #ffe0b2;
+            background: #fff8e1;
+            color: #5d4037;
+            display: flex;
+            gap: 8px;
+        }
+
+        .warning-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        /* TOC */
+
+        .toc {
+            grid-area: toc;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 12px 8px;
+            font-size: 14px;
+        }
+
+        @media (min-width: 900px) {
+            .toc {
+                position: sticky;
+                top: 8px;
+            }
+        }
+
+        .toc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toc-title {
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .toc-badge {
+            font-size: 11px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            color: var(--muted);
+            background: #fafafa;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 8px 0;
+        }
+
+        .toc-item {
+            margin-bottom: 2px;
+        }
+
+        .toc-link {
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: transparent;
+            padding: 6px 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .toc-link:hover {
+            background: #f2f2f2;
+        }
+
+        .toc-link.active {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        .toc-index {
+            font-size: 12px;
+            min-width: 26px;
+        }
+
+        .toc-footer {
+            border-top: 1px solid var(--border);
+            margin-top: 4px;
+            padding-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .btn-top {
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: #fafafa;
+            padding: 3px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-top:hover {
+            background: #e0e0e0;
+        }
+
+        /* Main content */
+
+        .content {
+            grid-area: content;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 16px 20px;
+            font-size: 15px;
+        }
+
+        .intro-card {
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 12px;
+            background: #fafafa;
+            margin-bottom: 16px;
+        }
+
+        .intro-card-header {
+            margin-bottom: 6px;
+        }
+
+        .intro-title {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .intro-meta-line {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .intro-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 13px;
+        }
+
+        .badge-soft,
+        .badge-ghost {
+            border-radius: 999px;
+            padding: 3px 8px;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            color: var(--muted);
+        }
+
+        section {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2.section-title {
+            font-size: 18px;
+            margin: 0 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h2.section-title .index {
+            font-size: 13px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            color: var(--muted);
+        }
+
+        h2.section-title .label {
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            margin: 12px 0 4px;
+            font-size: 16px;
+        }
+
+        h4 {
+            margin: 8px 0 4px;
+            font-size: 15px;
+        }
+
+        p {
+            margin: 4px 0 8px;
+        }
+
+        ul,
+        ol {
+            margin-top: 4px;
+            margin-bottom: 8px;
+            padding-left: 22px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        .note {
+            border-radius: 6px;
+            border: 1px solid #bbdefb;
+            background: #e3f2fd;
+            padding: 8px 10px;
+            font-size: 14px;
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .note-strong {
+            border-color: #bdbdbd;
+            background: #eeeeee;
+        }
+
+        .note-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .inline-code {
+            font-family: ui-monospace, Menlo, Consolas, "Courier New", monospace;
+            font-size: 13px;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .kbd {
+            font-size: 13px;
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #cccccc;
+        }
+
+        .link-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border-radius: 999px;
+            border: 1px solid var(--accent);
+            padding: 4px 8px;
+            font-size: 13px;
+            background: #e3f2fd;
+        }
+
+        .link-chip .icon {
+            font-size: 14px;
+        }
+
+        .subsection {
+            margin-top: 6px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #eeeeee;
+            background: #fafafa;
+        }
+
+        .subsection-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        figure {
+            margin: 8px 0 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: #fafafa;
+        }
+
+        figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        figcaption {
+            font-size: 13px;
+            color: var(--muted);
+            padding: 6px 8px;
+            border-top: 1px solid #eeeeee;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 800px) {
+            .split {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .footer {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--muted);
+            border-top: 1px solid #eeeeee;
+            padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .footer strong {
+            color: var(--text);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="page">
+        <!-- Header -->
+        <header class="header" id="top">
+            <div class="header-top">
+                <div class="logo-circle">AI</div>
+                <div>
+                    <div class="header-title-main">HƯỚNG DẪN SỬ DỤNG CHATBOT AI (XIAOZHI)</div>
+                    <div class="header-sub">
+                        Phiên bản hướng dẫn dành cho thiết bị ChatBot AI dùng nền tảng XiaoZhi.
+                    </div>
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="pill pill-accent">
+                    <span class="pill-dot"></span>
+                    <span><strong>Cập nhật:</strong> 17:00 — 28/10/2025</span>
+                </div>
+                <div class="pill">
+                    <span>Hướng dẫn sẽ được cập nhật khi có bản cập nhật mới.</span>
+                </div>
+                <div class="pill">
+                    <strong>Tác giả:</strong> TikTok @tandev282
+                </div>
+            </div>
+            <div class="warning">
+                <div class="warning-icon">ℹ️</div>
+                <div>
+                    Khách hàng sau khi nhận sản phẩm cần
+                    <strong>thay đổi Wi-Fi</strong> và
+                    <strong>tạo tài khoản</strong> để sử dụng ChatBot AI. Hướng dẫn chi tiết ở
+                    bên dưới từng mục.
+                </div>
+            </div>
+        </header>
+
+        <!-- TOC -->
+        <aside class="toc">
+            <div class="toc-header">
+                <div class="toc-title">Phụ lục nội dung</div>
+                <div class="toc-badge">Quick Nav</div>
+            </div>
+            <ul class="toc-list">
+                <li class="toc-item">
+                    <button class="toc-link" data-target="gioi-thieu">
+                        <span class="toc-index">00</span>
+                        <span class="toc-label">Giới thiệu chung</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="chuc-nang">
+                        <span class="toc-index">I</span>
+                        <span class="toc-label">Chức năng thiết bị</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="doi-wifi">
+                        <span class="toc-index">II</span>
+                        <span class="toc-label">Thay đổi Wi-Fi</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="tai-khoan-web">
+                        <span class="toc-index">III</span>
+                        <span class="toc-label">Tạo tài khoản & dùng web</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="giao-dien-tu-khoa">
+                        <span class="toc-index">IV</span>
+                        <span class="toc-label">Giao diện & từ khóa đánh thức</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="cap-nhat-fw">
+                        <span class="toc-index">V</span>
+                        <span class="toc-label">Cập nhật phần mềm</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="phat-nhac">
+                        <span class="toc-index">VI</span>
+                        <span class="toc-label">Nhạc, Radio, Podcast</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="tin-tuc">
+                        <span class="toc-index">VII</span>
+                        <span class="toc-label">Tin tức, xổ số, giá vàng</span>
+                    </button>
+                </li>
+                <li class="toc-item">
+                    <button class="toc-link" data-target="bao-thuc-dem-nguoc">
+                        <span class="toc-index">VIII</span>
+                        <span class="toc-label">Báo thức & đếm ngược</span>
+                    </button>
+                </li>
+            </ul>
+            <div class="toc-footer">
+                <span>Cuộn để xem chi tiết</span>
+                <button class="btn-top" id="btnBackToTop">
+                    ⬆ <span>Về đầu trang</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="content">
+            <!-- GIỚI THIỆU -->
+            <section id="gioi-thieu">
+                <div class="intro-card">
+                    <div class="intro-card-header">
+                        <div>
+                            <div class="intro-title">Giới thiệu</div>
+                            <div class="intro-meta-line">
+                                Hướng dẫn cài đặt, cấu hình và sử dụng đầy đủ cho thiết bị ChatBot AI dùng
+                                XiaoZhi Console.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="intro-badges">
+                        <span class="badge-soft">Thiết bị: ChatBot AI (ESP32-S3, LCD 240×240)</span>
+                        <span class="badge-ghost">Nền tảng quản lý: XiaoZhi Console</span>
+                    </div>
+                    <div class="warning">
+                        <div class="warning-icon">✅</div>
+                        <div>
+                            <strong>Trình tự khuyến nghị:</strong><br />
+                            1) Cấu hình Wi-Fi → 2) Tạo tài khoản & Agent → 3) Thêm thiết bị →
+                            4) Cấu hình vai trò / mô hình AI → 5) Tùy chỉnh giao diện →
+                            6) Cập nhật firmware (nếu cần).
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    Bản quyền hướng dẫn thuộc
+                    <strong>TikTok @tandev282</strong>.
+                </p>
+                <p>
+                    Hướng dẫn này được cập nhật khi có bản cập nhật mới của firmware hoặc tính năng
+                    từ XiaoZhi.
+                </p>
+            </section>
+
+            <!-- I. CHỨC NĂNG THIẾT BỊ -->
+            <section id="chuc-nang">
+                <h2 class="section-title">
+                    <span class="index">I</span>
+                    <span class="label">Chức năng thiết bị</span>
+                </h2>
+                <p>
+                    <strong>Từ khóa gọi ChatBot mặc định:</strong>
+                    <span class="inline-code">Hi, Lily</span><br />
+                    Bạn có thể thay đổi từ khóa đánh thức và giao diện thiết bị ở
+                    <a href="#giao-dien-tu-khoa">Mục IV</a>.
+                </p>
+                <ul>
+                    <li>
+                        Khi đang ở chế độ thêm / thay đổi Wi-Fi, nhấn nút giữa
+                        <span class="kbd">1 lần</span> sẽ:
+                        <ul>
+                            <li>Bắt đầu ghi âm để test micro.</li>
+                            <li>Nhấn thêm <span class="kbd">1 lần</span> nữa để dừng và phát lại âm thanh vừa ghi.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Chưa có hiển thị % pin chi tiết. Nếu thấy hoạt động chập chờn, có thể pin sắp
+                        hết. Thiết bị vẫn có báo đang sạc / đầy pin.
+                    </li>
+                    <li>
+                        Có thể kết nối với
+                        <span class="inline-code">Home Assistant (HASS)</span>
+                        để điều khiển thiết bị nhà thông minh thông qua MCP (bạn có thể tự nghiên cứu
+                        thêm hoặc chờ tác giả cập nhật hướng dẫn chi tiết).
+                    </li>
+                </ul>
+            </section>
+
+            <!-- II. THAY ĐỔI WIFI -->
+            <section id="doi-wifi">
+                <h2 class="section-title">
+                    <span class="index">II</span>
+                    <span class="label">Thay đổi Wi-Fi</span>
+                </h2>
+
+                <div class="subsection">
+                    <div class="subsection-title">1. Chế độ cấu hình Wi-Fi</div>
+                    <p>
+                        Khi thiết bị vào <strong>Chế độ cấu hình Wi-Fi</strong>, thiết bị sẽ phát ra
+                        1 mạng Wi-Fi riêng, ví dụ:
+                        <span class="inline-code">Xiaozhi-21B</span>.
+                    </p>
+                    <ul>
+                        <li>Dùng điện thoại / máy tính kết nối vào mạng Wi-Fi này.</li>
+                        <li>Wi-Fi cấu hình <strong>không có mật khẩu</strong>.</li>
+                    </ul>
+
+                    <!-- Ảnh gợi ý -->
+                    <figure>
+                        <img src="images/wifi-config-ssid.png" alt="Wi-Fi cấu hình Xiaozhi trên điện thoại" />
+                        <figcaption>Ví dụ mạng Wi-Fi cấu hình do thiết bị phát ra.</figcaption>
+                    </figure>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">2. Truy cập trang cấu hình</div>
+                    <p>
+                        Sau khi đã kết nối vào Wi-Fi cấu hình, mở trình duyệt và nhập địa chỉ
+                        <strong>IP hiển thị trên màn hình thiết bị</strong>.
+                    </p>
+                    <p>
+                        Mặc định thường là:
+                        <span class="inline-code">192.168.4.1</span>
+                    </p>
+                    <p>Giao diện cấu hình Wi-Fi sẽ xuất hiện.</p>
+
+                    <figure>
+                        <img src="images/wifi-config-page.png" alt="Trang cấu hình Wi-Fi của thiết bị" />
+                        <figcaption>Trang cấu hình mạng Wi-Fi trên trình duyệt.</figcaption>
+                    </figure>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">3. Nhập thông tin Wi-Fi</div>
+                    <ul>
+                        <li>
+                            <strong>SSID:</strong> Tên mạng Wi-Fi (có thể chọn từ danh sách hiển thị
+                            sẵn bên dưới).
+                        </li>
+                        <li><strong>Mật khẩu:</strong> Nhập mật khẩu Wi-Fi tương ứng.</li>
+                        <li>Nhấn nút <strong>Kết nối (连接)</strong> để lưu và áp dụng.</li>
+                    </ul>
+                    <div class="note">
+                        <div class="note-icon">⚠️</div>
+                        <div>
+                            <strong>Lưu ý:</strong> ESP32 chỉ hỗ trợ Wi-Fi
+                            <strong>2.4GHz</strong>, không kết nối được với mạng
+                            <strong>5GHz</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">4. Khởi động lại & hoàn thành</div>
+                    <p>
+                        Sau khi bấm <strong>OK</strong>, hệ thống sẽ tự động khởi động lại trong
+                        khoảng <strong>3 giây</strong>.
+                    </p>
+                    <p>
+                        Khi mở lại, ESP32 sẽ tự động kết nối vào mạng Wi-Fi mới bạn đã nhập. Lúc này
+                        bạn có thể:
+                    </p>
+                    <ul>
+                        <li>Sử dụng các tính năng AI của ChatBot.</li>
+                        <li>Điều khiển thiết bị từ ứng dụng / web XiaoZhi Console.</li>
+                    </ul>
+                    <p><strong>✅ Như vậy bạn đã cấu hình Wi-Fi thành công cho ChatBot AI.</strong></p>
+                </div>
+            </section>
+
+            <!-- III. TẠO TÀI KHOẢN, THÊM THIẾT BỊ & WEB -->
+            <section id="tai-khoan-web">
+                <h2 class="section-title">
+                    <span class="index">III</span>
+                    <span class="label">Tạo tài khoản, thêm thiết bị & sử dụng web</span>
+                </h2>
+
+                <p>Sử dụng nền tảng web XiaoZhi để quản lý và cấu hình thiết bị:</p>
+
+                <p>
+                    <span class="link-chip">
+                        <span class="icon">🌐</span>
+                        <a href="https://xiaozhi.me" target="_blank" rel="noopener">https://xiaozhi.me</a>
+                    </span>
+                </p>
+                <p>Trên trang chủ, chọn <strong>Console</strong>.</p>
+
+                <div class="split">
+                    <div>
+                        <h3>1. Tạo tài khoản & đăng nhập</h3>
+                        <h4>1.1. Đăng nhập bằng số điện thoại</h4>
+                        <ol>
+                            <li>Chọn mã vùng (ví dụ: <strong>+84</strong> cho Việt Nam).</li>
+                            <li>Nhập số điện thoại của bạn.</li>
+                            <li>Nhập <strong>mã xác thực hình ảnh</strong> (captcha) hiển thị trên màn hình.</li>
+                            <li>Nhấn <strong>Send Code</strong> để nhận mã OTP gửi về điện thoại.</li>
+                            <li>Nhập mã xác thực OTP.</li>
+                            <li>Nhấn <strong>Login</strong> để đăng nhập.</li>
+                        </ol>
+
+                        <h4>1.2. Đăng nhập bằng Google (khuyến nghị)</h4>
+                        <p>
+                            Chọn phương thức đăng nhập bằng tài khoản <strong>Google</strong> để thao
+                            tác nhanh, ít bước hơn, được khuyến nghị sử dụng.
+                        </p>
+                    </div>
+
+                    <div>
+                        <figure>
+                            <img src="images/xiaozhi-login.png" alt="Giao diện đăng nhập XiaoZhi" />
+                            <figcaption>Ví dụ giao diện đăng nhập XiaoZhi với số điện thoại / Google.</figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <h3>2. Vào trang điều khiển (Console)</h3>
+                <p>
+                    Sau khi đăng nhập thành công, truy cập phần
+                    <strong>Console</strong> để quản lý và cấu hình thiết bị.
+                </p>
+
+                <div class="note note-strong">
+                    <div class="note-icon">⭐</div>
+                    <div>
+                        <strong>Lưu ý quan trọng:</strong> Hãy
+                        <strong>tạo Agent trước</strong> rồi mới <strong>Add Device</strong>.
+                    </div>
+                </div>
+
+                <h3>3. Thêm thiết bị vào web</h3>
+                <ol>
+                    <li>Trong Console, nhấn <strong>Create Agent</strong>.</li>
+                    <li>Nhập tên Agent tùy ý (ví dụ: Lily, XiaoZhi Home,…).</li>
+                    <li>Sau khi tạo Agent, chọn <strong>Add Device</strong>.</li>
+                    <li>
+                        Nhập <strong>mã Code</strong> hiển thị trên màn hình thiết bị để liên kết
+                        thiết bị với Agent.
+                    </li>
+                </ol>
+
+                <figure>
+                    <img src="images/agent-add-device.png" alt="Thêm Agent và Add Device cho thiết bị" />
+                    <figcaption>Thêm Agent và liên kết thiết bị bằng mã Code hiển thị.</figcaption>
+                </figure>
+
+                <h3>4. Các chức năng chính trong Console &gt; Agents</h3>
+                <p>
+                    Trong trang <strong>Console → Agents</strong> bạn sẽ thấy danh sách các trợ lý
+                    (Agents) đã tạo. Mỗi Agent có các chức năng:
+                </p>
+                <ul>
+                    <li><strong>Configure Role</strong> → Cấu hình vai trò cho trợ lý AI.</li>
+                    <li><strong>Speaker Recognition</strong> → Nhận diện giọng nói.</li>
+                    <li><strong>Chat History</strong> → Xem lịch sử trò chuyện.</li>
+                    <li><strong>Manage Devices</strong> → Quản lý danh sách thiết bị.</li>
+                </ul>
+
+                <h3>5. Cấu hình vai trò (Configure Role)</h3>
+                <p>
+                    Khi bấm vào <strong>Configure Role</strong>, bạn có thể thiết lập chi tiết
+                    cho trợ lý AI:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Role Template:</strong> Mẫu vai trò (ví dụ: Taiwan Girl, English Tutor,
+                        …).
+                    </li>
+                    <li><strong>Assistant Name:</strong> Tên trợ lý (ví dụ: 小智, Lily,…).</li>
+                    <li><strong>Dialogue Language:</strong> Ngôn ngữ hội thoại (Chinese, Vietnamese, English, …).</li>
+                    <li><strong>Voice Role:</strong> Chọn giọng đọc (ví dụ: giọng nữ tiếng Việt).</li>
+                    <li>
+                        <strong>Role Introduction:</strong> Đoạn giới thiệu vai trò (viết bằng ngôn
+                        ngữ đã chọn).
+                    </li>
+                    <li>
+                        <strong>Vai trò (prompt):</strong> Tối đa khoảng 2.000 ký tự – mô tả chi tiết
+                        “tính cách” / nhiệm vụ của trợ lý, ví dụ:
+                        <em>
+                            “Bạn tên Lily, là giáo viên tiếng Anh, hãy dạy tôi căn bản…”
+                        </em>
+                    </li>
+                    <li>
+                        <strong>Memory:</strong> Bộ nhớ hội thoại, cho phép bot lưu ngữ cảnh và tự
+                        tái tạo sau mỗi cuộc trò chuyện.
+                    </li>
+                </ul>
+
+                <div class="note">
+                    <div class="note-icon">💡</div>
+                    <div>
+                        Bạn có thể dùng trường <strong>Vai trò</strong> để lưu
+                        <strong>ghi chú ngắn</strong> (pass Wi-Fi, địa chỉ,…) và hỏi lại khi cần.
+                        <br />
+                        👉 Muốn chatbot nói tiếng Việt hãy chọn <strong>Dialogue Language = Vietnamese</strong>.
+                    </div>
+                </div>
+
+                <h3>6. Mô hình ngôn ngữ (Language Model)</h3>
+                <p>Chọn mô hình AI phù hợp với nhu cầu sử dụng:</p>
+                <ul>
+                    <li>
+                        <strong>Qwen3 Realtime (Recommended):</strong> tốc độ phản hồi nhanh, vui vẻ,
+                        phù hợp dùng thường xuyên.
+                    </li>
+                    <li>
+                        <strong>DeepSeek V3:</strong> mô hình mạnh, chất lượng cao (máy “trí tuệ” hơn).
+                    </li>
+                    <li>
+                        <strong>Doubao 1.5 Pro, Kimi-K2,…:</strong> các model khác tùy nhu cầu.
+                    </li>
+                </ul>
+
+                <div class="note">
+                    <div class="note-icon">✅</div>
+                    <div>
+                        <strong>Gợi ý:</strong> DeepSeek mạnh mẽ nhất, Qwen3 phản hồi nhanh và “vui” nhất.
+                        <br />
+                        👉 Muốn chatbot không bị ngắc quãng, đứt chữ, hãy chọn mô hình
+                        <strong>Qwen3</strong>.
+                    </div>
+                </div>
+
+                <h3>7. Cài đặt nâng cao (Advanced Settings)</h3>
+                <ul>
+                    <li>
+                        <strong>Voice Recognition Speed:</strong> Tốc độ nhận diện giọng nói (Normal /
+                        Fast / Slow).
+                    </li>
+                    <li><strong>Character Speech Speed:</strong> Tốc độ đọc của nhân vật.</li>
+                    <li><strong>Voice Pitch:</strong> Cao độ giọng (Low Pitch = trầm, High Pitch = cao).</li>
+                </ul>
+                <div class="note">
+                    <div class="note-icon">💾</div>
+                    <div>
+                        Sau khi chỉnh xong, nhớ <strong>Save</strong> và
+                        <strong>khởi động lại thiết bị</strong> để áp dụng cấu hình mới.
+                    </div>
+                </div>
+            </section>
+
+            <!-- IV. THAY ĐỔI GIAO DIỆN + TỪ KHÓA ĐÁNH THỨC -->
+            <section id="giao-dien-tu-khoa">
+                <h2 class="section-title">
+                    <span class="index">IV</span>
+                    <span class="label">Thay đổi giao diện & từ khóa đánh thức</span>
+                </h2>
+
+                <div class="note note-strong">
+                    <div class="note-icon">⚠️</div>
+                    <div>
+                        Trước khi thực hiện, hãy khởi động thiết bị và đảm bảo thiết bị đang ở
+                        <strong>chế độ chờ (Idle)</strong>.<br />
+                        Chức năng này chỉ hỗ trợ từ phiên bản
+                        <strong>firmware 2.0.0 trở lên</strong>. Nếu thấp hơn, hãy cập nhật theo
+                        <a href="#cap-nhat-fw">Mục V</a>.
+                    </div>
+                </div>
+
+                <h3>1. Mở trang tùy chỉnh giao diện</h3>
+                <ol>
+                    <li>
+                        Truy cập:
+                        <span class="link-chip">
+                            <span class="icon">🌐</span>
+                            <a href="https://xiaozhi.me" target="_blank" rel="noopener">https://xiaozhi.me</a>
+                        </span>
+                    </li>
+                    <li>Vào <strong>Console → Agents → Manage Devices</strong>.</li>
+                    <li>
+                        Trong thẻ thiết bị (đèn <strong>Online</strong>), nhấn
+                        <strong>Customize</strong> (Tùy chỉnh chủ đề).
+                    </li>
+                </ol>
+
+                <figure>
+                    <img src="images/device-customize.png" alt="Màn hình Customize chủ đề cho thiết bị" />
+                    <figcaption>Mục Customize chủ đề thiết bị trong Manage Devices.</figcaption>
+                </figure>
+
+                <div class="note">
+                    <div class="note-icon">🌏</div>
+                    <div>
+                        Giao diện mặc định bằng tiếng Trung. Bạn nên bật
+                        <strong>dịch trang sang tiếng Việt</strong> để thao tác dễ hơn. Khi chọn từ
+                        khóa đánh thức, có thể cần chuyển lại ngôn ngữ gốc để thấy tên mô hình
+                        chính xác.
+                    </div>
+                </div>
+
+                <h3>2. Chọn model chip & cấu hình màn hình</h3>
+                <ol>
+                    <li>Kéo xuống <strong>Cấu hình phần cứng tùy chỉnh</strong> → bấm vào khung.</li>
+                    <li>
+                        <strong>Mô hình chip:</strong> chọn
+                        <span class="inline-code">ESP32-S3</span>.
+                    </li>
+                    <li>
+                        <strong>Chiều rộng / Chiều cao:</strong> nhập
+                        <span class="inline-code">240 / 240</span>.
+                    </li>
+                    <li>
+                        Kiểm tra phần <strong>Cấu hình hiện tại</strong> hiển thị đúng, sau đó nhấn
+                        <strong>Bước tiếp theo</strong>.
+                    </li>
+                </ol>
+
+                <p>
+                    Lý do: thiết bị được bán ra sử dụng chip <strong>ESP32-S3</strong> và màn hình
+                    <strong>1.3 inch 240×240</strong>, nên cần nhập đúng thông số để hiển thị chuẩn.
+                </p>
+
+                <h3>3. Thiết kế chủ đề – các tab cấu hình</h3>
+                <p>Bạn sẽ có 4 tab chính:</p>
+                <ul>
+                    <li>Cấu hình từ đánh thức (Wake word).</li>
+                    <li>Cấu hình phông chữ (Font).</li>
+                    <li>Bộ sưu tập biểu tượng cảm xúc (Emojis).</li>
+                    <li>Nền trò chuyện (Chat background).</li>
+                </ul>
+
+                <h4>3.1. Cấu hình từ đánh thức (Wake word)</h4>
+                <ul>
+                    <li>Mở danh sách tùy chọn từ đánh thức.</li>
+                    <li>
+                        Chọn cụm từ bạn muốn, ví dụ:
+                        <em>Sophia (WakeNet9)</em> hoặc
+                        <em>Xin chào, Joy (WakeNet9)</em>.
+                    </li>
+                    <li>Sau khi chọn, hệ thống báo đã chọn và hiển thị tên file mô hình.</li>
+                </ul>
+                <div class="note">
+                    <div class="note-icon">🚨</div>
+                    <div>
+                        Nếu <strong>không chọn</strong> từ đánh thức, thiết bị
+                        <strong>sẽ không thể đánh thức bằng giọng nói</strong>.
+                    </div>
+                </div>
+
+                <h4>3.2. Cấu hình phông chữ</h4>
+                <p>
+                    Do thiết bị dùng ESP32-S3 Mini, bộ nhớ hạn chế và font mặc định tương đối nặng,
+                    nên:
+                </p>
+                <ul>
+                    <li>Ưu tiên chọn kích thước <strong>14px</strong> hoặc <strong>16px</strong>.</li>
+                    <li>
+                        Nên chọn:
+                        <strong>Alibaba Puhui Body 16px</strong> (khuyên dùng cho màn 240×240).
+                    </li>
+                    <li>
+                        Hoặc chọn <strong>Phông chữ tùy chỉnh</strong> → tải lên file
+                        <span class="inline-code">.TTF / .WOFF / .WOFF2</span> có
+                        <strong>đầy đủ dấu tiếng Việt</strong>.
+                    </li>
+                </ul>
+                <p>
+                    Dùng font Việt hóa riêng thường giúp file assets.bin nhẹ hơn so với font mặc
+                    định.
+                </p>
+
+                <h4>3.3. Bộ sưu tập biểu tượng cảm xúc (Emojis)</h4>
+                <ul>
+                    <li>Chọn bộ emoji cài sẵn, ví dụ: <strong>Twemoji 64×64</strong> (hiển thị rõ).</li>
+                    <li>Chuyển sang tab <strong>Biểu tượng cảm xúc tùy chỉnh</strong> nếu muốn tự thiết kế.</li>
+                </ul>
+                <p>Với emoji tùy chỉnh:</p>
+                <ul>
+                    <li>Nhập <strong>Chiều rộng / Chiều cao</strong> (ví dụ: <strong>160×120</strong>).</li>
+                    <li>
+                        Ở khu <strong>Tải lên hình ảnh biểu tượng cảm xúc</strong>, bấm vào từng ô
+                        “Nhấp vào tải lên” để chọn ảnh cho 21 trạng thái (mặc định, vui mừng, cười
+                        lớn, buồn cười, buồn, tức giận, khóc,…).
+                    </li>
+                </ul>
+
+                <h4>3.4. Nền trò chuyện – chế độ Sáng / Tối</h4>
+                <p><strong>Tuỳ chọn 1: màu thuần</strong></p>
+                <ul>
+                    <li>
+                        Trong <strong>Nền trò chuyện</strong>, ở
+                        <strong>Chế độ sáng</strong> chọn <strong>Thuần màu</strong> → chọn màu
+                        <strong>nền</strong> và <strong>chữ</strong>.
+                    </li>
+                    <li>
+                        Ở <strong>Chế độ tối</strong>, chọn:
+                        <span class="inline-code">#121212</span> cho nền,
+                        <span class="inline-code">#ffffff</span> cho chữ để có độ tương phản tốt.
+                    </li>
+                    <li>Xem kết quả ở khung <strong>Xem trước</strong>.</li>
+                </ul>
+                <p><strong>Tuỳ chọn 2: ảnh nền</strong></p>
+                <ul>
+                    <li>Chuyển sang <strong>Ảnh nền</strong>.</li>
+                    <li>
+                        Tải ảnh cho chế độ sáng / tối (khuyến nghị ảnh vuông
+                        <strong>240×240</strong>, dung lượng &lt; ~500KB).
+                    </li>
+                </ul>
+
+                <h4>3.5. Xem trước & hoàn tất bước 2</h4>
+                <p>
+                    Khi mọi mục có <strong>dấu chấm xanh</strong>, nhấn
+                    <strong>Tiếp / Bước tiếp theo</strong> để sang bước 3.
+                </p>
+
+                <h3>4. Bước 3: Xem trước & tạo assets.bin</h3>
+                <p>Ở bước này:</p>
+                <ul>
+                    <li>Trái: mô phỏng thiết bị 240×240.</li>
+                    <li>Phải: văn bản xem trước, lựa chọn emoji hiển thị, chuyển chế độ Sáng/Tối.</li>
+                    <li>
+                        Kiểm tra lại <strong>Tóm tắt cấu hình</strong>: mô hình chip, độ phân giải,
+                        từ đánh thức, phông chữ, bộ emoji và danh sách file sẽ đóng gói.
+                    </li>
+                </ul>
+                <p>
+                    Sau khi kiểm tra, nhấn <strong>Bắt đầu tạo</strong> để tạo file
+                    <span class="inline-code">assets.bin</span>.
+                </p>
+
+                <div class="note note-strong">
+                    <div class="note-icon">ℹ️</div>
+                    <div>
+                        Thiết bị ChatBot phải được <strong>khởi động</strong> và đang ở
+                        <strong>chế độ chờ</strong> thì mới nhấn được nút nạp trực tuyến màu xanh.
+                    </div>
+                </div>
+
+                <h3>5. Nạp file assets.bin vào thiết bị</h3>
+                <p>Sau khi tạo xong, hệ thống hiển thị:</p>
+                <ul>
+                    <li>Tên file.</li>
+                    <li>Kích thước file, ví dụ: <strong>1,16MB</strong>.</li>
+                </ul>
+                <div class="note">
+                    <div class="note-icon">⚠️</div>
+                    <div>
+                        <strong>Quan trọng:</strong> file
+                        <span class="inline-code">assets.bin</span> phải
+                        <strong>&lt; 700KB</strong> mới nạp vào thiết bị được. Phần nặng nhất thường
+                        là <strong>font chữ</strong> (font càng to, càng nặng). Nên dùng font Việt
+                        hóa nhẹ để tối ưu.
+                    </div>
+                </div>
+
+                <p>Bạn có 2 lựa chọn:</p>
+                <ul>
+                    <li>
+                        <strong>Tải xuống assets.bin</strong> để nạp tay / đưa lên OTA server riêng.
+                    </li>
+                    <li>
+                        <strong>Ghi trực tuyến vào thiết bị</strong> (OTA trực tiếp thiết bị Online
+                        đang gắn với Agent).
+                    </li>
+                </ul>
+                <p>
+                    Khuyến nghị: chọn <strong>Ghi trực tuyến vào thiết bị</strong> để thiết bị tự
+                    tải và cập nhật cấu hình mới.
+                </p>
+                <p>
+                    Khi đang ghi vào thiết bị, sẽ có thanh tiến trình hiển thị trạng thái (đang chờ
+                    thiết bị khởi động lại, % hoàn thành,…). Hoàn tất, thiết bị sẽ tự khởi động
+                    lại với bộ tài nguyên mới.
+                </p>
+            </section>
+
+            <!-- V. CẬP NHẬT PHẦN MỀM -->
+            <section id="cap-nhat-fw">
+                <h2 class="section-title">
+                    <span class="index">V</span>
+                    <span class="label">Cập nhật phần mềm (Firmware)</span>
+                </h2>
+
+                <div class="note note-strong">
+                    <div class="note-icon">⚠️</div>
+                    <div>
+                        Khi cập nhật firmware,
+                        <strong>không nên bật công tắc thiết bị</strong>. Chỉ cần
+                        <strong>ghim cáp Type-C</strong> cạnh công tắc vào máy tính là được.
+                    </div>
+                </div>
+
+                <h3>1. Mở trang cập nhật</h3>
+                <p>
+                    Truy cập:
+                    <span class="link-chip">
+                        <span class="icon">🌐</span>
+                        <a href="https://tandev.click" target="_blank" rel="noopener">https://tandev.click</a>
+                    </span>
+                </p>
+                <p>Chọn mục <strong>Update ChatBot AI - TanDev</strong>.</p>
+                <p>
+                    Tiếp theo, chọn <strong>Kiểm tra cập nhật</strong> để lấy các bản firmware mới
+                    nhất.
+                </p>
+
+                <h3>2. Thứ tự cập nhật</h3>
+                <ul>
+                    <li>
+                        <strong>Ưu tiên cài Fw1 trước</strong>. Sau khi cập nhật Fw1 xong, nếu
+                        <strong>không bị lỗi nháy nháy màn hình</strong> thì tiếp tục cài Fw2.
+                    </li>
+                    <li>Đảm bảo chọn đúng thiết bị và phiên bản tương ứng.</li>
+                </ul>
+
+                <h3>3. Kết nối thiết bị & chọn cổng COM</h3>
+                <ul>
+                    <li>Kết nối thiết bị với máy tính bằng cable Type-C.</li>
+                    <li>
+                        Trên trang update, chọn cổng COM của thiết bị (thường có tên
+                        <strong>USB JTAG / Serial…</strong>).
+                    </li>
+                    <li>Tiến hành flash firmware theo hướng dẫn trên web.</li>
+                </ul>
+
+                <p>
+                    Sau khi cập nhật xong, rút cáp và bật công tắc để <strong>khởi động lại thiết bị</strong>.
+                </p>
+            </section>
+
+            <!-- VI. PHÁT NHẠC / RADIO / PODCAST -->
+            <section id="phat-nhac">
+                <h2 class="section-title">
+                    <span class="index">VI</span>
+                    <span class="label">Phát nhạc Zing, SoundCloud, Radio VOV, Podcast</span>
+                </h2>
+
+                <h3>1. Bật chức năng trong MCP Settings</h3>
+                <ol>
+                    <li>Vào <strong>https://xiaozhi.me → Console → Agents → Manage Devices</strong>.</li>
+                    <li>
+                        Trong thẻ thiết bị (Online), nhấn <strong>Configure Role</strong>
+                        (Cấu hình vai trò).
+                    </li>
+                    <li>Kéo xuống cuối trang, tìm phần <strong>MCP Settings</strong> (Cài đặt MCP).</li>
+                </ol>
+
+                <p>Trong MCP Settings:</p>
+                <ul>
+                    <li><strong>Bỏ tích</strong> ở mục <strong>Music</strong>.</li>
+                    <li>Chỉ chừa <strong>Weather</strong> → nhấn <strong>Save</strong>.</li>
+                </ul>
+
+                <p>
+                    Mặc định, sau khi cấu hình, thiết bị sẽ phát nhạc từ
+                    <strong>Zing MP3</strong>. Nếu muốn phát từ <strong>SoundCloud</strong>, hãy
+                    nói kèm: “phát từ SoundCloud”.
+                </p>
+
+                <h3>2. Radio VOV & kênh nhạc</h3>
+                <p>Các kênh Radio VOV hỗ trợ:</p>
+                <ul>
+                    <li>VOV 1, VOV 2, VOV 3.</li>
+                    <li>VOV Giao thông (Hà Nội), VOV Giao thông (HCM).</li>
+                    <li>VOV 5 Tiếng Anh 24/7, VOV Mekong.</li>
+                    <li>VOV 4 Miền Trung, VOV 4 Tây Bắc, VOV 4 Đông Bắc, VOV 4 Tây Nguyên.</li>
+                    <li>VOV 4 Đồng Bằng SCL, VOV 4 Hồ Chí Minh (alias).</li>
+                    <li>VOV Duyên Hải, VOV FM89.</li>
+                </ul>
+                <p>
+                    Ngoài ra có <strong>Radio Zeno</strong>: các kênh nhạc online cần mạng ổn định
+                    (có thể redirect).
+                </p>
+
+                <p>Các kênh nhạc thường dùng:</p>
+                <ul>
+                    <li>Miền Tây.</li>
+                    <li>Saigoner Cô Đơn.</li>
+                    <li>Nhạc Trẻ, Nhạc Vàng, Cải Lương, Nhạc Remix,…</li>
+                </ul>
+
+                <h3>3. Podcast</h3>
+                <p>Cách gọi lệnh bằng giọng nói:</p>
+                <ul>
+                    <li>“Mở podcast <strong>Tấm Cám</strong>.”</li>
+                    <li>“Phát podcast <strong>Cây Khế</strong>.”</li>
+                    <li>… và các tên podcast khác bạn muốn nghe.</li>
+                </ul>
+            </section>
+
+            <!-- VII. TIN TỨC, XỔ SỐ, GIÁ VÀNG -->
+            <section id="tin-tuc">
+                <h2 class="section-title">
+                    <span class="index">VII</span>
+                    <span class="label">Tin tức, xổ số, giá vàng</span>
+                </h2>
+
+                <h3>1. Tin tức (VnExpress)</h3>
+                <p><strong>Tính năng:</strong> đọc tin mới từ VnExpress theo 7 chủ đề:</p>
+                <ul>
+                    <li>Tin mới nhất.</li>
+                    <li>Tin nổi bật.</li>
+                    <li>Thế giới.</li>
+                    <li>Thời sự.</li>
+                    <li>Thể thao.</li>
+                    <li>Pháp luật.</li>
+                    <li>Khoa học công nghệ.</li>
+                </ul>
+                <p>Mặc định thiết bị sẽ lấy khoảng <strong>5 bài viết mới</strong>.</p>
+
+                <div class="note">
+                    <div class="note-icon">🛠️</div>
+                    <div>
+                        Hiện tại <strong>chưa có chức năng</strong> xem chi tiết một bài báo cụ thể
+                        (đọc toàn bộ nội dung), sẽ được bổ sung trong các bản cập nhật sau.
+                    </div>
+                </div>
+
+                <h3>2. Xổ số</h3>
+                <p>Thiết bị có thể:</p>
+                <ul>
+                    <li>Lấy kết quả xổ số theo <strong>tỉnh</strong>.</li>
+                    <li>Lấy kết quả theo <strong>miền</strong> (Bắc / Trung / Nam).</li>
+                </ul>
+
+                <h3>3. Giá vàng</h3>
+                <p>
+                    Hỗ trợ lấy <strong>giá vàng realtime</strong> từ <strong>SJC</strong>, phù hợp
+                    khi bạn cần tra giá nhanh.
+                </p>
+            </section>
+
+            <!-- VIII. BÁO THỨC & ĐẾM NGƯỢC -->
+            <section id="bao-thuc-dem-nguoc">
+                <h2 class="section-title">
+                    <span class="index">VIII</span>
+                    <span class="label">Báo thức & đếm ngược</span>
+                </h2>
+
+                <div class="split">
+                    <div>
+                        <h3>A. Báo thức (một lần)</h3>
+                        <p>
+                            Báo thức sẽ kêu <strong>một lần</strong> vào đúng giờ bạn đặt, hiển thị
+                            thông báo trên màn hình, sau đó tự xóa.
+                        </p>
+
+                        <h4>1. Đặt báo thức bằng giọng nói</h4>
+                        <p>Nói các câu tự nhiên:</p>
+                        <ul>
+                            <li>“Đặt báo thức lúc 7 giờ 30.”</li>
+                            <li>“Nhắc tôi 17 giờ 15: họp nhóm.”</li>
+                            <li>“Báo thức 6 giờ: dậy tập thể dục.”</li>
+                        </ul>
+                        <p>Thiết bị sẽ xác nhận lại và lưu báo thức một lần cho đúng ngày/giờ đó.</p>
+
+                        <h4>2. Kiểm tra danh sách báo thức</h4>
+                        <p>Câu lệnh ví dụ:</p>
+                        <ul>
+                            <li>“Cho mình xem các báo thức.”</li>
+                            <li>“Danh sách các báo thức.”</li>
+                        </ul>
+
+                        <h4>3. Xóa báo thức</h4>
+                        <p>Có thể xóa theo ID hoặc theo giờ:</p>
+                        <ul>
+                            <li>“Xóa báo thức số 3.” (dùng số ID trong danh sách).</li>
+                            <li>“Huỷ báo thức 7:30.” (nói đúng giờ đã đặt).</li>
+                        </ul>
+
+                        <h4>4. Khi báo thức reo</h4>
+                        <ul>
+                            <li>Thiết bị chuyển sang trạng thái <strong>Speaking</strong>.</li>
+                            <li>
+                                Hiển thị thông báo, ví dụ:
+                                <em>“⏰ Báo thức! Họp nhóm.”</em>
+                            </li>
+                            <li>Chuông reo trong một khoảng thời gian ngắn (~30 giây).</li>
+                            <li>Sau đó trở về trạng thái trước (Idle hoặc Listening).</li>
+                        </ul>
+
+                        <div class="note">
+                            <div class="note-icon">⚠️</div>
+                            <div>
+                                <strong>Lưu ý:</strong> báo thức là <strong>one-shot</strong> (kêu xong
+                                tự xóa). Thiết bị <strong>không nhớ lại</strong> báo thức khi đã tắt và
+                                bật nguồn lại – chỉ nhớ trong suốt quá trình đang bật.
+                            </div>
+                        </div>
+
+                        <div class="note">
+                            <div class="note-icon">⏱️</div>
+                            <div>
+                                Nếu đặt một giờ <strong>đã trôi qua trong ngày</strong>, báo thức sẽ
+                                <strong>không kêu</strong>. Hãy đặt lại một giờ trong tương lai. Sau khi
+                                đổi Wi-Fi hoặc mới khởi động thiết bị, nên chờ vài chục giây để đồng bộ
+                                thời gian rồi hãy đặt báo thức.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- B. Đếm ngược -->
+                    <div>
+                        <h3>B. Đếm ngược (hẹn giờ theo khoảng thời gian)</h3>
+                        <p>
+                            Đếm ngược phù hợp cho các nhắc việc kiểu “sau 30 phút”, “1 tiếng nữa…”.
+                            Khi hết giờ, thiết bị sẽ kêu chuông, hiển thị thông báo rồi tự xóa hẹn giờ.
+                        </p>
+
+                        <h4>1. Bắt đầu đếm ngược</h4>
+                        <p>Câu lệnh ví dụ:</p>
+                        <ul>
+                            <li>“Nhắc tôi sau 30 phút: kiểm tra bếp.”</li>
+                            <li>“1 tiếng nữa nhắc tôi đi họp.”</li>
+                            <li>“Sau 10 phút báo mình uống nước.”</li>
+                        </ul>
+                        <p>
+                            Thiết bị sẽ xác nhận lại tổng thời gian (phút / giây) và nội dung nhắc kèm
+                            theo.
+                        </p>
+
+                        <h4>2. Dừng / huỷ đếm ngược</h4>
+                        <ul>
+                            <li>“Huỷ đếm ngược số 2.” (nếu nhớ ID).</li>
+                            <li>“Huỷ đếm ngược 30 phút.” (nếu mới đặt xong).</li>
+                            <li>“Huỷ tất cả đếm ngược.” (xoá mọi hẹn giờ đang chạy).</li>
+                        </ul>
+
+                        <h4>3. Khi đếm ngược kết thúc</h4>
+                        <ul>
+                            <li>Thiết bị chuyển sang trạng thái <strong>Speaking</strong>.</li>
+                            <li>
+                                Hiển thị thông báo, ví dụ:
+                                <em>“⏰ Hết thời gian! Kiểm tra nồi.”</em>
+                            </li>
+                            <li>Chuông reo trong khoảng 30 giây rồi dừng.</li>
+                        </ul>
+
+                        <h4>4. Xem các đếm ngược đang chạy</h4>
+                        <p>Câu lệnh ví dụ:</p>
+                        <ul>
+                            <li>“Đếm ngược nào đang chạy.”</li>
+                        </ul>
+                        <p>Thiết bị sẽ cho biết:</p>
+                        <ul>
+                            <li>Mỗi bộ đếm còn lại bao nhiêu giây / phút.</li>
+                            <li>Nội dung nhắc tương ứng (nếu có).</li>
+                        </ul>
+
+                        <div class="note">
+                            <div class="note-icon">ℹ️</div>
+                            <div>
+                                Tương tự báo thức, đếm ngược chỉ được lưu trong suốt quá trình thiết bị
+                                đang bật. Tắt nguồn rồi bật lại sẽ <strong>không nhớ</strong> các hẹn giờ
+                                cũ.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <div class="footer">
+                <div>
+                    <strong>ChatBot AI (XiaoZhi)</strong> — Hướng dẫn sử dụng chi tiết, biên soạn bởi
+                    TikTok <strong>@tandev282</strong>.
+                </div>
+                <div>
+                    Gợi ý: lưu file này trên máy / điện thoại và mở bằng trình duyệt để tra cứu
+                    nhanh khi cần.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scroll + active section highlight
+        const tocLinks = document.querySelectorAll(".toc-link");
+        const sections = Array.from(document.querySelectorAll("main section"));
+        const backToTopBtn = document.getElementById("btnBackToTop");
+
+        tocLinks.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const targetId = btn.getAttribute("data-target");
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    const rect = targetEl.getBoundingClientRect();
+                    const offset = window.scrollY + rect.top - 95;
+                    window.scrollTo({ top: offset, behavior: "smooth" });
+                }
+            });
+        });
+
+        backToTopBtn.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        function updateActiveToc() {
+            let currentId = null;
+            const scrollPos = window.scrollY + 130;
+
+            for (const sec of sections) {
+                const top = sec.offsetTop;
+                const bottom = top + sec.offsetHeight;
+                if (scrollPos >= top && scrollPos < bottom) {
+                    currentId = sec.id;
+                    break;
+                }
+            }
+
+            tocLinks.forEach((btn) => {
+                const targetId = btn.getAttribute("data-target");
+                btn.classList.toggle("active", targetId === currentId);
+            });
+        }
+
+        window.addEventListener("scroll", () => {
+            window.requestAnimationFrame(updateActiveToc);
+        });
+
+        // Init
+        updateActiveToc();
+    </script>
+</body>
+
+</html>

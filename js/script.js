@@ -13,7 +13,8 @@ const fwCards = document.querySelectorAll(".fw-button")
 const chipGrid = document.getElementById("chipGrid")
 const chipSelection = document.getElementById("chipSelection")
 const oledSelection = document.getElementById("oledSelection")
-const oledButtons = document.querySelectorAll(".oled-button")
+const oledGrid = document.getElementById("oledGrid")
+
 
 let selectedChip = null
 let selectedFw = null
@@ -21,13 +22,19 @@ let selectedOled = null
 
 const chipOptions = {
   mochi_nav: [
-    { chip: "esp32", label: "ESP32" },
     { chip: "esp32c3", label: "ESP32-C3" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3 N16R8 / ESP32-S3 Mạch Tím - Hi, Lily" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Super Mini - Hi, Lily" },
-    { chip: "esp32s3_zero", label: "ESP32-S3 Zero - Hi, Lily" },
+    { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Super Mini" },
+    { chip: "esp32s3_zero", label: "ESP32-S3 Zero" },
+    { chip: "esp32c3", label: "Xmini-C3" },
+    { chip: "esp32c3_v3", label: "Xmini-C3 V3" },
+    { chip: "esp32s3_cube", label: "XingZhi Cube 1.54" },
+    { chip: "esp32s3_n28p", label: "ES32N28P" },
+    { chip: "esp32c3_esphi", label: "ESP Hi" },
+    { chip: "esp32s3_otto", label: "Otto Robot" },
+    { chip: "custom", label: "Custom" },
   ],
 }
 
@@ -36,7 +43,42 @@ const XIAOZHI_CHIP_MAP = {
   esp32s3: { dir: "esp32s3", filePrefix: "xiaozhi_esp32s3" },
   esp32s3_mini: { dir: "esp32s3mini", filePrefix: "xiaozhi_esp32s3mini" },
   esp32s3_zero: { dir: "esp32s3zero", filePrefix: "xiaozhi_esp32s3zero" }, // NEW
+  esp32c3: { dir: "esp32c3", filePrefix: "xiaozhi_esp32c3" },
+  esp32c3_v3: { dir: "esp32c3v3", filePrefix: "xiaozhi_esp32c3v3" }, // NEW
+  esp32s3_cube: { dir: "esp32s3cube", filePrefix: "xiaozhi_esp32s3cube" }, // NEW
+  esp32s3_n28p: { dir: "esp32s3n28p", filePrefix: "xiaozhi_esp32s3n28p" }, // NEW
+  esp32c3_esphi: { dir: "esp32c3esphi", filePrefix: "xiaozhi_esp32c3esphi" }, // NEW
+  esp32s3_otto: { dir: "esp32s3otto", filePrefix: "xiaozhi_esp32s3otto" }, // NEW
+  custom: { dir: "custom", filePrefix: "xiaozhi_custom" }, // NEW
 };
+
+// Các lựa chọn màn hình mặc định cho đa số board Xiaozhi
+const DEFAULT_OLED_OPTIONS = [
+  { value: "0.91", label: "OLED 0.91inch" },
+  { value: "0.96", label: "OLED 0.96inch" },
+  { value: "1.3", label: "OLED 1.3inch" },
+]
+
+// Các chip có layout màn hình riêng
+const CHIP_OLED_OPTIONS = {
+  // N28P có 2 kiểu màn 2.8"
+  esp32s3_n28p: [
+    { value: "2.8", label: "Màn 2.8 IPS" },
+    { value: "2.8-nonips", label: "Màn 2.8 Non-IPS" },
+  ],
+}
+
+// Chip chỉ có đúng 1 màn → auto chọn, bỏ bước chọn
+const CHIP_FIXED_SCREEN = {
+  esp32s3_cube: "1.54", // XingZhi Cube 1.54"
+  esp32c3: "0.96",    // Xmini-C3 chỉ có OLED 1.3"
+  esp32c3_v3: "0.96", // Xmini-C3 V3 chỉ có OLED 1.3"
+  esp32c3_esphi: "0.5", // ESP Hi chỉ có OLED 1.3"
+  esp32s3_otto: "1.54", // Otto Robot chỉ có LCD 1.3"
+  custom: "Nhắn tin để được hỗ trợ build riêng",
+}
+
+
 
 
 function initializeApp() {
@@ -48,7 +90,6 @@ function initializeApp() {
     console.error("Lỗi khởi tạo ứng dụng:", error)
   }
 }
-
 
 // Function to generate firmware binary file name and path
 function generateFirmwarePath(fw, chip, oled = null) {
@@ -244,7 +285,6 @@ async function downloadSelectedFirmware(manifestPath, chipType) {
   }
 }
 
-
 function setupEspWebToolsWithManifest(chipType) {
   let manifestPath = "";
 
@@ -288,7 +328,7 @@ function setupEspWebToolsWithManifest(chipType) {
   newInstallButton.classList.remove("invisible");
 
   // Thời gian bạn tự điền
-  const fwUpdatedAt = "20:00 - 16-11-2025";
+  const fwUpdatedAt = "20:00 - 03-12-2025";
   document.getElementById("fwUpdateStamp").textContent =
     `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
 
@@ -384,23 +424,67 @@ function switchTab(tabId) {
   })
 }
 
-function switchChipTab(chipTabId) {
-  chipTabContents.forEach((content) => content.classList.remove("active"))
-  document.getElementById(chipTabId + "-content").classList.add("active")
+function switchChipTab(chipTabId, scopeEl) {
+  const content = document.getElementById(chipTabId + "-content");
+  if (!content) return;
 
-  chipTabBtns.forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.chipTab === chipTabId)
-  })
+  // Giới hạn phạm vi trong cùng 1 wiring-section / tab-pane
+  const root =
+    scopeEl ||
+    content.closest(".wiring-section, .tab-pane, .main-guide-tab-content") ||
+    document;
+
+  // Chỉ tắt / bật chip-tab-content trong nhóm này
+  root.querySelectorAll(".chip-tab-content").forEach((c) => {
+    c.classList.remove("active");
+  });
+  content.classList.add("active");
+
+  // Chỉ toggle .chip-tab-btn trong nhóm này
+  root.querySelectorAll(".chip-tab-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.chipTab === chipTabId);
+  });
 }
+
 
 function switchMainTab(tabId) {
-  mainGuideTabContents.forEach((content) => content.classList.remove("active"))
-  document.getElementById(tabId).classList.add("active")
+  // 1. Bật/tắt nội dung main tab
+  mainGuideTabContents.forEach((content) => {
+    content.classList.toggle("active", content.id === tabId);
+  });
 
+  // 2. Active nút main ở trên
   mainGuideTabBtns.forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.mainTab === tabId)
-  })
+    btn.classList.toggle("active", btn.dataset.mainTab === tabId);
+  });
+
+  // 3. Xử lý tab con bên trong main tab vừa chọn
+  const currentMain = document.getElementById(tabId);
+  if (!currentMain) return;
+
+  const innerTabBtns = currentMain.querySelectorAll(".tab-btn");
+
+  if (innerTabBtns.length > 0) {
+    // Nếu trong group này đang có nút nào active thì ưu tiên dùng lại
+    let btnToActivate = Array.from(innerTabBtns).find((b) =>
+      b.classList.contains("active")
+    );
+
+    // Nếu không có thì chọn nút đầu tiên làm default
+    if (!btnToActivate) {
+      btnToActivate = innerTabBtns[0];
+    }
+
+    if (btnToActivate && btnToActivate.dataset.tab) {
+      switchTab(btnToActivate.dataset.tab);
+    }
+  } else {
+    // Main tab này không có tab con → clear trạng thái tab con cũ
+    tabPanes.forEach((pane) => pane.classList.remove("active"));
+    tabBtns.forEach((btn) => btn.classList.remove("active"));
+  }
 }
+
 
 function resetSelections() {
   chipSelection.style.display = "block"
@@ -412,6 +496,44 @@ function resetSelections() {
   selectedOled = null
 }
 
+function renderOledOptionsForChip(chip) {
+  // Nếu chip chỉ có 1 loại màn → auto chọn + ẩn UI
+  const fixed = CHIP_FIXED_SCREEN[chip]
+  if (fixed) {
+    oledSelection.style.display = "none"
+    oledGrid.innerHTML = ""
+    selectedOled = fixed
+    // Chip này đủ thông tin để flash luôn
+    updateFlashButtonVisibility()
+    return
+  }
+
+  // Xác định danh sách màn hình cho chip này
+  const options = CHIP_OLED_OPTIONS[chip] || DEFAULT_OLED_OPTIONS
+
+  oledSelection.style.display = "block"
+  oledGrid.innerHTML = ""
+  selectedOled = null
+
+  options.forEach((opt) => {
+    const btn = document.createElement("button")
+    btn.className = "oled-button"
+    btn.dataset.oled = opt.value
+    btn.textContent = opt.label
+
+    btn.addEventListener("click", async () => {
+      // clear active cũ
+      oledGrid.querySelectorAll(".oled-button").forEach((b) => b.classList.remove("active"))
+      btn.classList.add("active")
+
+      selectedOled = opt.value
+      await updateFlashButtonVisibility()
+    })
+
+    oledGrid.appendChild(btn)
+  })
+}
+
 function createChipButton(opt) {
   const btn = document.createElement("button")
   btn.className = "chip-button"
@@ -421,16 +543,20 @@ function createChipButton(opt) {
   btn.addEventListener("click", async () => {
     document.querySelectorAll(".chip-button").forEach((b) => b.classList.remove("active"))
     btn.classList.add("active")
+
     selectedChip = opt.chip
 
     if (selectedFw === "xiaozhi") {
-      oledSelection.style.display = "block"
-      oledButtons.forEach((b) => b.classList.remove("active"))
-      selectedOled = null
+      // Render UI màn hình theo từng chip
+      renderOledOptionsForChip(selectedChip)
     } else {
+      // MochiNav không cần chọn màn
       oledSelection.style.display = "none"
+      oledGrid.innerHTML = ""
+      selectedOled = null
     }
 
+    // Với chip fixed-screen, renderOledOptionsForChip() đã set selectedOled
     await updateFlashButtonVisibility()
   })
 
@@ -453,25 +579,24 @@ function setupEventListeners() {
     })
   })
 
-  // OLED selection
-  oledButtons.forEach((oledBtn) => {
-    oledBtn.addEventListener("click", async () => {
-      oledButtons.forEach((b) => b.classList.remove("active"))
-      oledBtn.classList.add("active")
-      selectedOled = oledBtn.dataset.oled
-      await updateFlashButtonVisibility()
-    })
-  })
-
   // Tab navigation
   tabBtns.forEach((btn) => {
     btn.addEventListener("click", () => switchTab(btn.dataset.tab))
   })
 
-  // Chip tab navigation
+  // Chip tab navigation (theo nhóm)
   chipTabBtns.forEach((btn) => {
-    btn.addEventListener("click", () => switchChipTab(btn.dataset.chipTab))
-  })
+    btn.addEventListener("click", () => {
+      const scope =
+        btn.closest(".wiring-section") ||
+        btn.closest(".tab-pane") ||
+        btn.closest(".main-guide-tab-content") ||
+        document;
+
+      switchChipTab(btn.dataset.chipTab, scope);
+    });
+  });
+
 
   // Main guide tabs
   mainGuideTabBtns.forEach((btn) => {
@@ -547,12 +672,17 @@ function initializePopups() {
     const closeBtn = fbPopup.querySelector("#closePopupBtn")
     const joinBtn = fbPopup.querySelector("#joinButton")
 
-    fbPopup.style.display = "flex"
+    fbPopup.style.display = "flex";
+    document.body.classList.add("no-scroll");
 
-    closeBtn?.addEventListener("click", () => (fbPopup.style.display = "none"))
+
+    closeBtn?.addEventListener("click", () => (fbPopup.style.display = "none",
+      document.body.classList.remove("no-scroll")));
     joinBtn?.addEventListener("click", () => {
       window.open("https://www.facebook.com/share/g/1G743kz7iZ/", "_blank")
-      fbPopup.style.display = "none"
+      fbPopup.style.display = "none";
+      document.body.classList.remove("no-scroll");
+
     })
   }
 
@@ -1026,6 +1156,7 @@ function disableScroll() {
   document.body.style.left = '0'; document.body.style.right = '0';
   document.body.style.width = '100%';
 }
+
 function enableScroll() {
   document.body.style.position = '';
   document.body.style.top = '';
@@ -1093,6 +1224,7 @@ function _unlink_showProgress(text = "Đang lấy MAC thiết bị…") {
     el.style.display = "flex";
   }
 }
+
 function _unlink_hideProgress() {
   const el = document.getElementById("unlinkProgressModal");
   if (el) el.style.display = "none";
@@ -1387,8 +1519,6 @@ function initUnlinkEmailHandlers() {
     });
   });
 }
-
-
 
 // Initialize app when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {

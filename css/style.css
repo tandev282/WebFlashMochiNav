@@ -1565,14 +1565,35 @@ esp-web-install-button {
   display: block;
 }
 
-/* FW và CHIP chia đôi chiều ngang */
-.fw-grid-horizontal,
-.chip-grid-horizontal {
+/* FW: vẫn 2 nút / hàng, căn hai bên */
+.fw-grid-horizontal {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
   margin-top: 1rem;
 }
+
+.fw-grid-horizontal .fw-button {
+  flex: 1 1 48%;
+}
+
+/* CHIP: 4 chip / hàng, căn từ trái sang phải */
+.chip-grid-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  /* Cho phép xuống dòng */
+  gap: 1rem;
+  justify-content: flex-start;
+  /* Xếp sát bên trái */
+  margin-top: 1rem;
+}
+
+.chip-grid-horizontal .chip-button {
+  flex: 0 0 calc(25% - 0.75rem);
+  /* 4 item / hàng */
+  max-width: calc(25% - 0.75rem);
+}
+
 
 .fw-button,
 .chip-button {
@@ -2320,4 +2341,212 @@ esp-web-install-button {
 
 .result.error {
   color: #ff6b6b;
+}
+
+/* ============================
+   FIX RESPONSIVE MOBILE
+   ============================ */
+@media (max-width: 768px) {
+
+  /* Cho phép trang tự cao theo nội dung, không khóa height */
+  .content-grid {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+
+  /* Panel full width, không tràn */
+  .left-panel,
+  .right-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Giảm padding để tránh tràn */
+  .main-content {
+    padding: 1rem !important;
+  }
+
+  /* Fix nút TAB — không bị đẩy quá rộng */
+  .tab-navigation {
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    flex: unset !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Ảnh tự co */
+  img,
+  .wiring-diagram {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Các bảng cho phép xuống dòng */
+  table {
+    word-break: break-word !important;
+  }
+
+  td, th {
+    white-space: normal !important;
+  }
+
+  /* Fix overflow ở connection table */
+  .connection-table {
+    overflow-x: auto !important;
+  }
+
+  /* Fix popup */
+  .popup-box {
+    width: 95% !important;
+  }
+}
+
+/* FIX Main Tab MochiNav / Xiaozhi trên mobile */
+@media (max-width: 768px) {
+  .main-guide-tabs {
+    flex-wrap: wrap;              /* Cho nút tự xuống dòng */
+    justify-content: center;      /* Căn giữa cho đẹp */
+    gap: 0.5rem;                  /* Giảm khoảng cách lại */
+  }
+
+  .main-guide-tab-btn {
+    flex: 1 1 100%;               /* Mỗi nút chiếm full 1 hàng */
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;            /* Chữ nhỏ lại chút cho đỡ tràn */
+    padding: 0.6rem 0.75rem;
+    white-space: normal;          /* Cho text xuống dòng, không bị kéo dài 1 hàng */
+  }
+}
+
+/* Fix popup buttons trên mobile */
+@media (max-width: 480px) {
+  .popup-actions {
+    flex-direction: column;        /* Xếp nút theo cột */
+    align-items: stretch;          /* Kéo full chiều ngang */
+  }
+
+  .popup-actions .btn {
+    min-width: 0;                  /* Bỏ giới hạn 180px */
+    width: 100%;                   /* Full chiều rộng popup */
+    box-sizing: border-box;
+    margin: 0.25rem 0 !important;  /* Ghi đè margin inline 10px */
+    text-align: center;
+  }
+}
+
+/* === Tối ưu popup FB/Zalo trên mobile === */
+@media (max-width: 480px) {
+  /* Khung popup nhỏ hơn, không full ngang */
+  #fbJoinPopup .popup-box {
+    max-width: 320px;      /* nhỏ hơn 420px hiện tại */
+    width: 90%;            /* chừa 2 bên một chút */
+    padding: 1rem 0.9rem 0.9rem;
+  }
+
+  /* Tiêu đề & đoạn mô tả nhỏ lại */
+  #fbJoinPopup .popup-header h3 {
+    font-size: 1.05rem;
+  }
+
+  #fbJoinPopup .popup-header p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  /* Nút hành động xếp dọc, full chiều ngang popup */
+  #fbJoinPopup .popup-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  #fbJoinPopup .popup-actions .btn {
+    width: 100%;
+    min-width: 0;
+    margin: 0;                 /* bỏ margin inline 10px nếu còn */
+    padding: 0.6rem 0.75rem;
+    box-sizing: border-box;
+  }
+
+  /* Thu gọn card notice bên trong */
+  #fbJoinPopup .notice-item {
+    grid-template-columns: 28px 1fr;
+    padding: 0.7rem;
+    gap: 0.5rem;
+  }
+
+  #fbJoinPopup .notice-icon {
+    font-size: 1.1rem;
+  }
+
+  #fbJoinPopup .notice-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.15rem;
+  }
+
+  #fbJoinPopup .notice-desc {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+}
+/* Khi body bị khóa thì không cho scroll */
+body.no-scroll {
+  overflow: hidden !important;
+  height: 100vh;
+  touch-action: none;
+}
+/* Khoảng cách 2 nút trong popup trên màn hình lớn */
+.popup-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;        /* khoảng cách giữa 2 nút */
+  margin-top: 1rem;
+}
+
+/* Bỏ mọi margin inline còn sót lại của nút */
+.popup-actions .btn {
+  margin: 0;
+}
+
+/* Thu nhỏ header chung cho cả PC và mobile */
+.header {
+  padding: 1.1rem 0 !important;   /* từ 2rem xuống còn khoảng 1/2 */
+}
+
+/* Thu nhỏ logo + chữ */
+.logo img {
+  width: 80px !important;         /* từ 120px xuống 80px */
+  height: auto;
+}
+
+.logo-text h1 {
+  font-size: 2rem !important;     /* từ 2.5rem xuống 2rem */
+}
+
+.logo-text .tagline {
+  font-size: 0.85rem !important;  /* nhỏ hơn 1 chút */
+}
+
+/* Nếu muốn mobile nhỏ thêm một xíu nữa */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.8rem 0 !important;
+  }
+
+  .logo img {
+    width: 70px !important;
+  }
+
+  .logo-text h1 {
+    font-size: 1.6rem !important;
+  }
+
+  .logo-text .tagline {
+    font-size: 0.8rem !important;
+  }
 }

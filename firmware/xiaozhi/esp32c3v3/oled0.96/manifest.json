@@ -1,0 +1,17 @@
+{
+  "name": "Xiaozhi 2.0.5 - Xmini C3 V3",
+  "version": "2.0.5",
+  "home_assistant_domain": "esphome",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "xiaozhi_esp32c3v3_oled0.96.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

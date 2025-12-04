@@ -1,0 +1,17 @@
+{
+  "name": "Xiaozhi 2.0.5 - ESP32S3N28P OLED 2.8inch",
+  "version": "2.0.5",
+  "home_assistant_domain": "esphome",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        {
+          "path": "xiaozhi_esp32s3n28p_oled2.8.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
