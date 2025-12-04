@@ -678,12 +678,6 @@ function initializePopups() {
 
     closeBtn?.addEventListener("click", () => (fbPopup.style.display = "none",
       document.body.classList.remove("no-scroll")));
-    joinBtn?.addEventListener("click", () => {
-      window.open("https://www.facebook.com/share/g/1G743kz7iZ/", "_blank")
-      fbPopup.style.display = "none";
-      document.body.classList.remove("no-scroll");
-
-    })
   }
 
   // Key warning popup
