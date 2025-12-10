@@ -22,21 +22,21 @@ let selectedOled = null
 
 const chipOptions = {
   mochi_nav: [
-    { chip: "esp32c3", label: "ESP32-C3" },
+    { chip: "esp32c3", label: "ESP32-C3", img: "/img/chips/esp32c3.png" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Super Mini" },
-    { chip: "esp32s3_zero", label: "ESP32-S3 Zero" },
-    { chip: "esp32c3", label: "Xmini-C3" },
-    { chip: "esp32c3_v3", label: "Xmini-C3 V3" },
-    { chip: "esp32s3_cube", label: "XingZhi Cube 1.54" },
-    { chip: "esp32s3_n28p", label: "ES32N28P" },
-    { chip: "esp32c3_esphi", label: "ESP Hi" },
-    { chip: "esp32s3_otto", label: "Otto Robot" },
-    { chip: "custom", label: "Custom" },
+    { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
+    { chip: "esp32s3_mini", label: "ESP32-S3 Super Mini", img: "/img/chips/esp32s3_mini.png" },
+    { chip: "esp32s3_zero", label: "ESP32-S3 Zero", img: "/img/chips/esp32s3_zero.png" },
+    { chip: "esp32c3", label: "Xmini-C3", img: "/img/chips/xmini_c3.png" },
+    { chip: "esp32c3_v3", label: "Xmini-C3 V3", img: "/img/chips/xmini_c3_v3.png" },
+    { chip: "esp32s3_cube", label: "XingZhi Cube 1.54", img: "/img/chips/xingzhi_cube.png" },
+    { chip: "esp32s3_n28p", label: "ES32N28P", img: "/img/chips/es32n28p.png" },
+    { chip: "esp32c3_esphi", label: "ESP Hi", img: "/img/chips/esp_hi.png" },
+    { chip: "custom", label: "Custom", img: "/img/chips/custom.png" },
   ],
-}
+};
+
 
 // Map thư mục & tiền tố tên file cho từng chip Xiaozhi
 const XIAOZHI_CHIP_MAP = {
@@ -48,7 +48,6 @@ const XIAOZHI_CHIP_MAP = {
   esp32s3_cube: { dir: "esp32s3cube", filePrefix: "xiaozhi_esp32s3cube" }, // NEW
   esp32s3_n28p: { dir: "esp32s3n28p", filePrefix: "xiaozhi_esp32s3n28p" }, // NEW
   esp32c3_esphi: { dir: "esp32c3esphi", filePrefix: "xiaozhi_esp32c3esphi" }, // NEW
-  esp32s3_otto: { dir: "esp32s3otto", filePrefix: "xiaozhi_esp32s3otto" }, // NEW
   custom: { dir: "custom", filePrefix: "xiaozhi_custom" }, // NEW
 };
 
@@ -74,7 +73,6 @@ const CHIP_FIXED_SCREEN = {
   esp32c3: "0.96",    // Xmini-C3 chỉ có OLED 1.3"
   esp32c3_v3: "0.96", // Xmini-C3 V3 chỉ có OLED 1.3"
   esp32c3_esphi: "0.5", // ESP Hi chỉ có OLED 1.3"
-  esp32s3_otto: "1.54", // Otto Robot chỉ có LCD 1.3"
   custom: "Nhắn tin để được hỗ trợ build riêng",
 }
 
@@ -535,33 +533,40 @@ function renderOledOptionsForChip(chip) {
 }
 
 function createChipButton(opt) {
-  const btn = document.createElement("button")
-  btn.className = "chip-button"
-  btn.dataset.chip = opt.chip
-  btn.textContent = opt.label
+  const btn = document.createElement("button");
+  btn.className = "chip-button";
+  btn.dataset.chip = opt.chip;
+
+  const imgSrc = opt.img || "/img/chips/default.png";
+
+  btn.innerHTML = `
+    <div class="chip-thumb">
+      <img src="${imgSrc}" alt="${opt.label}">
+    </div>
+    <div class="chip-label">${opt.label}</div>
+  `;
 
   btn.addEventListener("click", async () => {
-    document.querySelectorAll(".chip-button").forEach((b) => b.classList.remove("active"))
-    btn.classList.add("active")
+    document.querySelectorAll(".chip-button").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
 
-    selectedChip = opt.chip
+    selectedChip = opt.chip;
 
     if (selectedFw === "xiaozhi") {
-      // Render UI màn hình theo từng chip
-      renderOledOptionsForChip(selectedChip)
+      renderOledOptionsForChip(selectedChip);
     } else {
-      // MochiNav không cần chọn màn
-      oledSelection.style.display = "none"
-      oledGrid.innerHTML = ""
-      selectedOled = null
+      oledSelection.style.display = "none";
+      oledGrid.innerHTML = "";
+      selectedOled = null;
     }
 
-    // Với chip fixed-screen, renderOledOptionsForChip() đã set selectedOled
-    await updateFlashButtonVisibility()
-  })
+    await updateFlashButtonVisibility();
+  });
 
-  return btn
+  return btn;
 }
+
+
 
 function setupEventListeners() {
   // Firmware selection

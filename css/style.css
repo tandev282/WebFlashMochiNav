@@ -2390,7 +2390,8 @@ esp-web-install-button {
     word-break: break-word !important;
   }
 
-  td, th {
+  td,
+  th {
     white-space: normal !important;
   }
 
@@ -2408,43 +2409,57 @@ esp-web-install-button {
 /* FIX Main Tab MochiNav / Xiaozhi trên mobile */
 @media (max-width: 768px) {
   .main-guide-tabs {
-    flex-wrap: wrap;              /* Cho nút tự xuống dòng */
-    justify-content: center;      /* Căn giữa cho đẹp */
-    gap: 0.5rem;                  /* Giảm khoảng cách lại */
+    flex-wrap: wrap;
+    /* Cho nút tự xuống dòng */
+    justify-content: center;
+    /* Căn giữa cho đẹp */
+    gap: 0.5rem;
+    /* Giảm khoảng cách lại */
   }
 
   .main-guide-tab-btn {
-    flex: 1 1 100%;               /* Mỗi nút chiếm full 1 hàng */
+    flex: 1 1 100%;
+    /* Mỗi nút chiếm full 1 hàng */
     width: 100%;
     text-align: center;
-    font-size: 0.9rem;            /* Chữ nhỏ lại chút cho đỡ tràn */
+    font-size: 0.9rem;
+    /* Chữ nhỏ lại chút cho đỡ tràn */
     padding: 0.6rem 0.75rem;
-    white-space: normal;          /* Cho text xuống dòng, không bị kéo dài 1 hàng */
+    white-space: normal;
+    /* Cho text xuống dòng, không bị kéo dài 1 hàng */
   }
 }
 
 /* Fix popup buttons trên mobile */
 @media (max-width: 480px) {
   .popup-actions {
-    flex-direction: column;        /* Xếp nút theo cột */
-    align-items: stretch;          /* Kéo full chiều ngang */
+    flex-direction: column;
+    /* Xếp nút theo cột */
+    align-items: stretch;
+    /* Kéo full chiều ngang */
   }
 
   .popup-actions .btn {
-    min-width: 0;                  /* Bỏ giới hạn 180px */
-    width: 100%;                   /* Full chiều rộng popup */
+    min-width: 0;
+    /* Bỏ giới hạn 180px */
+    width: 100%;
+    /* Full chiều rộng popup */
     box-sizing: border-box;
-    margin: 0.25rem 0 !important;  /* Ghi đè margin inline 10px */
+    margin: 0.25rem 0 !important;
+    /* Ghi đè margin inline 10px */
     text-align: center;
   }
 }
 
 /* === Tối ưu popup FB/Zalo trên mobile === */
 @media (max-width: 480px) {
+
   /* Khung popup nhỏ hơn, không full ngang */
   #fbJoinPopup .popup-box {
-    max-width: 320px;      /* nhỏ hơn 420px hiện tại */
-    width: 90%;            /* chừa 2 bên một chút */
+    max-width: 320px;
+    /* nhỏ hơn 420px hiện tại */
+    width: 90%;
+    /* chừa 2 bên một chút */
     padding: 1rem 0.9rem 0.9rem;
   }
 
@@ -2467,7 +2482,8 @@ esp-web-install-button {
   #fbJoinPopup .popup-actions .btn {
     width: 100%;
     min-width: 0;
-    margin: 0;                 /* bỏ margin inline 10px nếu còn */
+    margin: 0;
+    /* bỏ margin inline 10px nếu còn */
     padding: 0.6rem 0.75rem;
     box-sizing: border-box;
   }
@@ -2493,18 +2509,21 @@ esp-web-install-button {
     line-height: 1.4;
   }
 }
+
 /* Khi body bị khóa thì không cho scroll */
 body.no-scroll {
   overflow: hidden !important;
   height: 100vh;
   touch-action: none;
 }
+
 /* Khoảng cách 2 nút trong popup trên màn hình lớn */
 .popup-actions {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.75rem;        /* khoảng cách giữa 2 nút */
+  gap: 0.75rem;
+  /* khoảng cách giữa 2 nút */
   margin-top: 1rem;
 }
 
@@ -2515,21 +2534,25 @@ body.no-scroll {
 
 /* Thu nhỏ header chung cho cả PC và mobile */
 .header {
-  padding: 1.1rem 0 !important;   /* từ 2rem xuống còn khoảng 1/2 */
+  padding: 1.1rem 0 !important;
+  /* từ 2rem xuống còn khoảng 1/2 */
 }
 
 /* Thu nhỏ logo + chữ */
 .logo img {
-  width: 80px !important;         /* từ 120px xuống 80px */
+  width: 80px !important;
+  /* từ 120px xuống 80px */
   height: auto;
 }
 
 .logo-text h1 {
-  font-size: 2rem !important;     /* từ 2.5rem xuống 2rem */
+  font-size: 2rem !important;
+  /* từ 2.5rem xuống 2rem */
 }
 
 .logo-text .tagline {
-  font-size: 0.85rem !important;  /* nhỏ hơn 1 chút */
+  font-size: 0.85rem !important;
+  /* nhỏ hơn 1 chút */
 }
 
 /* Nếu muốn mobile nhỏ thêm một xíu nữa */
@@ -2549,4 +2572,40 @@ body.no-scroll {
   .logo-text .tagline {
     font-size: 0.8rem !important;
   }
+}
+
+/* Bố cục nút chip: ảnh trên, tên dưới */
+.chip-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Khung chứa ảnh */
+.chip-thumb {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ảnh bên trong */
+.chip-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Tên chip */
+.chip-label {
+  font-size: 0.9rem;
+  line-height: 1.3;
 }
