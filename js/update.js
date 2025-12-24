@@ -161,7 +161,7 @@ async function listVersions() {
         }
 
         versionList.innerHTML = pairs.map(versionCardHTML).join("");
-        deviceInfo.textContent = "1. Nếu nạp Fw1 thiết bị bị nháy nháy màn hình, hãy thử nạp bản firmware Fw2. \n2. Khi nạp xong, vui lòng khởi động lại thiết bị nếu nó không hiển thị gì (có tiếng nhưng tối thui màn hình).";
+        deviceInfo.textContent = "1. Nếu nạp Fw1 thiết bị bị nháy nháy màn hình, hãy thử nạp bản firmware Fw2. \n2. Khi nạp xong, vui lòng khởi động lại thiết bị nếu nó không hiển thị gì (có tiếng nhưng tối thui màn hình). \n3. Số phiên bản ở web và thiết bị hiển thị khác nhau sau khi cài, đó không phải lỗi, đó là tính năng :))))))))))))";
         deviceInfo.className = "result ok";
     } catch (err) {
         console.error(err);

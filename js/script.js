@@ -31,7 +31,7 @@ const chipOptions = {
     { chip: "esp32c3", label: "Xmini-C3", img: "/img/chips/xmini_c3.png" },
     { chip: "esp32c3_v3", label: "Xmini-C3 V3", img: "/img/chips/xmini_c3_v3.png" },
     { chip: "esp32s3_cube", label: "XingZhi Cube 1.54", img: "/img/chips/xingzhi_cube.png" },
-    { chip: "esp32s3_n28p", label: "ES32N28P", img: "/img/chips/es32n28p.png" },
+    { chip: "esp32s3_n28p", label: "ES32N28P (No Update)", img: "/img/chips/es32n28p.png" },
     { chip: "esp32c3_esphi", label: "ESP Hi", img: "/img/chips/esp_hi.png" },
     { chip: "custom", label: "Custom", img: "/img/chips/custom.png" },
   ],
@@ -56,6 +56,7 @@ const DEFAULT_OLED_OPTIONS = [
   { value: "0.91", label: "OLED 0.91inch" },
   { value: "0.96", label: "OLED 0.96inch" },
   { value: "1.3", label: "OLED 1.3inch" },
+  { value: "1.54", label: "OLED 1.54inch" },
 ]
 
 // Các chip có layout màn hình riêng
@@ -326,7 +327,7 @@ function setupEspWebToolsWithManifest(chipType) {
   newInstallButton.classList.remove("invisible");
 
   // Thời gian bạn tự điền
-  const fwUpdatedAt = "20:00 - 03-12-2025";
+  const fwUpdatedAt = "20:00 - 24-12-2025";
   document.getElementById("fwUpdateStamp").textContent =
     `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
 
