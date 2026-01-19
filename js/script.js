@@ -31,7 +31,7 @@ const chipOptions = {
     { chip: "esp32c3", label: "Xmini-C3 (Bị lỗi Reset)", img: "/img/chips/xmini_c3.png" },
     { chip: "esp32c3_v3", label: "Xmini-C3 V3 (Bị lỗi Reset)", img: "/img/chips/xmini_c3_v3.png" },
     { chip: "esp32s3_cube", label: "XingZhi Cube 1.54", img: "/img/chips/xingzhi_cube.png" },
-    { chip: "esp32s3_n28p", label: "ES32N28P (No Update)", img: "/img/chips/es32n28p.png" },
+    { chip: "esp32s3_n28p", label: "ES32N28P (Đã Update, Chưa Test)", img: "/img/chips/es32n28p.png" },
     { chip: "esp32c3_esphi", label: "ESP Hi", img: "/img/chips/esp_hi.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
