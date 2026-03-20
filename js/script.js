@@ -28,11 +28,7 @@ const chipOptions = {
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
     { chip: "esp32s3_mini", label: "ESP32-S3 Super Mini", img: "/img/chips/esp32s3_mini.png" },
     { chip: "esp32s3_zero", label: "ESP32-S3 Zero", img: "/img/chips/esp32s3_zero.png" },
-    { chip: "esp32c3", label: "Xmini-C3 (Bị lỗi Reset)", img: "/img/chips/xmini_c3.png" },
-    { chip: "esp32c3_v3", label: "Xmini-C3 V3 (Bị lỗi Reset)", img: "/img/chips/xmini_c3_v3.png" },
     { chip: "esp32s3_cube", label: "XingZhi Cube 1.54", img: "/img/chips/xingzhi_cube.png" },
-    { chip: "esp32s3_n28p", label: "ES32N28P (Đã Update, Chưa Test)", img: "/img/chips/es32n28p.png" },
-    { chip: "esp32c3_esphi", label: "ESP Hi", img: "/img/chips/esp_hi.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
 };
@@ -43,11 +39,7 @@ const XIAOZHI_CHIP_MAP = {
   esp32s3: { dir: "esp32s3", filePrefix: "xiaozhi_esp32s3" },
   esp32s3_mini: { dir: "esp32s3mini", filePrefix: "xiaozhi_esp32s3mini" },
   esp32s3_zero: { dir: "esp32s3zero", filePrefix: "xiaozhi_esp32s3zero" }, // NEW
-  esp32c3: { dir: "esp32c3", filePrefix: "xiaozhi_esp32c3" },
-  esp32c3_v3: { dir: "esp32c3v3", filePrefix: "xiaozhi_esp32c3v3" }, // NEW
   esp32s3_cube: { dir: "esp32s3cube", filePrefix: "xiaozhi_esp32s3cube" }, // NEW
-  esp32s3_n28p: { dir: "esp32s3n28p", filePrefix: "xiaozhi_esp32s3n28p" }, // NEW
-  esp32c3_esphi: { dir: "esp32c3esphi", filePrefix: "xiaozhi_esp32c3esphi" }, // NEW
   custom: { dir: "custom", filePrefix: "xiaozhi_custom" }, // NEW
 };
 
@@ -62,22 +54,13 @@ const DEFAULT_OLED_OPTIONS = [
 // Các chip có layout màn hình riêng
 const CHIP_OLED_OPTIONS = {
   // N28P có 2 kiểu màn 2.8"
-  esp32s3_n28p: [
-    { value: "2.8", label: "Màn 2.8 IPS" },
-    { value: "2.8-nonips", label: "Màn 2.8 Non-IPS" },
-  ],
 }
 
 // Chip chỉ có đúng 1 màn → auto chọn, bỏ bước chọn
 const CHIP_FIXED_SCREEN = {
   esp32s3_cube: "1.54", // XingZhi Cube 1.54"
-  esp32c3: "0.96",    // Xmini-C3 chỉ có OLED 1.3"
-  esp32c3_v3: "0.96", // Xmini-C3 V3 chỉ có OLED 1.3"
-  esp32c3_esphi: "0.5", // ESP Hi chỉ có OLED 1.3"
   custom: "Nhắn tin để được hỗ trợ build riêng",
 }
-
-
 
 
 function initializeApp() {
