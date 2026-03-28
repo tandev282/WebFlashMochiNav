@@ -1,0 +1,16 @@
+{
+  "name": "Xiaozhi 2.0.5 - XingZhi Cube No WeChat",
+  "version": "2.0.5",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        {
+          "path": "xiaozhi_esp32s3cube_no_wechat.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

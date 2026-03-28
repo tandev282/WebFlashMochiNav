@@ -16,7 +16,7 @@
         <button id="closePopupBtn" class="close-btn" aria-label="Đóng">✕</button>
 
         <div class="popup-header">
-            <h3>🌟 Nhóm Xiaozhi VN</h3>
+            <h3>Xiaozhi VN</h3>
             <p>Tham gia nhóm Facebook hoặc Zalo để nhận hỗ trợ, cập nhật tin tức và chia sẻ trải nghiệm của bạn với
                 cộng đồng Xiaozhi tại Việt Nam!</p>
         </div>
@@ -34,18 +34,9 @@
             <li class="notice-item">
                 <div class="notice-icon" aria-hidden="true">🎵</div>
                 <div class="notice-content">
-                    <div class="notice-title">Cập nhật Firmware 2.0.5.2</div>
-                    <div class="notice-desc">Phát nhạc với 2 kênh Stereo chất lượng cao nhất, Led nháy theo nhạc, màn
-                        hình lcd 1.54, tối ưu hiệu năng tốt nhất,......
-                    </div>
-                </div>
-            </li>
-            <li class="notice-item">
-                <div class="notice-icon" aria-hidden="true">🆕</div>
-                <div class="notice-content">
-                    <div class="notice-title">Chú ý</div>
-                    <div class="notice-desc">Hãy cài phiên bản mới nhất, vì mình đã ngưng hỗ trợ phiên bản cũ nên sẽ
-                        không sử dụng được</div>
+                    <div class="notice-title">Cập nhật Firmware 2.2.5</div>
+                    <div class="notice-desc">Đa màn hình, chỉ cần 1 firmware cho tất cả các loại thiết bị, không cần sơ
+                        đồ đấu nối,...</div>
                 </div>
             </li>
             <li class="notice-item">
@@ -93,13 +84,13 @@
                     </section>
                     <!-- Chip Selection after FW -->
                     <section class="chip-selection" id="chipSelection" style="display: none;">
-                        <h2>Chọn Chip</h2>
+                        <h2>Chọn Thiết Bị</h2>
                         <div class="chip-grid-horizontal" id="chipGrid"></div>
                     </section>
 
-                    <section class="chip-selection" id="oledSelection" style="display: none;">
-                        <h2>Chọn Màn Hình</h2>
-                        <div class="chip-grid-horizontal" id="oledGrid"></div>
+                    <section class="chip-selection" id="optionSelection" style="display: none;">
+                        <h2>Chọn Dung Lượng / Phiên Bản</h2>
+                        <div class="chip-grid-horizontal" id="optionGrid"></div>
                     </section>
 
                     <!-- Flash Section -->
@@ -163,7 +154,7 @@
                             <div class="tab-navigation">
                                 <button class="tab-btn active" data-tab="xz-tab0">Chat Bot AI (Xiaozhi) - Firmware
                                     Version 2.0.5</button>
-                                <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ</button>
+                                <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ Mẫu</button>
                             </div>
 
                             <!-- Tab Content -->
@@ -174,49 +165,91 @@
                                         <div class="update-card">
                                             <h3>Chat Bot AI (Xiaozhi) - Firmware Version 2.0.5
                                             </h3>
-                                            <img src="/img/chatbot.jpg" alt="MochiNav" class="update-image"
-                                                style="display:block;margin:16px auto;max-width:200px;width:100%;height:auto;">
+
                                             <ul>
                                                 <li>
+                                                <li>
                                                     <strong>🆕 CHỨC NĂNG MỚI UPDATE</strong><br><br>
+                                                    🚀 <strong>Nâng cấp nền tảng</strong><br>
+                                                    • Cập nhật chương trình cốt lõi <strong>XiaoZhi lên phiên bản 2.2.5
+                                                        mới nhất</strong> từ repo
+                                                    <strong>78/xiaozhi-esp32</strong>.<br><br>
 
-                                                    🔊 <strong>Âm thanh Stereo 2 kênh</strong><br>
+                                                    🔥 <strong>Firmware hợp nhất – 1 file duy nhất</strong><br>
+                                                    • Chỉ cần nạp <strong>1 firmware</strong> cho tất cả thiết bị.<br>
+                                                    • Hỗ trợ đa dạng phần cứng: <strong>màn hình, micro, loa, thiết bị
+                                                        ngoại vi</strong>.<br>
+                                                    • Tùy chọn linh hoạt theo nhu cầu sử dụng.<br><br>
+
+                                                    🔌 <strong>Tùy chỉnh GPIO linh hoạt</strong><br>
+                                                    • Không cần sơ đồ phần cứng cố định.<br>
+                                                    • Cho phép <strong>tự do hàn nối</strong> theo cách tối ưu nhất.<br>
+                                                    • Cấu hình <strong>GPIO không giới hạn</strong>, dễ dàng thay đổi
+                                                    trực tiếp trên firmware.<br><br>
+
+                                                    🌐 <strong>Tab Cấu Hình Thiết Bị (Device Config)</strong><br>
+                                                    • Tích hợp trong trang <strong>Web Setup WiFi</strong>, cho phép cấu
+                                                    hình toàn bộ thiết bị:<br><br>
+
+                                                    📟 <strong>Cấu Hình Thiết Bị</strong><br>
+                                                    • Chọn loại màn hình, ngôn ngữ hệ thống.<br><br>
+
+                                                    🖥️ <strong>Màn Hình (Screen Preset)</strong><br>
+                                                    • Chọn driver, kích thước, xoay màn hình.<br>
+                                                    • Hỗ trợ giao diện như <strong>WeChat UI</strong> và nhiều preset
+                                                    khác.<br><br>
+
+                                                    🔧 <strong>GPIO Màn Hình & Âm Thanh</strong><br>
+                                                    • <strong>Display SPI GPIO</strong>: cấu hình chân SPI cho màn
+                                                    hình.<br>
+                                                    • <strong>Mic & Audio GPIO</strong>: cấu hình chân micro và
+                                                    loa.<br><br>
+
+                                                    🔘 <strong>Thiết Bị Ngoại Vi (Peripherals)</strong><br>
+                                                    • LED trạng thái<br>
+                                                    • Nút Wakeup<br>
+                                                    • Nút Volume (+ / -)<br>
+                                                    • Hiển thị & đo mức pin<br>
+                                                    • ........................ <br>
+                                                    <br>
+
+                                                    ⚡ <strong>Tối ưu hiệu năng hệ thống</strong><br>
+                                                    • Cải tiến hệ thống nhạc và API.<br>
+                                                    • Mang lại trải nghiệm <strong>nhẹ hơn – mượt hơn – ổn định
+                                                        hơn</strong> trong mọi hoạt động.<br>
+                                                </li>
+                                                <li>
+                                                    <strong>✅ CHỨC NĂNG HIỆN CÓ (ĐÃ ỔN ĐỊNH)</strong><br><br>
+
+                                                    ✅ <strong>Âm thanh Stereo 2 kênh</strong><br>
                                                     • Phát âm thanh trái / phải (Stereo) rõ ràng, tách kênh tốt
                                                     hơn.<br><br>
 
-                                                    🎧 <strong>Âm thanh chất lượng cao</strong><br>
+                                                    ✅ <strong>Âm thanh chất lượng cao</strong><br>
                                                     • Tối ưu pipeline audio, phát nhạc với chất lượng cao nhất, sạch và
                                                     chi tiết hơn.<br><br>
 
-                                                    💡 <strong>LED nháy theo nhạc (Music Visualizer)</strong><br>
+                                                    ✅ <strong>LED nháy theo nhạc (Music Visualizer)</strong><br>
                                                     • Hỗ trợ: <strong>Tắt</strong> / <strong>Bật</strong> /
                                                     <strong>LED nháy theo nhạc bằng lệnh "Mở/ tắt đèn/led nháy theo
                                                         nhạc"</strong>.<br>
                                                     • Cho phép khai báo số lượng LED bằng cách "Cài cho tôi 16,32,...
                                                     bóng đèn/led"<br><br>
 
-                                                    🖼️ <strong>Bật / Tắt ảnh bài hát (Thumbnail)</strong><br>
+                                                    ✅ <strong>Bật / Tắt ảnh bài hát (Thumbnail)</strong><br>
                                                     • Cho phép ẩn / hiện hình ảnh bài hát để giảm tải và tăng hiệu
                                                     năng.<br><br>
 
-                                                    ⚡ <strong>Tối ưu hệ thống nhạc &amp; API</strong><br>
+                                                    ✅ <strong>Tối ưu hệ thống nhạc &amp; API</strong><br>
                                                     • Cải tiến toàn bộ hệ thống phát nhạc và API giúp <strong>nhẹ – mượt
                                                         – nhanh</strong> hơn rõ rệt.<br><br>
-
-                                                    📟 <strong>Hỗ trợ màn hình 1.54&quot; cho ESP32-S3</strong><br>
-                                                    • Hỗ trợ các board: <strong>ESP32 S3 DevKit</strong>, <strong>S3
-                                                        Super
-                                                        Mini</strong>, <strong>S3 Zero</strong>.<br><br>
-                                                </li>
-                                                <li>
-                                                    <strong>✅ CHỨC NĂNG HIỆN CÓ (ĐÃ ỔN ĐỊNH)</strong><br><br>
 
                                                     ✅ <strong>Phát nhạc từ Youtube</strong><br>
                                                     • Phát mọi video Youtube dưới dạng âm thanh.<br><br>
 
-                                                    ✅ <strong>Phát nhạc từ Zing MP3, SoundCloud, Nhacuatui</strong><br>
+                                                    ✅ <strong>Phát nhạc từ Zing MP3, SoundCloud, Nhaccuatui</strong><br>
                                                     • Hỗ trợ phát nhạc trực tiếp từ Zing MP3, SoundCloud,
-                                                    Nhacuatui.<br><br>
+                                                    Nhaccuatui.<br><br>
 
                                                     ✅ <strong>Phát mọi radio của VOV</strong><br>
                                                     • Hỗ trợ phát mọi kênh radio của VOV.<br><br>
@@ -248,12 +281,9 @@
 
                                                     ✅ <strong>Fix &amp; Nâng cấp hệ thống</strong><br>
                                                     • Tăng âm lượng Radio.<br>
-                                                    • Fix lỗi đen màn hình LCD.<br>
                                                     • Giao diện test MIC ở màn hình Wi-Fi.<br>
                                                     • Tự đọc thông báo sau khi phát nhạc xong.<br>
                                                     • Fix dữ liệu xổ số, hiển thị chính xác.<br>
-                                                    • Fix đảo màu OLED 1.3&quot;.<br><br>
-
 
                                                     ✅ <strong>Code gốc từ GitHub</strong><br>
                                                     <div class="code-block">
@@ -275,6 +305,7 @@
                                                 N16R8</button>
                                             <button class="chip-tab-btn" data-chip-tab="xz-esp32s3mini">ESP32-S3
                                                 Super Mini / ESP32 S3 Zero</button>
+                                            <button class="chip-tab-btn" data-chip-tab="xz-linhtinh">Linh tinh</button>
                                         </div>
 
                                         <!-- ESP32-S3 DevKit -->
@@ -287,175 +318,6 @@
                                             <div class="diagram-container">
                                                 <img src="/img/esp32s3.jpg" alt="Sơ đồ đấu nối ESP32-S3 DevKit"
                                                     class="wiring-diagram">
-                                            </div>
-
-                                            <div class="connection-table">
-                                                <h5>ESP32-S3 - OLED 0.96inch SSD1306 / OLED 0.91inch</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>OLED SSD1306</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VCC</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO42</td>
-                                                            <td>SCL</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO41</td>
-                                                            <td>SDA</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32 with MAX98357A -->
-                                                <h5>ESP32-S3 - MAX98357A</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>MAX98357A</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GPIO7</td>
-                                                            <td>DIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO15</td>
-                                                            <td>BCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO16</td>
-                                                            <td>LRCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>5V</td>
-                                                            <td>VIN</td>
-                                                        </tr>
-                                                        <tr>
-
-                                                            <td>GND</td>
-                                                            <td>GAIN</td>
-                                                        </tr>
-                                                        <tr>
-
-                                                            <td>5V</td>
-                                                            <td>SD</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32 with MIC INMP441 -->
-                                                <h5>ESP32-S3 - Microphone INMP441</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>INMP441</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VCC</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO4</td>
-                                                            <td>WS</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO5</td>
-                                                            <td>SCK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO6</td>
-                                                            <td>SD</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>L/R</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32 with Buttons -->
-                                                <h5>ESP32-S3 - Nút Nhấn</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>Nút Nhấn</th>
-                                                            <th>Chức năng</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GPIO40</td>
-                                                            <td>Nút nhấn 1</td>
-                                                            <td>Tăng âm lượng</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO39</td>
-                                                            <td>Nút nhấn 2</td>
-                                                            <td>Giảm âm lượng</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO0</td>
-                                                            <td>Nút nhấn 3</td>
-                                                            <td>Đánh thức</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO18</td>
-                                                            <td>LED</td>
-                                                            <td>Đèn</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- Mô-đun Pin và Sạc -->
-                                                <h5>Pin 3.7V - Mô-đun Sạc và Tăng Áp</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Thiết bị</th>
-                                                            <th>Kết nối</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Pin 3.7V</td>
-                                                            <td>Kết nối với IN+ và IN- của mô-đun sạc</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Mô-đun Sạc</td>
-                                                            <td>OUT+ đến 5V (VIN ESP32), OUT- đến GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Công tắc</td>
-                                                            <td>Kết nối giữa OUT+ và ESP32 để bật/tắt nguồn</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
                                             </div>
                                             <!-- Ghi chú quan trọng -->
                                             <div class="important-notes">
@@ -495,175 +357,6 @@
                                                 <img src="/img/xiaozhi_mini.png" alt="Sơ đồ đấu nối ESP32-S3 Super Mini"
                                                     class="wiring-diagram">
                                             </div>
-
-
-                                            <div class="connection-table">
-                                                <h5>ESP32-S3 - OLED 0.96inch SSD1306</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>OLED SSD1306</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VCC</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO9</td>
-                                                            <td>SCL</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO8</td>
-                                                            <td>SDA</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32 with MIC INMP441 -->
-                                                <h5>ESP32-S3 - Microphone INMP441</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>INMP441</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3V3</td>
-                                                            <td>VCC</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO2</td>
-                                                            <td>WS</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO3</td>
-                                                            <td>SCK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO4</td>
-                                                            <td>SD</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>L/R</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- ESP32 with MAX98357A -->
-                                                <h5>ESP32-S3 - MAX98357A</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>MAX98357A</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GPIO5</td>
-                                                            <td>DIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO6</td>
-                                                            <td>BCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO7</td>
-                                                            <td>LRCLK</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>5V</td>
-                                                            <td>VIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GAIN</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>5V</td>
-                                                            <td>SD</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GND</td>
-                                                            <td>GND</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-
-                                                <!-- ESP32 with Buttons -->
-                                                <h5>ESP32-S3 - Nút Nhấn</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ESP32-S3</th>
-                                                            <th>Nút Nhấn</th>
-                                                            <th>Chức năng</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>GPIO10</td>
-                                                            <td>Nút nhấn 1</td>
-                                                            <td>Tăng âm lượng</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO11</td>
-                                                            <td>Nút nhấn 2</td>
-                                                            <td>Giảm âm lượng</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO01</td>
-                                                            <td>Nút nhấn 3</td>
-                                                            <td>Đánh thức</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>GPIO12</td>
-                                                            <td>LED</td>
-                                                            <td>Đèn</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <!-- Mô-đun Pin và Sạc -->
-                                                <h5>Pin 3.7V - Mô-đun Sạc và Tăng Áp</h5>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Thiết bị</th>
-                                                            <th>Kết nối</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Pin 3.7V</td>
-                                                            <td>Kết nối với IN+ và IN- của mô-đun sạc</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Mô-đun Sạc</td>
-                                                            <td>OUT+ đến 5V (VIN ESP32), OUT- đến GND</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Công tắc</td>
-                                                            <td>Kết nối giữa OUT+ và ESP32 để bật/tắt nguồn</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
                                             <!-- Ghi chú quan trọng -->
                                             <div class="important-notes">
                                                 <h4>⚠️ Ghi chú</h4>
@@ -684,6 +377,13 @@
                                             </div>
                                         </div>
 
+                                        <div class="wiring-card chip-tab-content" id="xz-linhtinh-content">
+                                            <h3>Linh tinh</h3>
+                                            <div class="diagram-container">
+                                                <img src="/img/pcm5102.jpg" alt="Sơ đồ đấu nối PCM5102"
+                                                    class="wiring-diagram">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

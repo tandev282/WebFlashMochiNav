@@ -1,0 +1,16 @@
+{
+  "name": "Xiaozhi 2.2.5 - ESP32-S3 Super Mini / Zero",
+  "version": "2.2.5",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        {
+          "path": "xiaozhi_esp32s3n4r2_n4r2.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

@@ -12,13 +12,13 @@ const mainGuideTabContents = document.querySelectorAll(".main-guide-tab-content"
 const fwCards = document.querySelectorAll(".fw-button")
 const chipGrid = document.getElementById("chipGrid")
 const chipSelection = document.getElementById("chipSelection")
-const oledSelection = document.getElementById("oledSelection")
-const oledGrid = document.getElementById("oledGrid")
+const optionSelection = document.getElementById("optionSelection")
+const optionGrid = document.getElementById("optionGrid")
 
 
 let selectedChip = null
 let selectedFw = null
-let selectedOled = null
+let selectedOption = null
 
 const chipOptions = {
   mochi_nav: [
@@ -26,8 +26,7 @@ const chipOptions = {
   ],
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
-    { chip: "esp32s3_mini", label: "ESP32-S3 Super Mini", img: "/img/chips/esp32s3_mini.png" },
-    { chip: "esp32s3_zero", label: "ESP32-S3 Zero", img: "/img/chips/esp32s3_zero.png" },
+    { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
     { chip: "esp32s3_cube", label: "XingZhi Cube 1.54", img: "/img/chips/xingzhi_cube.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
@@ -37,29 +36,35 @@ const chipOptions = {
 // Map thư mục & tiền tố tên file cho từng chip Xiaozhi
 const XIAOZHI_CHIP_MAP = {
   esp32s3: { dir: "esp32s3", filePrefix: "xiaozhi_esp32s3" },
-  esp32s3_mini: { dir: "esp32s3mini", filePrefix: "xiaozhi_esp32s3mini" },
-  esp32s3_zero: { dir: "esp32s3zero", filePrefix: "xiaozhi_esp32s3zero" }, // NEW
+  esp32s3_n4r2: { dir: "esp32s3n4r2", filePrefix: "xiaozhi_esp32s3n4r2" },
   esp32s3_cube: { dir: "esp32s3cube", filePrefix: "xiaozhi_esp32s3cube" }, // NEW
   custom: { dir: "custom", filePrefix: "xiaozhi_custom" }, // NEW
 };
 
 // Các lựa chọn màn hình mặc định cho đa số board Xiaozhi
-const DEFAULT_OLED_OPTIONS = [
-  { value: "0.91", label: "OLED 0.91inch" },
-  { value: "0.96", label: "OLED 0.96inch" },
-  { value: "1.3", label: "OLED 1.3inch" },
-  { value: "1.54", label: "LCD 1.54inch" },
-]
+const DEFAULT_OPTIONS = []
 
 // Các chip có layout màn hình riêng
-const CHIP_OLED_OPTIONS = {
-  // N28P có 2 kiểu màn 2.8"
+const CHIP_OPTIONS_MAP = {
+  esp32s3: [
+    { value: "n16r8", label: "N16R8" },
+    { value: "n16r2", label: "N16R2" }
+  ],
+  esp32s3_n4r2: [
+    { value: "n4r2", label: "N4R2" }
+  ],
+  esp32s3_cube: [
+    { value: "wechat", label: "Giao diện Wechat" },
+    { value: "no_wechat", label: "Giao diện Không Wechat" }
+  ],
+  custom: [
+    { value: "custom", label: "Nhắn tin để hỗ trợ build riêng" }
+  ]
 }
 
 // Chip chỉ có đúng 1 màn → auto chọn, bỏ bước chọn
-const CHIP_FIXED_SCREEN = {
-  esp32s3_cube: "1.54", // XingZhi Cube 1.54"
-  custom: "Nhắn tin để được hỗ trợ build riêng",
+const CHIP_FIXED_OPTION = {
+  custom: "custom"
 }
 
 
@@ -74,7 +79,7 @@ function initializeApp() {
 }
 
 // Function to generate firmware binary file name and path
-function generateFirmwarePath(fw, chip, oled = null) {
+function generateFirmwarePath(fw, chip, option = null) {
   let binaryFileName = ""
   let folderPath = ""
 
@@ -87,9 +92,9 @@ function generateFirmwarePath(fw, chip, oled = null) {
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chip}`);
 
     // Tên file theo chip cụ thể
-    binaryFileName = `${map.filePrefix}_oled${oled}.bin`;
+    binaryFileName = `${map.filePrefix}_${option}.bin`;
     // Đường dẫn có ngôn ngữ + thư mục chip riêng
-    folderPath = `/firmware/${fw}/${map.dir}/oled${oled}`;
+    folderPath = `/firmware/${fw}/${map.dir}/${option}`;
   }
 
   return {
@@ -100,9 +105,9 @@ function generateFirmwarePath(fw, chip, oled = null) {
 }
 
 // Function to check if firmware binary file exists
-async function checkFirmwareExists(fw, chip, oled = null) {
+async function checkFirmwareExists(fw, chip, option = null) {
   try {
-    const { fullPath } = generateFirmwarePath(fw, chip, oled)
+    const { fullPath } = generateFirmwarePath(fw, chip, option)
 
     console.log(`Checking firmware: ${fullPath}`)
 
@@ -117,14 +122,14 @@ async function checkFirmwareExists(fw, chip, oled = null) {
 
     return exists
   } catch (error) {
-    console.log(`❌ Error checking firmware: ${fw}/${chip}${oled ? `/oled${oled}` : ""} - ${error.message}`)
+    console.log(`❌ Error checking firmware: ${fw}/${chip}${option ? `/${option}` : ""} - ${error.message}`)
     return false
   }
 }
 
 async function updateFlashButtonVisibility() {
   const shouldShow =
-    (selectedFw === "mochi_nav" && selectedChip) || (selectedFw === "xiaozhi" && selectedChip && selectedOled)
+    (selectedFw === "mochi_nav" && selectedChip) || (selectedFw === "xiaozhi" && selectedChip && selectedOption)
 
   if (!shouldShow) {
     flashSection.style.display = "none"
@@ -136,7 +141,7 @@ async function updateFlashButtonVisibility() {
   showFirmwareCheckingState()
 
   // Check if firmware binary exists
-  const firmwareExists = await checkFirmwareExists(selectedFw, selectedChip, selectedOled)
+  const firmwareExists = await checkFirmwareExists(selectedFw, selectedChip, selectedOption)
 
   if (firmwareExists) {
     // Show connect button if firmware exists
@@ -164,14 +169,14 @@ function showFirmwareNotAvailableMessage() {
   // Create firmware name for display
   const firmwareName = selectedFw === "mochi_nav" ? "MochiNav" : "Xiaozhi"
   const chipName = selectedChip.toUpperCase().replace("_", "-")
-  const oledInfo = selectedOled ? ` với OLED ${selectedOled}"` : ""
-  const { binaryFileName, folderPath } = generateFirmwarePath(selectedFw, selectedChip, selectedOled)
+  const optionInfo = selectedOption ? ` với tùy chọn ${selectedOption}` : ""
+  const { binaryFileName, folderPath } = generateFirmwarePath(selectedFw, selectedChip, selectedOption)
 
   espWebToolsContainer.innerHTML = `
     <div class="firmware-not-available">
       <div class="not-available-icon">⚠️</div>
       <h4>Firmware Chưa Sẵn Sàng</h4>
-      <p>Hiện tại firmware <strong>${firmwareName}</strong> cho chip <strong>${chipName}</strong>${oledInfo} đang được phát triển.</p>
+      <p>Hiện tại firmware <strong>${firmwareName}</strong> cho chip <strong>${chipName}</strong>${optionInfo} đang được phát triển.</p>
     </div>
   `
 }
@@ -275,7 +280,7 @@ function setupEspWebToolsWithManifest(chipType) {
   } else if (selectedFw === "xiaozhi") {
     const map = XIAOZHI_CHIP_MAP[chipType];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chipType}`);
-    manifestPath = `/firmware/${selectedFw}/${map.dir}/oled${selectedOled}/manifest.json`;
+    manifestPath = `/firmware/${selectedFw}/${map.dir}/${selectedOption}/manifest.json`;
   }
 
   // Reset container với nút Kết nối + nút Tải FW
@@ -310,7 +315,7 @@ function setupEspWebToolsWithManifest(chipType) {
   newInstallButton.classList.remove("invisible");
 
   // Thời gian bạn tự điền
-  const fwUpdatedAt = "20:00 - 24-12-2025";
+  const fwUpdatedAt = "20:00 - 28-03-2026";
   document.getElementById("fwUpdateStamp").textContent =
     `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
 
@@ -471,48 +476,48 @@ function switchMainTab(tabId) {
 function resetSelections() {
   chipSelection.style.display = "block"
   chipGrid.innerHTML = ""
-  oledSelection.style.display = "none"
+  optionSelection.style.display = "none"
   flashSection.style.display = "none"
   statusSection.style.display = "none"
   selectedChip = null
-  selectedOled = null
+  selectedOption = null
 }
 
-function renderOledOptionsForChip(chip) {
+function renderOptionsForChip(chip) {
   // Nếu chip chỉ có 1 loại màn → auto chọn + ẩn UI
-  const fixed = CHIP_FIXED_SCREEN[chip]
+  const fixed = CHIP_FIXED_OPTION[chip]
   if (fixed) {
-    oledSelection.style.display = "none"
-    oledGrid.innerHTML = ""
-    selectedOled = fixed
+    optionSelection.style.display = "none"
+    optionGrid.innerHTML = ""
+    selectedOption = fixed
     // Chip này đủ thông tin để flash luôn
     updateFlashButtonVisibility()
     return
   }
 
   // Xác định danh sách màn hình cho chip này
-  const options = CHIP_OLED_OPTIONS[chip] || DEFAULT_OLED_OPTIONS
+  const options = CHIP_OPTIONS_MAP[chip] || DEFAULT_OPTIONS
 
-  oledSelection.style.display = "block"
-  oledGrid.innerHTML = ""
-  selectedOled = null
+  optionSelection.style.display = "block"
+  optionGrid.innerHTML = ""
+  selectedOption = null
 
   options.forEach((opt) => {
     const btn = document.createElement("button")
     btn.className = "oled-button"
-    btn.dataset.oled = opt.value
+    btn.dataset.option = opt.value
     btn.textContent = opt.label
 
     btn.addEventListener("click", async () => {
       // clear active cũ
-      oledGrid.querySelectorAll(".oled-button").forEach((b) => b.classList.remove("active"))
+      optionGrid.querySelectorAll(".oled-button").forEach((b) => b.classList.remove("active"))
       btn.classList.add("active")
 
-      selectedOled = opt.value
+      selectedOption = opt.value
       await updateFlashButtonVisibility()
     })
 
-    oledGrid.appendChild(btn)
+    optionGrid.appendChild(btn)
   })
 }
 
@@ -537,11 +542,11 @@ function createChipButton(opt) {
     selectedChip = opt.chip;
 
     if (selectedFw === "xiaozhi") {
-      renderOledOptionsForChip(selectedChip);
+      renderOptionsForChip(selectedChip);
     } else {
-      oledSelection.style.display = "none";
-      oledGrid.innerHTML = "";
-      selectedOled = null;
+      optionSelection.style.display = "none";
+      optionGrid.innerHTML = "";
+      selectedOption = null;
     }
 
     await updateFlashButtonVisibility();
@@ -601,7 +606,7 @@ function setupEventListeners() {
         .forEach((card) => card.classList.remove("active"))
       selectedChip = null
       selectedFw = null
-      selectedOled = null
+      selectedOption = null
     }
   })
 }
