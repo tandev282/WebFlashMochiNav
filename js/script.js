@@ -315,7 +315,7 @@ function setupEspWebToolsWithManifest(chipType) {
   newInstallButton.classList.remove("invisible");
 
   // Thời gian bạn tự điền
-  const fwUpdatedAt = "20:00 - 28-03-2026";
+  const fwUpdatedAt = "20:00 - 30-03-2026";
   document.getElementById("fwUpdateStamp").textContent =
     `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
 
