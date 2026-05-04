@@ -1,6 +1,6 @@
 {
-  "name": "Xiaozhi 2.2.5 - ESP32-S3 Super Mini / Zero",
-  "version": "2.2.5",
+  "name": "Xiaozhi 2.2.6 - ESP32-S3 Super Mini / Zero",
+  "version": "2.2.6",
   "new_install_prompt_erase": false,
   "builds": [
     {
