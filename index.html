@@ -9,6 +9,279 @@
     <script type="module" src="https://unpkg.com/esp-web-tools@latest/dist/web/install-button.js?module"></script>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/update.css" />
+    <style>
+        .log-container {
+            margin-top: 15px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #log {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .log-item {
+            padding: 2px 6px;
+            border-radius: 4px;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        .log-time {
+            color: #666;
+            margin-right: 8px;
+            font-weight: normal;
+        }
+
+        .log-info {
+            color: #e0e0e0;
+        }
+
+        .log-ok {
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid #22c55e;
+        }
+
+        .log-err {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+
+        .log-warn {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid #f59e0b;
+        }
+
+        .log-info {
+            color: #e0e0e0;
+        }
+
+        .log-tx {
+            color: #0ea5e9;
+            font-weight: 600;
+        }
+
+        .log-rx {
+            color: #22c55e;
+        }
+
+        .log-server {
+            color: #f59e0b;
+        }
+
+        .log-err {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        /* Tùy chỉnh thanh cuộn */
+        .log-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .log-container::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        .log-container::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        .log-container::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+
+        /* Mới: Giao diện Activation Premium */
+        .license-card {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .mac-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .mac-info #title {
+            font-size: 1.5rem;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            text-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+        }
+
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #333;
+            z-index: 1;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: #222;
+            border: 2px solid #444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active .step-num {
+            border-color: #0ea5e9;
+            color: #0ea5e9;
+            background: rgba(14, 165, 233, 0.1);
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .step-item.active .step-label {
+            color: #fff;
+        }
+
+        .step-item.error .step-num {
+            border-color: #ef4444;
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .step-item.error .step-label {
+            color: #ef4444;
+        }
+
+        .activation-form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-premium {
+            background: #000;
+            border: 1px solid #444;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-premium:focus {
+            border-color: #0ea5e9;
+        }
+
+        .btn-premium {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+        }
+
+        .btn-primary-p {
+            background: #0ea5e9;
+            color: #fff;
+        }
+
+        .btn-primary-p:hover {
+            background: #0284c7;
+            transform: translateY(-2px);
+        }
+
+        .btn-premium:disabled {
+            background: #222;
+            color: #555;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.3;
+            filter: grayscale(1);
+        }
+
+        .btn-secondary-p {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary-p:hover {
+            background: #444;
+        }
+
+        .hint-text {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            color: #f59e0b;
+            font-size: 0.9rem;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
 </head>
 
 <div id="fbJoinPopup" class="popup-overlay" style="display:none;">
@@ -82,12 +355,10 @@
                     <!-- Chip Selection -->
                     <!-- Firmware Selection -->
                     <section class="chip-selection">
-                        <h2>Chọn Chương Trình (Miễn Phí)</h2>
+                        <h2>Chọn Chương Trình</h2>
                         <div class="fw-grid-horizontal">
-                            <button class="fw-button" data-fw="mochi_nav">MochiNav - Không phải ChatBot (Có
-                                phí)</button>
-                            <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Miễn phí)
-                            </button>
+                            <button class="fw-button" data-fw="mochi_nav">MochiNav - No ChatBot (Có phí)</button>
+                            <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Miễn phí)</button>
                         </div>
                     </section>
                     <!-- Chip Selection after FW -->
@@ -147,11 +418,10 @@
                             <button class="main-guide-tab-btn active" data-main-tab="xiaozhi-tab">ChatBot AI (Miễn
                                 Phí)</button>
                             <button class="main-guide-tab-btn" data-main-tab="mochinav-tab">MochiNav (Có
-                                Phí) - Không Phải ChatBot</button>
+                                Phí) - No ChatBot</button>
                             <button class="main-guide-tab-btn" data-main-tab="update-tab">Khách Hàng Update Tại
                                 Đây</button>
                             <button class="main-guide-tab-btn" data-main-tab="unlink-tab">Gỡ Thiết Bị</button>
-
                             <button class="main-guide-tab-btn" data-main-tab="donate-tab">Donate</button>
 
                         </div>
@@ -160,10 +430,10 @@
                         <div class="main-guide-tab-content active" id="xiaozhi-tab">
                             <!-- Tab Navigation -->
                             <div class="tab-navigation">
-                                <button class="tab-btn active" data-tab="xz-tab0">Chat Bot AI (Xiaozhi) - Firmware
-                                    Version 2.2.6</button>
+                                <button class="tab-btn active" data-tab="xz-tab0">Phiên bản 2.2.6</button>
                                 <button class="tab-btn" data-tab="xz-tab1">Sơ Đồ Mẫu</button>
-                                <button class="tab-btn" data-tab="xz-tab2">Hướng Dẫn Sử Dụng Fw Mới</button>
+                                <button class="tab-btn" data-tab="xz-tab2">Bluetooth Xiaozhi (Có Phí)</button>
+                                <button class="tab-btn" data-tab="xz-tab3">Hướng Dẫn Sử Dụng Fw Mới</button>
                             </div>
 
                             <!-- Tab Content -->
@@ -193,7 +463,7 @@
                                                     🔵 <strong>Bluetooth</strong><br>
                                                     • Thêm chức năng kết nối Bluetooth.<br>
                                                     • Hỗ trợ phát âm thanh và mở rộng thiết bị ngoại vi.<br><br>
-                                                      🔵 <strong>Sửa lỗi Radio </strong><br>
+                                                    🔵 <strong>Sửa lỗi Radio </strong><br>
                                                     • Thay đổi api nghe Radio.<br><br>
 
                                                     🛠 <strong>Fix lỗi nâng cấp hệ thống</strong><br>
@@ -408,7 +678,236 @@
                                     </div>
                                 </div>
 
+                                <!-- xz-tab2: Bluetooth Xiaozhi -->
                                 <div class="tab-pane" id="xz-tab2">
+                                    <div class="tab-navigation">
+                                        <button class="tab-btn active" data-tab="xz-bt-intro">Giới thiệu</button>
+                                        <button class="tab-btn" data-tab="xz-bt-wiring">Sơ đồ</button>
+                                        <button class="tab-btn" data-tab="xz-bt-license">Kích hoạt</button>
+                                    </div>
+
+                                    <div class="tab-content">
+                                        <!-- Sub-sub-tab: Giới thiệu -->
+                                        <div class="tab-pane active" id="xz-bt-intro">
+                                            <div class="update-section">
+                                                <!-- Mục 1: Tổng quan & Hỗ trợ -->
+                                                <div class="update-card">
+                                                    <h3>Bluetooth Xiaozhi (Có Phí)</h3>
+                                                    <p>FW ESP32 Bluetooth là firmware cầu nối âm thanh Bluetooth dành
+                                                        cho hệ thống chatbot Xiaozhi, sử dụng ESP32 để nhận âm thanh từ
+                                                        ESP32-S3 qua I2S và phát ra loa hoặc tai nghe Bluetooth bằng
+                                                        chuẩn A2DP.</p>
+                                                    <br>
+                                                    <ul>
+                                                        <li>✅ Âm thanh chất lượng cao 44.1kHz Stereo</li>
+                                                        <li>✅ Kết nối với chatbot Xiaozhi</li>
+                                                        <li>✅ Quét và kết nối loa Bluetooth</li>
+                                                        <li>✅ Tự lưu và tự kết nối lại thiết bị đã ghép đôi</li>
+                                                        <li>✅ Điều khiển bằng giọng nói</li>
+                                                        <li>✅ Streaming âm thanh ổn định, độ trễ thấp</li>
+                                                    </ul>
+                                                </div>
+
+                                                <!-- Mục 2: Lệnh điều khiển -->
+                                                <div class="update-card" style="margin-top: 20px;">
+                                                    <h4 style="color: #0ea5e9;">Danh sách lệnh điều khiển (Voice
+                                                        Commands)</h4>
+                                                    <div class="command-list" style="margin-top: 15px;">
+                                                        <div
+                                                            style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; font-size: 0.9rem;">
+                                                            <div style="color: #22c55e; font-weight: bold;">Bật
+                                                                Bluetooth</div>
+                                                            <div class="muted">Tự động kết nối lại thiết bị đã ghép đôi.
+                                                            </div>
+
+                                                            <div style="color: #ef4444; font-weight: bold;">Tắt
+                                                                Bluetooth</div>
+                                                            <div class="muted">Ngắt kết nối và tắt sóng Bluetooth.</div>
+
+                                                            <div style="color: #f59e0b; font-weight: bold;">Dò tìm loa
+                                                            </div>
+                                                            <div class="muted">Quét các thiết bị loa xung quanh (khoảng
+                                                                5s).</div>
+
+                                                            <div style="color: #0ea5e9; font-weight: bold;">Kết nối loa
+                                                                [Tên/Số]</div>
+                                                            <div class="muted">Kết nối theo số thứ tự (index) hoặc tên
+                                                                thiết bị.</div>
+
+                                                            <div style="color: #ef4444; font-weight: bold;">Ngắt kết nối
+                                                            </div>
+                                                            <div class="muted">Ngắt kết nối với loa hiện tại.</div>
+
+                                                            <div style="color: #e0e0e0; font-weight: bold;">Trạng thái
+                                                                Bluetooth</div>
+                                                            <div class="muted">Kiểm tra tình trạng bật/tắt và kết nối.
+                                                            </div>
+
+                                                            <div style="color: #e0e0e0; font-weight: bold;">Danh sách đã
+                                                                ghép đôi</div>
+                                                            <div class="muted">Xem các thiết bị đã từng kết nối thành
+                                                                công.</div>
+
+                                                            <div style="color: #ef4444; font-weight: bold;">Xóa ghép đôi
+                                                            </div>
+                                                            <div class="muted">Xóa thông tin thiết bị khỏi bộ nhớ loa.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Mục 3: Chính Sách Mua Key -->
+                                                <div class="key-description-card"
+                                                    style="margin-top: 20px; padding: 25px;">
+                                                    <h3 style="color: #22c55e;">Chính Sách Mua Key</h3>
+
+                                                    <div class="key-policy" style="margin-top: 15px;">
+                                                        <h4>📋 Thông Tin Cơ Bản</h4>
+                                                        <ul>
+                                                            <li>Khi mua, người dùng nhận được <strong>01 key kích
+                                                                    hoạt</strong></li>
+                                                            <li>Mỗi key chỉ sử dụng được trên <strong>01 thiết bị
+                                                                    ESP32</strong></li>
+                                                            <li>Có thể sử dụng key <strong>nhiều lần</strong> trên cùng
+                                                                1 thiết bị</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="key-policy" style="margin-top: 15px;">
+                                                        <h4>🆓 Key Được Cấp Miễn Phí Khi</h4>
+                                                        <ul>
+                                                            <li>Người dùng thay bo mạch ESP32 do <strong>lỗi phần
+                                                                    cứng</strong></li>
+                                                            <li>Làm thêm thiết bị với <strong>mục đích cá nhân</strong>
+                                                                (không thương mại)</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="key-policy" style="margin-top: 15px;">
+                                                        <h4>💼 Chính Sách Cấp Key Bổ Sung</h4>
+                                                        <p class="muted">Nếu sử dụng để tạo thêm nhiều sản phẩm hoặc
+                                                            triển khai thương mại, người dùng cần:</p>
+                                                        <ul>
+                                                            <li><strong>Mua key bổ sung</strong> theo số lượng thiết bị
+                                                            </li>
+                                                            <li><strong>Liên hệ trực tiếp</strong> để được báo giá và hỗ
+                                                                trợ</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="pricing-section" style="margin-top: 20px;">
+                                                        <h4>💰 Giá Bán</h4>
+                                                        <div class="price-card"
+                                                            style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 12px; padding: 15px; display: inline-block;">
+                                                            <div class="price-item">
+                                                                <span class="price-label">1 Key:</span>
+                                                                <span class="price-value"
+                                                                    style="color: #22c55e; font-size: 1.5rem; font-weight: bold; margin-left: 10px;">30.000đ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="purchase-section"
+                                                        style="margin-top: 25px; text-align: center;">
+                                                        <h4>🛒 Mua Key Ngay</h4>
+                                                        <p class="muted">Liên hệ qua Zalo để được hỗ trợ mua key và tư
+                                                            vấn:</p>
+                                                        <div style="margin-top: 15px;">
+                                                            <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih"
+                                                                class="btn btn-primary" target="_blank"
+                                                                style="padding: 12px 25px; border-radius: 30px;">
+                                                                💬 Mua Key qua Zalo
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sub-sub-tab: Sơ đồ -->
+                                        <div class="tab-pane" id="xz-bt-wiring">
+                                            <div class="wiring-card">
+                                                <h3>Sơ Đồ Đấu Nối Bluetooth Xiaozhi</h3>
+                                                <div class="important-notes">
+                                                    <h4>⚠️ Ghi chú quan trọng</h4>
+                                                    <ul>
+                                                        <li><strong>Nguồn điện:</strong> Đảm bảo chân MASS (GND) cả 2
+                                                            thiết bị phải dùng chung, chúng mới có thể kết nối với nhau.
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <br>
+                                                <div class="diagram-container">
+                                                    <img src="/img/xz_bt.png" alt="Sơ đồ đấu nối Bluetooth Xiaozhi"
+                                                        class="wiring-diagram">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sub-sub-tab: Kích hoạt -->
+                                        <div class="tab-pane" id="xz-bt-license">
+                                            <div class="license-card">
+                                                <div class="license-header">
+                                                    <div class="mac-info">
+                                                        <div id="title" class="mac-title">MAC: Chưa kết nối</div>
+                                                        <span class="badge muted statusBadge" id="statusBadge"
+                                                            style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;">Chưa
+                                                            KÍCH HOẠT</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="stepper">
+                                                    <div class="step-item active">
+                                                        <div class="step-num">1</div>
+                                                        <div class="step-label">Nạp FW</div>
+                                                    </div>
+                                                    <div class="step-item">
+                                                        <div class="step-num">2</div>
+                                                        <div class="step-label">Kết nối</div>
+                                                    </div>
+                                                    <div class="step-item">
+                                                        <div class="step-num">3</div>
+                                                        <div class="step-label">Lấy MAC</div>
+                                                    </div>
+                                                    <div class="step-item">
+                                                        <div class="step-num">4</div>
+                                                        <div class="step-label">Nhập Key</div>
+                                                    </div>
+                                                    <div class="step-item">
+                                                        <div class="step-num">5</div>
+                                                        <div class="step-label">Kích hoạt</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="activation-form">
+                                                    <div class="form-group">
+                                                        <button id="btnConnect" class="btnConnect btn-premium btn-primary-p"
+                                                            style="flex: 2;">⚡ Kết nối ESP32</button>
+                                                        <button id="btnGetDid" class="btnGetDid btn-premium btn-secondary-p"
+                                                            style="flex: 1;" disabled>🔍 Lấy MAC</button>
+                                                        <button id="btnReboot" class="btnReboot btn-premium btn-secondary-p"
+                                                            style="flex: 1;" disabled>🔄 Reboot</button>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input id="inpKey" class="inpKey input-premium"
+                                                            placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button id="btnActivate" class="btnActivate btn-premium btn-primary-p"
+                                                            style="flex: 1;" disabled>🚀 Kích hoạt ngay</button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="log-container" style="margin-top: 25px;">
+                                                    <div id="log" class="log-window"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- xz-tab3: Hướng dẫn sử dụng -->
+                                <div class="tab-pane" id="xz-tab3">
                                     <div class="diagram-container">
                                         <img src="/img/0.png" alt="Hướng Dẫn Sử Dụng FW Mới" class="wiring-diagram">
                                     </div>
@@ -458,7 +957,7 @@
                                 <button class="tab-btn" data-tab="tab1">Sơ Đồ</button>
                                 <button class="tab-btn" data-tab="tab2">Key</button>
                                 <button class="tab-btn" data-tab="tab3">Chức Năng</button>
-                                <button class="tab-btn" data-tab="tab4">Kích Hoạt</button>
+                                <button class="tab-btn" data-tab="tab-license">Kích hoạt</button>
                                 <button class="tab-btn" data-tab="tab5">Hướng Dẫn Sử Dụng</button>
                             </div>
                             <!-- Tab Content -->
@@ -993,8 +1492,7 @@
                                             <div class="update-icon">🚀</div>
                                             <div class="update-content">
                                                 <h4>Cập Nhật Liên Tục</h4>
-                                                <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời
-                                                    gian
+                                                <p>Thiết bị sẽ liên tục được nâng cấp phần mềm/tính năng trong thời gian
                                                     tới để mang đến trải nghiệm tốt nhất cho người dùng.</p>
                                             </div>
                                         </div>
@@ -1007,57 +1505,74 @@
                                                 <li><strong>Tính từ khi khởi động, nếu bạn không kết nối điện thoại với
                                                         thiết bị, thiết bị sẽ tự động tắt Bluetooth sau 3 phút giúp tăng
                                                         thời gian sử dụng pin và tránh tình trạng thiết bị bị nóng khi
-                                                        không
-                                                        sử
-                                                        dụng.</strong></li>
+                                                        không sử dụng.</strong></li>
                                             </ul>
                                         </div>
-                                    </div>
-                                </div>
+                                     </div>
+                                 </div>
 
-                                <div class="tab-pane" id="tab4">
-                                    <div class="license-scope">
-                                        <div class="header">
-                                            <h1 class="err" id="title">MAC: Chưa kết nối</h1>
-                                            <span class="badge muted" id="statusBadge">Chưa ký</span>
-                                        </div>
-                                        <h1 class="err" id="title">Các bước kích hoạt : 1. Nạp firmware -> 2. Kết nối
-                                            ESP32 C3 Super Mini -> 3. Lấy MAC
-                                            -> 4. Nhập KEY -> 5. Kích hoạt</h1>
-                                        <h1 class="err" id="title">Khi kích hoạt xong vui lòng vào tab Hướng Dẫn Sử Dụng
-                                            để xem cách cài âm thanh MochiNav và cách dùng FW</h1>
+                                 <!-- Tab: Kích hoạt (MochiNav) -->
+                                 <div class="tab-pane" id="tab-license">
+                                     <div class="license-card">
+                                         <div class="license-header">
+                                             <div class="mac-info">
+                                                 <div class="mac-title">MAC: Chưa kết nối</div>
+                                                 <span class="badge muted statusBadge"
+                                                     style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;">Chưa
+                                                     KÍCH HOẠT</span>
+                                             </div>
+                                         </div>
 
-                                        <div class="row">
-                                            <button id="btnConnect">Kết nối ESP32</button>
-                                            <button id="btnGetDid" disabled>Lấy MAC</button>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <input id="inpKey" placeholder="KEY" style="flex:1">
-                                        </div>
+                                         <div class="stepper">
+                                             <div class="step-item active">
+                                                 <div class="step-num">1</div>
+                                                 <div class="step-label">Nạp FW</div>
+                                             </div>
+                                             <div class="step-item">
+                                                 <div class="step-num">2</div>
+                                                 <div class="step-label">Kết nối</div>
+                                             </div>
+                                             <div class="step-item">
+                                                 <div class="step-num">3</div>
+                                                 <div class="step-label">Lấy MAC</div>
+                                             </div>
+                                             <div class="step-item">
+                                                 <div class="step-num">4</div>
+                                                 <div class="step-label">Nhập Key</div>
+                                             </div>
+                                             <div class="step-item">
+                                                 <div class="step-num">5</div>
+                                                 <div class="step-label">Kích hoạt</div>
+                                             </div>
+                                         </div>
 
-                                        <div class="row">
-                                            <button id="btnActivate" disabled>Kích hoạt</button>
-                                            <button id="btnReboot" disabled>Reboot</button>
-                                        </div>
+                                         <div class="activation-form">
+                                             <div class="form-group">
+                                                 <button class="btnConnect btn-premium btn-primary-p"
+                                                     style="flex: 2;">⚡ Kết nối ESP32</button>
+                                                 <button class="btnGetDid btn-premium btn-secondary-p" style="flex: 1;"
+                                                     disabled>🔍 Lấy MAC</button>
+                                                 <button class="btnReboot btn-premium btn-secondary-p" style="flex: 1;"
+                                                     disabled>🔄 Reboot</button>
+                                             </div>
+                                             <div class="form-group">
+                                                 <input class="inpKey input-premium"
+                                                     placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
+                                             </div>
+                                             <div class="form-group">
+                                                 <button class="btnActivate btn-premium btn-primary-p" style="flex: 1;"
+                                                     disabled>🚀 Kích hoạt ngay</button>
+                                             </div>
+                                         </div>
 
-                                        <div id="log"></div>
-                                    </div>
-                                </div>
+                                         <div class="log-container" style="margin-top: 25px;">
+                                             <div class="log-window"></div>
+                                         </div>
+                                     </div>
+                                 </div>
 
-                                <br>
-
-                                <!-- Lưu ý quan trọng -->
-                                <div class="important-notes">
-                                    <h4>⚠️ Lưu Ý</h4>
-                                    <ul>
-                                        <li><strong>Nếu bạn chưa có key mà vẫn spam kích hoạt, chúng tôi sẽ đưa chip
-                                                esp32 vào danh sách chặn sau 5 lần thử</strong></li>
-                                    </ul>
-                                </div>
-
-                                <!-- Tab 5: Hướng dẫn sử dụng -->
-                                <div class="tab-pane" id="tab5">
+                                 <!-- Tab 5: Hướng dẫn sử dụng -->
+                                 <div class="tab-pane" id="tab5">
                                     <div class="app-section">
                                         <div class="activation-card">
 

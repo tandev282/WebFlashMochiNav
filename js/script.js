@@ -27,7 +27,7 @@ const chipOptions = {
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
     { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
-    { chip: "esp32s3_cube", label: "XingZhi Cube 1.54", img: "/img/chips/xingzhi_cube.png" },
+    { chip: "esp32_bt", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
 };
@@ -37,7 +37,7 @@ const chipOptions = {
 const XIAOZHI_CHIP_MAP = {
   esp32s3: { dir: "esp32s3", filePrefix: "xiaozhi_esp32s3" },
   esp32s3_n4r2: { dir: "esp32s3n4r2", filePrefix: "xiaozhi_esp32s3n4r2" },
-  esp32s3_cube: { dir: "esp32s3cube", filePrefix: "xiaozhi_esp32s3cube" }, // NEW
+  esp32_bt: { dir: "esp32bt", filePrefix: "xiaozhi_esp32bt" }, // NEW
   custom: { dir: "custom", filePrefix: "xiaozhi_custom" }, // NEW
 };
 
@@ -53,18 +53,16 @@ const CHIP_OPTIONS_MAP = {
   esp32s3_n4r2: [
     { value: "n4r2", label: "N4R2" }
   ],
-  esp32s3_cube: [
-    { value: "wechat", label: "Giao diện Wechat" },
-    { value: "no_wechat", label: "Giao diện Không Wechat" }
+  esp32_bt: [
+    { value: "bt", label: "ESP32 WROOM" },
   ],
   custom: [
-    { value: "custom", label: "Nhắn tin để hỗ trợ build riêng" }
+    { value: "custom", label: "Nhắn tin để build riêng (có phí)" }
   ]
 }
 
 // Chip chỉ có đúng 1 màn → auto chọn, bỏ bước chọn
 const CHIP_FIXED_OPTION = {
-  custom: "custom"
 }
 
 
@@ -402,13 +400,33 @@ function hideStatusSection() {
   statusSection.classList.remove("fade-in")
 }
 
-function switchTab(tabId) {
-  tabPanes.forEach((pane) => pane.classList.remove("active"))
-  document.getElementById(tabId).classList.add("active")
+function switchTab(tabId, clickedBtn) {
+  const targetPane = document.getElementById(tabId);
+  if (!targetPane) return;
 
-  tabBtns.forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.tab === tabId)
-  })
+  const paneContainer = targetPane.parentElement;
+  if (paneContainer) {
+    Array.from(paneContainer.children).forEach((p) => {
+      if (p.classList.contains("tab-pane")) p.classList.remove("active");
+    });
+  }
+  targetPane.classList.add("active");
+
+  if (clickedBtn) {
+    const nav = clickedBtn.parentElement;
+    Array.from(nav.children).forEach((b) => {
+      if (b.classList.contains("tab-btn")) b.classList.remove("active");
+    });
+    clickedBtn.classList.add("active");
+  } else {
+    document.querySelectorAll(`.tab-btn[data-tab="${tabId}"]`).forEach((btn) => {
+      const nav = btn.parentElement;
+      Array.from(nav.children).forEach((b) => {
+        if (b.classList.contains("tab-btn")) b.classList.remove("active");
+      });
+      btn.classList.add("active");
+    });
+  }
 }
 
 function switchChipTab(chipTabId, scopeEl) {
@@ -435,40 +453,31 @@ function switchChipTab(chipTabId, scopeEl) {
 
 
 function switchMainTab(tabId) {
-  // 1. Bật/tắt nội dung main tab
   mainGuideTabContents.forEach((content) => {
     content.classList.toggle("active", content.id === tabId);
   });
 
-  // 2. Active nút main ở trên
   mainGuideTabBtns.forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.mainTab === tabId);
   });
 
-  // 3. Xử lý tab con bên trong main tab vừa chọn
   const currentMain = document.getElementById(tabId);
   if (!currentMain) return;
 
-  const innerTabBtns = currentMain.querySelectorAll(".tab-btn");
+  const nav = currentMain.querySelector(".tab-navigation");
+  if (!nav) return;
+
+  const innerTabBtns = Array.from(nav.children).filter((b) =>
+    b.classList.contains("tab-btn")
+  );
 
   if (innerTabBtns.length > 0) {
-    // Nếu trong group này đang có nút nào active thì ưu tiên dùng lại
-    let btnToActivate = Array.from(innerTabBtns).find((b) =>
-      b.classList.contains("active")
-    );
-
-    // Nếu không có thì chọn nút đầu tiên làm default
-    if (!btnToActivate) {
-      btnToActivate = innerTabBtns[0];
-    }
+    let btnToActivate = innerTabBtns.find((b) => b.classList.contains("active"));
+    if (!btnToActivate) btnToActivate = innerTabBtns[0];
 
     if (btnToActivate && btnToActivate.dataset.tab) {
-      switchTab(btnToActivate.dataset.tab);
+      switchTab(btnToActivate.dataset.tab, btnToActivate);
     }
-  } else {
-    // Main tab này không có tab con → clear trạng thái tab con cũ
-    tabPanes.forEach((pane) => pane.classList.remove("active"));
-    tabBtns.forEach((btn) => btn.classList.remove("active"));
   }
 }
 
@@ -573,10 +582,13 @@ function setupEventListeners() {
     })
   })
 
-  // Tab navigation
-  tabBtns.forEach((btn) => {
-    btn.addEventListener("click", () => switchTab(btn.dataset.tab))
-  })
+  // Tab navigation (Delegated for nested/dynamic tabs)
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tab-btn");
+    if (btn && btn.dataset.tab) {
+      switchTab(btn.dataset.tab, btn);
+    }
+  });
 
   // Chip tab navigation (theo nhóm)
   chipTabBtns.forEach((btn) => {
@@ -663,30 +675,40 @@ function initializePopups() {
 
   // Facebook popup
   if (fbPopup) {
-    const closeBtn = fbPopup.querySelector("#closePopupBtn")
-    const joinBtn = fbPopup.querySelector("#joinButton")
+    const closeBtn = fbPopup.querySelector("#closePopupBtn");
+    const close = () => {
+      fbPopup.style.display = "none";
+      document.body.classList.remove("no-scroll");
+    };
 
     fbPopup.style.display = "flex";
     document.body.classList.add("no-scroll");
 
-
-    closeBtn?.addEventListener("click", () => (fbPopup.style.display = "none",
-      document.body.classList.remove("no-scroll")));
+    closeBtn?.addEventListener("click", close);
+    // Click outside to close
+    fbPopup.addEventListener("click", (e) => {
+      if (e.target === fbPopup) close();
+    });
   }
 
   // Key warning popup
   if (keyPopup && !localStorage.getItem("hideKeyWarning")) {
-    const closeBtn = keyPopup.querySelector("#closePopupBtn")
-    const dontShowAgain = keyPopup.querySelector("#dontShowAgain")
-
-    keyPopup.style.display = "flex"
-
-    closeBtn?.addEventListener("click", () => {
+    const closeBtn = keyPopup.querySelector("#closePopupBtn");
+    const dontShowAgain = keyPopup.querySelector("#dontShowAgain");
+    const close = () => {
       if (dontShowAgain?.checked) {
-        localStorage.setItem("hideKeyWarning", "true")
+        localStorage.setItem("hideKeyWarning", "true");
       }
-      keyPopup.style.display = "none"
-    })
+      keyPopup.style.display = "none";
+    };
+
+    keyPopup.style.display = "flex";
+
+    closeBtn?.addEventListener("click", close);
+    // Click outside to close
+    keyPopup.addEventListener("click", (e) => {
+      if (e.target === keyPopup) close();
+    });
   }
 }
 
@@ -694,61 +716,135 @@ function initializePopups() {
 const WORKER_URL = "https://license-signer.tandev.workers.dev/sign";
 let port, reader, writer;
 let currentMac = ""; // Lưu MAC đã đọc để dùng khi ký
+let stepErrors = [false, false, false, false, false]; // Theo dõi lỗi từng bước [0,1,2,3,4]
 
 // --- tiện ích UI ---
 const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
 const escapeHtml = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const log = (m, cls = "") => {
-  const el = $("#log");
+
+const log = (m, status = "info") => {
+  const logs = $$(".log-window");
+  if (!logs.length) return;
+
   const t = new Date().toLocaleTimeString();
-  el.innerHTML += `<div class="${cls}">[${t}] ${escapeHtml(m)}</div>`;
-  el.scrollTop = el.scrollHeight;
+  let cls = "log-info";
+
+  if (status === "err" || status === "error") cls = "log-err";
+  else if (status === "server") cls = "log-server";
+  else if (status === "ok" || status === "success") cls = "log-rx";
+
+  if (m.startsWith(">>")) cls = "log-tx";
+  else if (m.startsWith("<<")) cls = "log-rx";
+
+  logs.forEach(el => {
+    const item = document.createElement("div");
+    item.className = `log-item ${cls}`;
+    item.innerHTML = `<span class="log-time">[${t}]</span> ${escapeHtml(m)}`;
+    el.appendChild(item);
+    el.parentElement.scrollTop = el.parentElement.scrollHeight;
+  });
 };
 
 // --- tiện ích UI ---
 function setStatusUI(isSigned, reason = "") {
-  const badge = $("#statusBadge");
-  if (isSigned) {
-    badge.className = "badge ok";
-    badge.textContent = "ĐÃ KÝ • Full features";
-  } else {
-    badge.className = "badge err";
-    badge.textContent = reason ? `CHƯA KÝ • ${reason}` : "CHƯA KÝ";
-  }
+  $$(".statusBadge").forEach(badge => {
+    if (isSigned) {
+      badge.className = "badge ok statusBadge";
+      badge.textContent = "ĐÃ KÝ • Full features";
+    } else {
+      badge.className = "badge err statusBadge";
+      badge.textContent = reason ? `CHƯA KÍCH HOẠT • ${reason}` : "CHƯA KÍCH HOẠT";
+    }
+  });
+  refreshStepper();
 }
 
-// Cập nhật tiêu đề theo MAC (chỉ để MAC, không ảnh hưởng badge)
+// Cập nhật tiêu đề theo MAC
 function setMacTitle(mac) {
   currentMac = (mac || "").toUpperCase();
-  $("#title").textContent = currentMac ? `MAC: ${currentMac}` : "MAC: Chưa kết nối";
+  $$(".mac-title").forEach(el => {
+    el.textContent = currentMac ? `MAC: ${currentMac}` : "MAC: Chưa kết nối";
+  });
+  refreshStepper();
 }
 
+// Cập nhật Stepper dựa trên trạng thái thực tế
+function refreshStepper() {
+  const licenseCards = $$(".license-card");
+  if (!licenseCards.length) return;
+
+  const isSigned = $$(".statusBadge")[0]?.classList.contains("ok");
+
+  licenseCards.forEach(card => {
+    const key = (card.querySelector(".inpKey")?.value || "").trim();
+    const steps = card.querySelectorAll(".step-item");
+
+    const isCompleted = [
+      true,                   // Bước 1: Nạp FW
+      !!port,                 // Bước 2: Đã kết nối
+      !!currentMac,           // Bước 3: Đã lấy được MAC
+      !!currentMac && !!key,  // Bước 4: Đã nhập Key
+      isSigned                // Bước 5: Đã kích hoạt
+    ];
+
+    const isActive = [
+      true,
+      true,
+      isCompleted[1],
+      isCompleted[2],
+      isCompleted[3]
+    ];
+
+    steps.forEach((el, idx) => {
+      const active = isActive[idx];
+      const done = isCompleted[idx];
+      const hasError = stepErrors[idx];
+      const numEl = el.querySelector(".step-num");
+
+      el.classList.remove("active", "error");
+
+      if (hasError) {
+        el.classList.add("error");
+        if (numEl) numEl.textContent = "✕";
+        return;
+      }
+
+      if (active || done) el.classList.add("active");
+      if (numEl) numEl.textContent = done ? "✓" : idx + 1;
+    });
+  });
+
+  refreshButtons();
+}
+
+function refreshButtons() {
+  const isConnected = !!port;
+  $$(".license-card").forEach(card => {
+    const key = (card.querySelector(".inpKey")?.value || "").trim();
+    const btnGetDid = card.querySelector(".btnGetDid");
+    const btnReboot = card.querySelector(".btnReboot");
+    const btnActivate = card.querySelector(".btnActivate");
+
+    if (btnGetDid) btnGetDid.disabled = !isConnected;
+    if (btnReboot) btnReboot.disabled = !isConnected;
+    if (btnActivate) btnActivate.disabled = !(isConnected && key);
+  });
+}
 
 // --- hàng đợi chờ dòng phù hợp ---
 const waiters = [];
 function notifyLine(line) {
   let m;
+  if ((m = line.match(/^STATUS:\s*SIGNED\b/i))) setStatusUI(true);
+  else if ((m = line.match(/^STATUS:\s*UNSIGNED(?:\s*\((.*)\))?/i))) setStatusUI(false, m[1] || "");
+  else if (/^SIGNED\b/i.test(line)) setStatusUI(true);
+  else if ((m = line.match(/^UNSIGNED\b(?::\s*(.*))?/i))) setStatusUI(false, m[1] || "");
 
-  // 1) Cập nhật trạng thái ký
-  if ((m = line.match(/^STATUS:\s*SIGNED\b/i))) {
-    setStatusUI(true);
-  } else if ((m = line.match(/^STATUS:\s*UNSIGNED(?:\s*\((.*)\))?/i))) {
-    const reason = m[1] ? m[1] : "";
-    setStatusUI(false, reason);
-  } else if (/^SIGNED\b/i.test(line)) {
-    setStatusUI(true);
-  } else if ((m = line.match(/^UNSIGNED\b(?::\s*(.*))?/i))) {
-    const reason = m[1] ? m[1] : "";
-    setStatusUI(false, reason);
-  }
-
-  // 2) Bắt DID/MAC để hiển thị lên title
-  // Hỗ trợ cả hai dạng tiền tố: "DID:" hoặc "MAC:"
   if ((m = line.match(/^(?:DID|MAC):\s*([0-9A-F]{2}(?::[0-9A-F]{2}){5})$/i))) {
     setMacTitle(m[1]);
   }
 
-  // 3) Đánh thức các waiter
   for (let i = waiters.length - 1; i >= 0; i--) {
     const { re, resolve } = waiters[i];
     if (re.test(line)) { waiters.splice(i, 1); resolve(line); }
@@ -766,7 +862,7 @@ function waitForLine(re, timeoutMs = 5000) {
   });
 }
 
-// --- read pump: đọc nền, log & phát sự kiện dòng ---
+// --- read pump ---
 let pumpRunning = false;
 async function startReadPump() {
   if (pumpRunning) return;
@@ -788,46 +884,44 @@ async function startReadPump() {
         notifyLine(line);
       }
     }
-  } catch (e) {
-    // ignore
-  } finally { pumpRunning = false; }
+  } catch (e) { } finally { pumpRunning = false; }
 }
 
 // --- serial open / write ---
 async function openSerial() {
   if (!("serial" in navigator)) { alert("Trình duyệt không hỗ trợ Web Serial."); return; }
-  port = await navigator.serial.requestPort();
-  await port.open({ baudRate: 115200 });
-
-  // ESP32-S3 USB-CDC thường cần DTR=true
-  try { await port.setSignals?.({ dataTerminalReady: true, requestToSend: false }); } catch { }
-
-  reader = port.readable.getReader();
-  writer = port.writable.getWriter();
-  startReadPump();
-
-  log("Đã kết nối serial.");
-  $("#btnGetDid").disabled = false;
-  $("#btnActivate").disabled = false;
-  $("#btnReboot").disabled = false;
-
-  // Ngay khi kết nối: hỏi HELLO để lấy STATUS + DID/MAC cho UI
-  await sendLine("HELLO");
-  // chờ phản hồi (không chặn UI nếu timeout)
-  waitForLine(/^STATUS:/i, 1500).catch(() => { });
-  // Hỗ trợ cả DID:.. hoặc MAC:..
-  waitForLine(/^(?:DID|MAC):\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 1500).catch(() => { });
+  try {
+    stepErrors[1] = false;
+    refreshStepper();
+    port = await navigator.serial.requestPort();
+    await port.open({ baudRate: 115200 });
+    try { await port.setSignals?.({ dataTerminalReady: true, requestToSend: false }); } catch { }
+    reader = port.readable.getReader();
+    writer = port.writable.getWriter();
+    startReadPump();
+    refreshStepper();
+    log("Đã kết nối serial.");
+    await sendLine("HELLO");
+    waitForLine(/^STATUS:/i, 1500).catch(() => { });
+    waitForLine(/^(?:DID|MAC):\s*[0-9A-F]{2}(?::[0-9A-F]{2}){5}$/i, 1500).catch(() => { });
+  } catch (e) {
+    log("Lỗi kết nối: " + e.message, "err");
+    stepErrors[1] = true;
+    refreshStepper();
+  }
 }
 
 async function sendLine(line) {
   const enc = new TextEncoder();
-  await writer.write(enc.encode(line + "\r\n")); // CRLF
+  await writer.write(enc.encode(line + "\r\n"));
   log(">> " + line);
 }
 
 // --- nghiệp vụ ---
 async function getDid() {
   const MAX_TRY = 2;
+  stepErrors[2] = false;
+  refreshStepper();
   for (let attempt = 1; attempt <= MAX_TRY; attempt++) {
     await sendLine("GETDID");
     try {
@@ -837,10 +931,10 @@ async function getDid() {
       setMacTitle(mac);
       log("MAC: " + mac, "ok");
       return mac;
-    } catch (e) {
-      log(`Không thấy MAC (lần ${attempt})`, "err");
-    }
+    } catch (e) { log(`Không thấy MAC (lần ${attempt})`, "err"); }
   }
+  stepErrors[2] = true;
+  refreshStepper();
   throw new Error("Không nhận được MAC/DID từ ESP32");
 }
 
@@ -848,58 +942,82 @@ function showPayload(license) {
   try {
     const payloadB64 = license.split(".")[0];
     const json = JSON.parse(atob(payloadB64));
-    log("Payload: " + JSON.stringify(json, null, 2), "ok");
+    log("Payload: " + JSON.stringify(json, null, 2), "server");
   } catch (e) { log("Decode payload lỗi: " + e, "err"); }
 }
 
 async function activate() {
-  const activationKey = $("#inpKey").value.trim();
+  // Lấy key từ bất kỳ input nào có giá trị
+  let activationKey = "";
+  $$(".inpKey").forEach(input => { if (input.value.trim()) activationKey = input.value.trim(); });
+
   if (!currentMac) { alert("Hãy bấm 'Kết nối' hoặc 'Lấy MAC' trước."); return; }
   if (!activationKey) { alert("Nhập activation key!"); return; }
 
-  log("Gọi server ký...");
-  const res = await fetch(WORKER_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ deviceId: currentMac, activationKey })
-  });
-  const js = await res.json().catch(() => ({}));
-  if (!res.ok) { log("Sign lỗi: " + JSON.stringify(js), "err"); return; }
-
-  const license = js.license;
-  log("Nhận license OK.");
-  showPayload(license);
-
-  await sendLine("LIC:" + license);
-
-  // chờ [OK] hoặc [ERR:...]; đồng thời sẽ có dòng SIGNED/UNSIGNED để UI cập nhật
+  stepErrors[4] = false;
+  refreshStepper();
+  log("Đang kiểm tra key...", "server");
   try {
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ deviceId: currentMac, activationKey })
+    });
+    const js = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      log("Sign lỗi: " + (js.error || JSON.stringify(js)), "err");
+      stepErrors[4] = true;
+      refreshStepper();
+      return;
+    }
+    const license = js.license;
+    log("Nhận license từ Server OK.", "server");
+    showPayload(license);
+    await sendLine("LIC:" + license);
     const ok = await waitForLine(/^\[(OK|ERR:.*)\]$/i, 5000);
     if (/^\[OK\]$/i.test(ok)) {
       log("ESP32 xác nhận license.", "ok");
       setStatusUI(true);
     } else {
       log("ESP32 từ chối license: " + ok, "err");
+      stepErrors[4] = true;
     }
-  } catch {
-    log("Không nhận được phản hồi từ ESP32 sau khi gửi license.", "err");
+  } catch (e) {
+    log("Lỗi Server/Mạng: " + e.message, "err");
+    stepErrors[4] = true;
   }
+  refreshStepper();
 }
 
 async function reboot() { await sendLine("REBOOT"); }
 
 // --- gán sự kiện ---
-$("#btnConnect").onclick = () => openSerial().catch(e => log(String(e), "err"));
-$("#btnGetDid").onclick = () => getDid().catch(e => log(String(e), "err"));
-$("#btnActivate").onclick = () => activate().catch(e => log(String(e), "err"));
-$("#btnReboot").onclick = () => reboot().catch(e => log(String(e), "err"));
+document.addEventListener("click", e => {
+  if (e.target.closest(".btnConnect")) openSerial().catch(e => log(String(e), "err"));
+  if (e.target.closest(".btnGetDid")) getDid().catch(e => log(String(e), "err"));
+  if (e.target.closest(".btnActivate")) activate().catch(e => log(String(e), "err"));
+  if (e.target.closest(".btnReboot")) reboot().catch(e => log(String(e), "err"));
+});
 
-// --- đóng trang: tự giải phóng serial ---
+document.addEventListener("input", e => {
+  if (e.target.closest(".inpKey")) {
+    // Đồng bộ key giữa các input
+    const val = e.target.value;
+    $$(".inpKey").forEach(input => { if (input !== e.target) input.value = val; });
+    refreshStepper();
+  }
+});
+
+// --- đóng trang ---
 window.addEventListener("beforeunload", async () => {
   try { await reader?.releaseLock(); await writer?.releaseLock(); await port?.close(); } catch { }
-  setMacTitle(""); // về MAC: Chưa kết nối
+  port = null;
+  stepErrors = [false, false, false, false, false];
+  setMacTitle("");
   setStatusUI(false, "Chưa kết nối");
 });
+
+refreshStepper();
 
 
 // Lấy tất cả ảnh cần bật viewer
