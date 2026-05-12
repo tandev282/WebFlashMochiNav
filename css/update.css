@@ -1,149 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-:root {
-  /* Dark theme with black and blue */
-  --bg-primary: #000000;
-  --bg-secondary: #0f1419;
-  --bg-tertiary: #1a1f2e;
-  --bg-card: #0d1117;
-  --text-primary: #ffffff;
-  --text-secondary: #8b949e;
-  --text-muted: #6e7681;
-  --border-color: #21262d;
-  --accent-primary: #0ea5e9;
-  --accent-secondary: #06b6d4;
-  --accent-success: #22c55e;
-  --accent-danger: #ef4444;
-  --accent-warning: #f59e0b;
-  --wire-red: #ef4444;
-  --wire-black: #374151;
-  --wire-blue: #3b82f6;
-  --wire-yellow: #eab308;
-  --wire-purple: #a855f7;
-  --wire-gray: #9ca3af;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
-  --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-  --gradient-secondary: linear-gradient(135deg, #1e40af 0%, #0ea5e9 100%);
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  transition: all 0.3s ease;
-}
-
-.container {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Header */
-.header {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-secondary);
-}
-
-.header-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.logo-text h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-}
-
-.logo-text .tagline {
-  font-family: 'Ubuntu', cursive;
-  /* hoặc font đẹp hơn */
-  font-size: 1.0rem;
-  font-weight: 400;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-
-.logo img {
-  width: 120px;
-  height: auto;
-  border-radius: 8px;
-}
-
-.logo h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2rem;
-}
-
-.content-grid {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  gap: 2rem;
-  height: calc(100vh - 200px);
-}
-
-/* Left Panel - Fixed */
-.left-panel {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 1.5rem;
-  border: 1px solid var(--border-color);
-  height: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* Right Panel - Scrollable */
-.right-panel {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 2rem;
-  border: 1px solid var(--border-color);
-  height: 100%;
-  overflow-y: auto;
-}
+/* update.css - Specific styles only */
 
 /* Chip Selection */
 .chip-selection h2 {
@@ -1227,15 +1082,32 @@ esp-web-install-button {
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+
+  .container,
+  .main-content,
   .content-grid {
-    grid-template-columns: 1fr;
     height: auto;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .content-grid {
+    display: block;
   }
 
   .left-panel,
   .right-panel {
     height: auto;
     max-height: none;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 1.5rem 1rem !important;
   }
 
   .trouble-grid {
@@ -1253,7 +1125,7 @@ esp-web-install-button {
 
 @media (max-width: 768px) {
   .main-content {
-    padding: 1rem;
+    padding: 0;
   }
 
   .logo h1 {
@@ -1339,6 +1211,8 @@ esp-web-install-button {
 
 .update-card li {
   color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
   margin-bottom: 1rem;
   padding-left: 1.5rem;
   position: relative;
@@ -2327,6 +2201,7 @@ esp-web-install-button::part(button) {
 
 /* Fix tràn ngang version item trên mobile */
 @media (max-width: 768px) {
+
   /* Mỗi item chỉ còn 1 cột, không chia trái/phải nữa */
   #versions .version-item {
     display: grid;

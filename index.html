@@ -290,8 +290,8 @@
 
         <div class="popup-header">
             <h3>Xiaozhi VN</h3>
-            <p>Tham gia nhóm Facebook hoặc Zalo để nhận hỗ trợ, cập nhật tin tức và chia sẻ trải nghiệm của bạn với
-                cộng đồng Xiaozhi tại Việt Nam!</p>
+            <p>Tham gia Facebook hoặc Zalo để nhận hỗ trợ, cập nhật tin tức và chia sẻ cùng cộng đồng Xiaozhi Việt Nam!
+            </p>
         </div>
         <div class="popup-actions">
             <a href="https://www.facebook.com/groups/750955974105399" target="_blank" id="joinButton"
@@ -334,24 +334,18 @@
 
 <body>
     <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <img src="/img/logo.png" alt="Logo">
-                    <div class="logo-text">
-                        <h1>TanDev</h1>
-                        <p class="tagline">original creator of Mochi and Xiaozhi trend</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
         <!-- Main Content -->
         <main class="main-content">
             <div class="content-grid">
                 <!-- Left Panel - 30% -->
                 <div class="left-panel">
+                    <div class="logo">
+                        <img src="/img/logo.png" alt="Logo">
+                        <div class="logo-text">
+                            <h1>TanDev</h1>
+                            <p class="tagline">original creator of Mochi and Xiaozhi trend</p>
+                        </div>
+                    </div>
                     <!-- Chip Selection -->
                     <!-- Firmware Selection -->
                     <section class="chip-selection">
@@ -396,18 +390,20 @@
                         </div>
                     </section>
 
-                    <div class="step-content">
-                        <h4>Hướng dẫn nạp firmware </h4>
+                    <details class="step-content">
+                        <summary class="step-header">
+                            <span class="step-icon-toggle"></span>
+                            <h4>Hướng dẫn nạp firmware</h4>
+                        </summary>
                         <ul>
                             <li><strong>Vui lòng sử dụng máy tính để nạp chương trình</strong></li>
-                            <li><strong>Nhấn giữ nút BOOT và gim cáp kết nối với máy
-                                    tính nếu gặp tình trạng ẩn hiện cổng COM liên tục</strong>
-                            </li>
+                            <li><strong>Nếu gặp tình trạng cổng COM ẩn hiện liên tục, nhấn giữ nút BOOT và gim cáp kết
+                                    nối với máy tính </strong></li>
                             <li><strong>Chọn chip và màn hình phù hợp và nhấn kết nối</strong></li>
                             <li><strong>Chọn cổng COM của chip và nhấn Kết nối -> Install -> Install -> chờ nạp xong
                                     code</strong></li>
                         </ul>
-                    </div>
+                    </details>
                 </div>
 
                 <!-- Right Panel - 70% -->
@@ -423,8 +419,8 @@
                                 Đây</button>
                             <button class="main-guide-tab-btn" data-main-tab="unlink-tab">Gỡ Thiết Bị</button>
                             <button class="main-guide-tab-btn" data-main-tab="donate-tab">Donate</button>
-
                         </div>
+                        <div class="tab-separator"></div>
 
                         <!-- Tab Content for Xiaozhi -->
                         <div class="main-guide-tab-content active" id="xiaozhi-tab">
@@ -709,7 +705,7 @@
                                                 </div>
 
                                                 <!-- Mục 2: Lệnh điều khiển -->
-                                                <div class="update-card" style="margin-top: 20px;">
+                                                <div class="update-card">
                                                     <h4 style="color: #0ea5e9;">Danh sách lệnh điều khiển (Voice
                                                         Commands)</h4>
                                                     <div class="command-list" style="margin-top: 15px;">
@@ -881,11 +877,14 @@
 
                                                 <div class="activation-form">
                                                     <div class="form-group">
-                                                        <button id="btnConnect" class="btnConnect btn-premium btn-primary-p"
+                                                        <button id="btnConnect"
+                                                            class="btnConnect btn-premium btn-primary-p"
                                                             style="flex: 2;">⚡ Kết nối ESP32</button>
-                                                        <button id="btnGetDid" class="btnGetDid btn-premium btn-secondary-p"
+                                                        <button id="btnGetDid"
+                                                            class="btnGetDid btn-premium btn-secondary-p"
                                                             style="flex: 1;" disabled>🔍 Lấy MAC</button>
-                                                        <button id="btnReboot" class="btnReboot btn-premium btn-secondary-p"
+                                                        <button id="btnReboot"
+                                                            class="btnReboot btn-premium btn-secondary-p"
                                                             style="flex: 1;" disabled>🔄 Reboot</button>
                                                     </div>
                                                     <div class="form-group">
@@ -893,7 +892,8 @@
                                                             placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
                                                     </div>
                                                     <div class="form-group">
-                                                        <button id="btnActivate" class="btnActivate btn-premium btn-primary-p"
+                                                        <button id="btnActivate"
+                                                            class="btnActivate btn-premium btn-primary-p"
                                                             style="flex: 1;" disabled>🚀 Kích hoạt ngay</button>
                                                     </div>
                                                 </div>
@@ -1508,71 +1508,71 @@
                                                         không sử dụng.</strong></li>
                                             </ul>
                                         </div>
-                                     </div>
-                                 </div>
+                                    </div>
+                                </div>
 
-                                 <!-- Tab: Kích hoạt (MochiNav) -->
-                                 <div class="tab-pane" id="tab-license">
-                                     <div class="license-card">
-                                         <div class="license-header">
-                                             <div class="mac-info">
-                                                 <div class="mac-title">MAC: Chưa kết nối</div>
-                                                 <span class="badge muted statusBadge"
-                                                     style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;">Chưa
-                                                     KÍCH HOẠT</span>
-                                             </div>
-                                         </div>
+                                <!-- Tab: Kích hoạt (MochiNav) -->
+                                <div class="tab-pane" id="tab-license">
+                                    <div class="license-card">
+                                        <div class="license-header">
+                                            <div class="mac-info">
+                                                <div class="mac-title">MAC: Chưa kết nối</div>
+                                                <span class="badge muted statusBadge"
+                                                    style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;">Chưa
+                                                    KÍCH HOẠT</span>
+                                            </div>
+                                        </div>
 
-                                         <div class="stepper">
-                                             <div class="step-item active">
-                                                 <div class="step-num">1</div>
-                                                 <div class="step-label">Nạp FW</div>
-                                             </div>
-                                             <div class="step-item">
-                                                 <div class="step-num">2</div>
-                                                 <div class="step-label">Kết nối</div>
-                                             </div>
-                                             <div class="step-item">
-                                                 <div class="step-num">3</div>
-                                                 <div class="step-label">Lấy MAC</div>
-                                             </div>
-                                             <div class="step-item">
-                                                 <div class="step-num">4</div>
-                                                 <div class="step-label">Nhập Key</div>
-                                             </div>
-                                             <div class="step-item">
-                                                 <div class="step-num">5</div>
-                                                 <div class="step-label">Kích hoạt</div>
-                                             </div>
-                                         </div>
+                                        <div class="stepper">
+                                            <div class="step-item active">
+                                                <div class="step-num">1</div>
+                                                <div class="step-label">Nạp FW</div>
+                                            </div>
+                                            <div class="step-item">
+                                                <div class="step-num">2</div>
+                                                <div class="step-label">Kết nối</div>
+                                            </div>
+                                            <div class="step-item">
+                                                <div class="step-num">3</div>
+                                                <div class="step-label">Lấy MAC</div>
+                                            </div>
+                                            <div class="step-item">
+                                                <div class="step-num">4</div>
+                                                <div class="step-label">Nhập Key</div>
+                                            </div>
+                                            <div class="step-item">
+                                                <div class="step-num">5</div>
+                                                <div class="step-label">Kích hoạt</div>
+                                            </div>
+                                        </div>
 
-                                         <div class="activation-form">
-                                             <div class="form-group">
-                                                 <button class="btnConnect btn-premium btn-primary-p"
-                                                     style="flex: 2;">⚡ Kết nối ESP32</button>
-                                                 <button class="btnGetDid btn-premium btn-secondary-p" style="flex: 1;"
-                                                     disabled>🔍 Lấy MAC</button>
-                                                 <button class="btnReboot btn-premium btn-secondary-p" style="flex: 1;"
-                                                     disabled>🔄 Reboot</button>
-                                             </div>
-                                             <div class="form-group">
-                                                 <input class="inpKey input-premium"
-                                                     placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
-                                             </div>
-                                             <div class="form-group">
-                                                 <button class="btnActivate btn-premium btn-primary-p" style="flex: 1;"
-                                                     disabled>🚀 Kích hoạt ngay</button>
-                                             </div>
-                                         </div>
+                                        <div class="activation-form">
+                                            <div class="form-group">
+                                                <button class="btnConnect btn-premium btn-primary-p" style="flex: 2;">⚡
+                                                    Kết nối ESP32</button>
+                                                <button class="btnGetDid btn-premium btn-secondary-p" style="flex: 1;"
+                                                    disabled>🔍 Lấy MAC</button>
+                                                <button class="btnReboot btn-premium btn-secondary-p" style="flex: 1;"
+                                                    disabled>🔄 Reboot</button>
+                                            </div>
+                                            <div class="form-group">
+                                                <input class="inpKey input-premium"
+                                                    placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btnActivate btn-premium btn-primary-p" style="flex: 1;"
+                                                    disabled>🚀 Kích hoạt ngay</button>
+                                            </div>
+                                        </div>
 
-                                         <div class="log-container" style="margin-top: 25px;">
-                                             <div class="log-window"></div>
-                                         </div>
-                                     </div>
-                                 </div>
+                                        <div class="log-container" style="margin-top: 25px;">
+                                            <div class="log-window"></div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                 <!-- Tab 5: Hướng dẫn sử dụng -->
-                                 <div class="tab-pane" id="tab5">
+                                <!-- Tab 5: Hướng dẫn sử dụng -->
+                                <div class="tab-pane" id="tab5">
                                     <div class="app-section">
                                         <div class="activation-card">
 
@@ -1785,34 +1785,35 @@
                             </div>
                         </div>
 
+                        <!-- Footer -->
+                        <footer class="footer">
+                            <div class="footer-content">
+                                <h3>Liên Hệ</h3>
+                                <div class="footer-links">
+                                    <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="footer-link" target="_blank">
+                                        <span class="footer-icon">💬</span>
+                                        Zalo
+                                    </a>
+                                    <a href="https://www.tiktok.com/@tanbeat282" class="footer-link" target="_blank">
+                                        <span class="footer-icon">🎵</span>
+                                        TikTok
+                                    </a>
+                                    <a href="https://www.facebook.com/trantan03" class="footer-link" target="_blank">
+                                        <span class="footer-icon">📘</span>
+                                        Facebook
+                                    </a>
+                                </div>
+                                <p class="footer-text">© 2025 - TanDev</p>
+                                <img src="https://visitor-badge.laobi.icu/badge?page_id=tandev282.WebFlashMochiNav"
+                                    alt="visitor badge" style="height:20px;vertical-align:middle" loading="lazy"
+                                    decoding="async">
+                            </div>
+                        </footer>
+
                     </div>
                 </div>
             </div>
         </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3>Liên Hệ</h3>
-                <div class="footer-links">
-                    <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih" class="footer-link" target="_blank">
-                        <span class="footer-icon">💬</span>
-                        Zalo
-                    </a>
-                    <a href="https://www.tiktok.com/@tanbeat282" class="footer-link" target="_blank">
-                        <span class="footer-icon">🎵</span>
-                        TikTok
-                    </a>
-                    <a href="https://www.facebook.com/trantan03" class="footer-link" target="_blank">
-                        <span class="footer-icon">📘</span>
-                        Facebook
-                    </a>
-                </div>
-                <p class="footer-text">© 2025 - TanDev</p>
-                <img src="https://visitor-badge.laobi.icu/badge?page_id=tandev282.WebFlashMochiNav" alt="visitor badge"
-                    style="height:20px;vertical-align:middle" loading="lazy" decoding="async">
-            </div>
-        </footer>
 
 
         <!-- Image Viewer Modal -->

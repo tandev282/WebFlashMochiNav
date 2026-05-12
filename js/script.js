@@ -880,6 +880,12 @@ async function startReadPump() {
         let line = buf.slice(0, i).replace(/\r/g, "").trim();
         buf = buf.slice(i + 1);
         if (!line) continue;
+
+        // Sanitize: remove ANSI codes and non-printable/garbage chars
+        line = line.replace(/\x1B\[[0-9;]*[A-Za-z]/g, "")
+          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFFFD]/g, "");
+
+        if (!line) continue;
         log("<< " + line);
         notifyLine(line);
       }

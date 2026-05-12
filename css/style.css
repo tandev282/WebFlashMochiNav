@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Ubuntu:ital,wght@0,400;0,700;1,400&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +8,7 @@
 
 :root {
   /* Dark theme with black and blue */
-  --bg-primary: #000000;
+  --bg-primary: #05080c;
   --bg-secondary: #0f1419;
   --bg-tertiary: #1a1f2e;
   --bg-card: #0d1117;
@@ -33,51 +35,58 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: var(--bg-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #05080c;
   color: var(--text-primary);
   line-height: 1.6;
-  transition: all 0.3s ease;
+  transition: none;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .container {
-  width: 100%;
-  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Header */
-.header {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-secondary);
-}
-
-.header-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+/* Logo in Sidebar */
 .logo {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .logo-text {
   display: flex;
   flex-direction: column;
+  align-items: center;
   line-height: 1.2;
 }
 
 .logo-text h1 {
-  font-size: 2.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -87,71 +96,63 @@ body {
 
 .logo-text .tagline {
   font-family: 'Ubuntu', cursive;
-  /* hoặc font đẹp hơn */
-  font-size: 1.0rem;
+  font-size: 0.8rem;
   font-weight: 400;
   color: var(--text-secondary);
   margin: 0;
+  text-align: center;
 }
 
 
 .logo img {
-  width: 120px;
+  width: 80px;
   height: auto;
   border-radius: 8px;
 }
 
-.logo h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .content-grid {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  gap: 2rem;
-  height: calc(100vh - 200px);
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 
-/* Left Panel - Fixed */
 .left-panel {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 1.5rem;
-  border: 1px solid var(--border-color);
+  flex: 0 0 30%;
+  background: #0D1117;
+  backdrop-filter: blur(10px);
+  padding: 2rem 1.5rem;
   height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
-/* Right Panel - Scrollable */
 .right-panel {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 2rem;
-  border: 1px solid var(--border-color);
+  flex: 1;
+  background: rgba(8, 12, 20, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 2rem 1.5rem;
   height: 100%;
   overflow-y: auto;
 }
 
 /* Chip Selection */
 .chip-selection h2 {
-  font-size: 1.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: var(--accent-primary);
+  margin-bottom: 1.25rem;
+  text-align: left;
+  color: var(--text-primary);
+  opacity: 0.9;
 }
 
 .chip-grid {
@@ -287,38 +288,76 @@ body {
   box-shadow: var(--shadow-md);
 }
 
-/* Guide Section */
-.guide-section h2 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  text-align: center;
-  color: var(--accent-primary);
+/* Modern Tab Navigation */
+.main-guide-tabs {
+  display: flex;
+  background: rgba(15, 20, 25, 0.8);
+  backdrop-filter: blur(15px);
+  padding: 0.5rem;
+  border-radius: 14px;
+  gap: 0.5rem;
+  margin-bottom: 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Tab Navigation */
+.main-guide-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.main-guide-tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.main-guide-tab-btn.active {
+  background: var(--accent-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.tab-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: -16px 0 2rem 0;
+  opacity: 1;
+  width: 100%;
+}
+
+/* Sub-Tab Navigation */
 .tab-navigation {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
   flex-wrap: wrap;
 }
 
 .tab-btn {
-  background: var(--bg-tertiary);
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 0.6rem 1.25rem;
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  flex: 1;
-  text-align: center;
-  min-width: 120px;
-  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
 }
 
 .tab-btn:hover {
@@ -466,10 +505,11 @@ body {
 }
 
 .program-description-card h3 {
+  font-family: 'Outfit', sans-serif;
   color: var(--accent-primary);
   font-size: 1.5rem;
   margin-bottom: 2rem;
-  text-align: center;
+  text-align: left;
 }
 
 .feature-grid {
@@ -765,29 +805,67 @@ body {
 
 .step-content {
   flex: 1;
+  margin-top: 1rem;
+  background: transparent;
+  overflow: hidden;
 }
 
-.step-content h4 {
+.step-header {
+  padding: 0.4rem 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.6rem;
+  list-style: none;
+}
+
+.step-header::-webkit-details-marker {
+  display: none;
+}
+
+.step-header h4 {
   color: var(--accent-primary);
-  margin-bottom: 0.5rem;
+  margin: 0;
+  font-size: 1.1rem;
+  /* Increased size */
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-.step-content p {
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
+.step-icon-toggle::after {
+  content: '▶';
+  font-size: 0.85rem;
+  color: #ffffff;
+  transition: transform 0.2s ease;
+  display: inline-block;
+  transform: translateY(-5px);
+  /* Nudge up more for larger text */
+}
+
+.step-content[open] .step-icon-toggle::after {
+  transform: rotate(90deg) translateX(-5px);
 }
 
 .step-content ul {
   list-style: none;
-  padding-left: 0;
-  margin-bottom: 1rem;
+  padding: 0.2rem 0 0.8rem 1.3rem;
+  margin: 0;
 }
 
 .step-content li {
   color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-  padding-left: 1.5rem;
+  margin-bottom: 0.15rem;
+  padding: 0.25rem 0 0.25rem 1.1rem;
   position: relative;
+  display: block;
+  line-height: 1.4;
+  font-size: 0.95rem;
+  /* Match update list */
+}
+
+.step-content li strong {
+  font-weight: 500;
 }
 
 .step-content li::before {
@@ -795,6 +873,9 @@ body {
   color: var(--accent-primary);
   position: absolute;
   left: 0;
+  top: 0.3rem;
+  /* Align with first line of text */
+  transform: none;
   font-weight: bold;
 }
 
@@ -1149,10 +1230,10 @@ esp-web-install-button {
 
 /* Footer */
 .footer {
-  padding: 2rem 0;
+  padding: 3rem 0 1rem;
   border-top: 1px solid var(--border-color);
-  background: var(--bg-secondary);
-  margin-top: 2rem;
+  margin-top: 3rem;
+  width: 100%;
 }
 
 .footer-content {
@@ -1225,111 +1306,129 @@ esp-web-install-button {
   animation: fadeIn 0.5s ease-out;
 }
 
-/* Responsive Design */
+/* Responsive Design - Comprehensive Optimization */
 @media (max-width: 1024px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .container,
+  .main-content,
   .content-grid {
-    grid-template-columns: 1fr;
     height: auto;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .content-grid {
+    flex-direction: column;
   }
 
   .left-panel,
   .right-panel {
+    flex: 1 1 auto;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    backdrop-filter: none;
     height: auto;
-    max-height: none;
+    box-shadow: none;
   }
 
-  .trouble-grid {
-    grid-template-columns: 1fr;
+  .logo {
+    padding: 1rem 0 2rem;
+    border-bottom: none;
+    margin-bottom: 0;
   }
 
-  .tab-navigation {
-    flex-direction: column;
+  /* Utility Responsive Fixes */
+  img,
+  .wiring-diagram {
+    max-width: 100% !important;
+    height: auto !important;
   }
 
-  .feature-grid {
-    grid-template-columns: 1fr;
+  table {
+    word-break: break-word !important;
+  }
+
+  td,
+  th {
+    white-space: normal !important;
+  }
+
+  .connection-table {
+    overflow-x: auto !important;
+  }
+
+  .popup-box {
+    width: 95% !important;
+    padding: 1.5rem !important;
   }
 }
 
 @media (max-width: 768px) {
-  .main-content {
-    padding: 1rem;
+  .logo-text h1 {
+    font-size: 1.5rem;
   }
 
-  .logo h1 {
-    font-size: 2rem;
+  .main-guide-tabs {
+    padding: 0.25rem;
+    border-radius: 12px;
   }
 
-  .footer-links {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .footer-content {
-    padding: 0 1rem;
-  }
-
-  .footer-text {
-    padding: 0 1rem;
-  }
-
-  .step-container {
-    flex-direction: column;
-  }
-
-  .step-number {
-    align-self: center;
-  }
-
-  .interface-grid {
-    grid-template-columns: 1fr;
+  .main-guide-tab-btn {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
   }
 
   .tab-navigation {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 
   .tab-btn {
-    width: 100%;
-    min-width: auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
   }
 
-  .chip-type-tabs {
-    flex-wrap: wrap;
+  .update-card,
+  .program-description-card {
+    padding: 1.5rem;
   }
 
-  .feature-item {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .update-notice {
-    flex-direction: column;
-    text-align: center;
+  .update-card h3,
+  .program-description-card h3 {
+    font-size: 1.25rem;
   }
 }
 
 .update-section {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .update-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
   padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .update-card h3 {
+  font-family: 'Outfit', sans-serif;
   color: var(--accent-primary);
   font-size: 1.5rem;
-  margin-bottom: 1rem;
-  text-align: center;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
 
 .update-card ul {
@@ -1398,400 +1497,25 @@ esp-web-install-button {
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
+  background: #0EA5E9;
+  border-radius: 10px;
+  border: 2px solid #05080c;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-primary);
-}
-
-/* Fix image responsiveness in activation tab */
-.image-placeholder img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Popup Warning Overlay */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  padding: 1rem;
-}
-
-.popup-box {
-  background: var(--bg-card);
-  border: 1px solid var(--accent-warning);
-  border-radius: 12px;
-  padding: 2rem;
-  max-width: 420px;
-  width: 100%;
-  text-align: center;
-  box-shadow: var(--shadow-lg);
-  animation: fadeIn 0.3s ease-out;
-  position: relative;
-}
-
-/* Close Button Styling - ĐÂY LÀ PHẦN QUAN TRỌNG */
-.close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2rem;
-  height: 2rem;
-  background: var(--accent-danger);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  z-index: 10000;
-}
-
-.close-btn:hover {
-  background: #dc2626;
-  transform: scale(1.1);
-}
-
-.close-btn:active {
-  transform: scale(0.95);
-}
-
-.popup-box h3 {
-  color: var(--accent-warning);
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-  /* Thêm margin-top để tránh đè lên nút X */
-}
-
-.popup-box p {
-  color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-  font-size: 0.95rem;
-}
-
-/* Custom Checkbox */
-.custom-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  user-select: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  justify-content: flex-start;
-}
-
-.custom-checkbox input {
-  display: none;
-}
-
-.custom-checkbox .checkmark {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--accent-warning);
-  border-radius: 4px;
-  display: inline-block;
-  position: relative;
-  background: var(--bg-card);
-  flex-shrink: 0;
-}
-
-.custom-checkbox input:checked+.checkmark::after {
-  content: "✔";
-  position: absolute;
-  top: -2px;
-  left: 3px;
-  color: var(--accent-warning);
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-.checkbox-label-text {
-  flex: 1;
-  color: var(--text-secondary);
-}
-
-.main-guide-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.main-guide-tab-btn {
-  background: var(--bg-tertiary);
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.main-guide-tab-btn.active {
-  background: var(--accent-primary);
-  color: white;
-}
-
-.main-guide-tab-content {
-  display: none;
-}
-
-.main-guide-tab-content.active {
-  display: block;
-}
-
-/* FW: vẫn 2 nút / hàng, căn hai bên */
-.fw-grid-horizontal {
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
-
-.fw-grid-horizontal .fw-button {
-  flex: 1 1 48%;
-}
-
-/* CHIP: 4 chip / hàng, căn từ trái sang phải */
-.chip-grid-horizontal {
-  display: flex;
-  flex-wrap: wrap;
-  /* Cho phép xuống dòng */
-  gap: 1rem;
-  justify-content: flex-start;
-  /* Xếp sát bên trái */
-  margin-top: 1rem;
-}
-
-.chip-grid-horizontal .chip-button {
-  flex: 0 0 calc(25% - 0.75rem);
-  /* 4 item / hàng */
-  max-width: calc(25% - 0.75rem);
+  background: #0ea5e9;
+  filter: brightness(1.2);
 }
 
 
-.fw-button,
-.chip-button {
-  flex: 1 1 48%;
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.25rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-
-.fw-button::before,
-.chip-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 100%;
-  background: var(--gradient-primary);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.fw-button:hover,
-.chip-button:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-md);
-  color: white;
-}
-
-.fw-button:hover::before,
-.chip-button:hover::before {
-  transform: scaleX(1);
-}
-
-.fw-button.active,
-.chip-button.active {
-  border-color: var(--accent-primary);
-  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(14, 165, 233, 0.1) 100%);
-}
-
-.fw-button.active::before,
-.chip-button.active::before {
-  transform: scaleX(1);
-}
-
-.oled-button {
-  flex: 1 1 48%;
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.25rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-
-.oled-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 100%;
-  background: var(--gradient-primary);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.oled-button:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-md);
-  color: white;
-}
-
-.oled-button:hover::before {
-  transform: scaleX(1);
-}
-
-.oled-button.active {
-  border-color: var(--accent-primary);
-  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(14, 165, 233, 0.1) 100%);
-}
-
-.oled-button.active::before {
-  transform: scaleX(1);
-}
-
-/* Additional styles for firmware checking and not available messages */
-.firmware-checking {
-  background: var(--bg-card);
-  border: 2px solid var(--accent-primary);
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
-  animation: fadeIn 0.5s ease;
-}
-
-.checking-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  animation: spin 2s linear infinite;
-}
-
-.firmware-checking p {
-  color: var(--text-secondary);
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.firmware-not-available {
-  background: var(--bg-card);
-  border: 2px solid var(--accent-warning);
-  border-radius: 12px;
-  padding: 2rem;
-  text-align: center;
-  animation: fadeIn 0.5s ease;
-}
-
-.not-available-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  animation: pulse 2s infinite;
-}
-
-.firmware-not-available h4 {
-  color: var(--accent-warning);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.firmware-not-available p {
-  color: var(--text-secondary);
-  margin-bottom: 0.75rem;
-  line-height: 1.5;
-}
-
-.firmware-not-available p strong {
-  color: var(--accent-primary);
-  font-weight: 600;
-}
-
-.coming-soon {
-  color: var(--accent-success) !important;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-/* Animations */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-}
-
-/* Main guide tabs (MochiNav / Xiaozhi) */
-.main-guide-tab-content {
-  display: none;
-}
-
-.main-guide-tab-content.active {
-  display: block;
-  animation: fadeIn 0.5s ease;
-}
 
 /* === Tab 4 License - Dark theme === */
 .license-scope {
@@ -2123,10 +1847,13 @@ esp-web-install-button {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: 1.25rem 1.25rem 1rem;
+  padding: .9rem 1rem .9rem;
   box-shadow: var(--shadow-lg);
   animation: fadeIn .3s ease;
   position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .close-btn {
@@ -2148,17 +1875,25 @@ esp-web-install-button {
 }
 
 .popup-header h3 {
-  margin: 0 0 .25rem 0;
-  font-size: 1.25rem;
+  margin: 0 0 .15rem 0;
+  font-size: 1.3rem;
   color: var(--accent-primary);
   text-align: center;
 }
 
-.popup-subtitle {
-  margin: 0 0 .75rem 0;
+.popup-header p {
+  margin: 0 0 .5rem 0;
   color: var(--text-secondary);
   text-align: center;
-  font-size: .95rem;
+  font-size: .88rem;
+  line-height: 1.4;
+}
+
+.popup-subtitle {
+  margin: 0 0 .5rem 0;
+  color: var(--text-secondary);
+  text-align: center;
+  font-size: .88rem;
 }
 
 /* Danh sách thông báo */
@@ -2166,57 +1901,80 @@ esp-web-install-button {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: .75rem;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
 .notice-item {
   display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: .75rem;
+  grid-template-columns: 1.4rem 1fr;
+  column-gap: .35rem;
   align-items: start;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: .9rem;
+  padding: .65rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: none;
 }
 
-.notice-item:hover {
-  border-color: var(--accent-primary);
+.notice-item:last-child {
+  border-bottom: none;
+}
+
+.notice-item:hover .notice-title {
+  color: var(--accent-primary);
 }
 
 .notice-icon {
-  display: grid;
-  place-items: center;
-  font-size: 1.25rem;
+  font-size: .95rem;
+  line-height: 1.4;
+  padding-top: .05rem;
+}
+
+.notice-content {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
 }
 
 .notice-title {
   font-weight: 700;
-  margin-bottom: .2rem;
   color: var(--text-primary);
+  font-size: .88rem;
+  line-height: 1.4;
+  text-align: left;
+  transition: color .2s;
 }
 
 .notice-desc {
   color: var(--text-secondary);
-  font-size: .95rem;
-  line-height: 1.5;
+  font-size: .88rem;
+  line-height: 1.45;
+  text-align: left;
 }
 
-.notice-important {
-  border-color: var(--accent-warning);
-  background: rgba(245, 158, 11, 0.08);
+.notice-important .notice-title {
+  color: var(--accent-warning);
 }
 
 /* Nút hành động */
 .popup-actions {
-  margin-top: 1rem;
+  margin-top: .6rem;
   display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
+  gap: .75rem;
 }
 
 .popup-actions .btn {
-  min-width: 180px;
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: .5rem 1rem;
+  font-size: .88rem;
 }
 
 /* Mobile */
@@ -2343,236 +2101,7 @@ esp-web-install-button {
   color: #ff6b6b;
 }
 
-/* ============================
-   FIX RESPONSIVE MOBILE
-   ============================ */
-@media (max-width: 768px) {
 
-  /* Cho phép trang tự cao theo nội dung, không khóa height */
-  .content-grid {
-    grid-template-columns: 1fr !important;
-    height: auto !important;
-  }
-
-  /* Panel full width, không tràn */
-  .left-panel,
-  .right-panel {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-  }
-
-  /* Giảm padding để tránh tràn */
-  .main-content {
-    padding: 1rem !important;
-  }
-
-  /* Fix nút TAB — không bị đẩy quá rộng */
-  .tab-navigation {
-    flex-wrap: wrap;
-  }
-
-  .tab-btn {
-    flex: unset !important;
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  /* Ảnh tự co */
-  img,
-  .wiring-diagram {
-    max-width: 100% !important;
-    height: auto !important;
-  }
-
-  /* Các bảng cho phép xuống dòng */
-  table {
-    word-break: break-word !important;
-  }
-
-  td,
-  th {
-    white-space: normal !important;
-  }
-
-  /* Fix overflow ở connection table */
-  .connection-table {
-    overflow-x: auto !important;
-  }
-
-  /* Fix popup */
-  .popup-box {
-    width: 95% !important;
-  }
-}
-
-/* FIX Main Tab MochiNav / Xiaozhi trên mobile */
-@media (max-width: 768px) {
-  .main-guide-tabs {
-    flex-wrap: wrap;
-    /* Cho nút tự xuống dòng */
-    justify-content: center;
-    /* Căn giữa cho đẹp */
-    gap: 0.5rem;
-    /* Giảm khoảng cách lại */
-  }
-
-  .main-guide-tab-btn {
-    flex: 1 1 100%;
-    /* Mỗi nút chiếm full 1 hàng */
-    width: 100%;
-    text-align: center;
-    font-size: 0.9rem;
-    /* Chữ nhỏ lại chút cho đỡ tràn */
-    padding: 0.6rem 0.75rem;
-    white-space: normal;
-    /* Cho text xuống dòng, không bị kéo dài 1 hàng */
-  }
-}
-
-/* Fix popup buttons trên mobile */
-@media (max-width: 480px) {
-  .popup-actions {
-    flex-direction: column;
-    /* Xếp nút theo cột */
-    align-items: stretch;
-    /* Kéo full chiều ngang */
-  }
-
-  .popup-actions .btn {
-    min-width: 0;
-    /* Bỏ giới hạn 180px */
-    width: 100%;
-    /* Full chiều rộng popup */
-    box-sizing: border-box;
-    margin: 0.25rem 0 !important;
-    /* Ghi đè margin inline 10px */
-    text-align: center;
-  }
-}
-
-/* === Tối ưu popup FB/Zalo trên mobile === */
-@media (max-width: 480px) {
-
-  /* Khung popup nhỏ hơn, không full ngang */
-  #fbJoinPopup .popup-box {
-    max-width: 320px;
-    /* nhỏ hơn 420px hiện tại */
-    width: 90%;
-    /* chừa 2 bên một chút */
-    padding: 1rem 0.9rem 0.9rem;
-  }
-
-  /* Tiêu đề & đoạn mô tả nhỏ lại */
-  #fbJoinPopup .popup-header h3 {
-    font-size: 1.05rem;
-  }
-
-  #fbJoinPopup .popup-header p {
-    font-size: 0.85rem;
-    line-height: 1.4;
-  }
-
-  /* Nút hành động xếp dọc, full chiều ngang popup */
-  #fbJoinPopup .popup-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  #fbJoinPopup .popup-actions .btn {
-    width: 100%;
-    min-width: 0;
-    margin: 0;
-    /* bỏ margin inline 10px nếu còn */
-    padding: 0.6rem 0.75rem;
-    box-sizing: border-box;
-  }
-
-  /* Thu gọn card notice bên trong */
-  #fbJoinPopup .notice-item {
-    grid-template-columns: 28px 1fr;
-    padding: 0.7rem;
-    gap: 0.5rem;
-  }
-
-  #fbJoinPopup .notice-icon {
-    font-size: 1.1rem;
-  }
-
-  #fbJoinPopup .notice-title {
-    font-size: 0.9rem;
-    margin-bottom: 0.15rem;
-  }
-
-  #fbJoinPopup .notice-desc {
-    font-size: 0.85rem;
-    line-height: 1.4;
-  }
-}
-
-/* Khi body bị khóa thì không cho scroll */
-body.no-scroll {
-  overflow: hidden !important;
-  height: 100vh;
-  touch-action: none;
-}
-
-/* Khoảng cách 2 nút trong popup trên màn hình lớn */
-.popup-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  /* khoảng cách giữa 2 nút */
-  margin-top: 1rem;
-}
-
-/* Bỏ mọi margin inline còn sót lại của nút */
-.popup-actions .btn {
-  margin: 0;
-}
-
-/* Thu nhỏ header chung cho cả PC và mobile */
-.header {
-  padding: 1.1rem 0 !important;
-  /* từ 2rem xuống còn khoảng 1/2 */
-}
-
-/* Thu nhỏ logo + chữ */
-.logo img {
-  width: 80px !important;
-  /* từ 120px xuống 80px */
-  height: auto;
-}
-
-.logo-text h1 {
-  font-size: 2rem !important;
-  /* từ 2.5rem xuống 2rem */
-}
-
-.logo-text .tagline {
-  font-size: 0.85rem !important;
-  /* nhỏ hơn 1 chút */
-}
-
-/* Nếu muốn mobile nhỏ thêm một xíu nữa */
-@media (max-width: 768px) {
-  .header {
-    padding: 0.8rem 0 !important;
-  }
-
-  .logo img {
-    width: 70px !important;
-  }
-
-  .logo-text h1 {
-    font-size: 1.6rem !important;
-  }
-
-  .logo-text .tagline {
-    font-size: 0.8rem !important;
-  }
-}
 
 /* Bố cục nút chip: ảnh trên, tên dưới */
 .chip-button {
