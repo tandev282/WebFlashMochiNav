@@ -808,7 +808,8 @@
                                                         style="margin-top: 25px; text-align: center;">
                                                         <h4>🛒 Mua Key Ngay</h4>
                                                         <p class="muted">Liên hệ qua Zalo để được hỗ trợ mua key và tư
-                                                            vấn:</p>
+                                                            vấn <br> Sử dụng điện thoại nhấn Mua Key để được điều hướng
+                                                            tới Zalo</p>
                                                         <div style="margin-top: 15px;">
                                                             <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih"
                                                                 class="btn btn-primary" target="_blank"
@@ -843,64 +844,66 @@
 
                                         <!-- Sub-sub-tab: Kích hoạt -->
                                         <div class="tab-pane" id="xz-bt-license">
-                                            <div class="license-card">
-                                                <div class="license-header">
-                                                    <div class="mac-info">
-                                                        <div id="title" class="mac-title">MAC: Chưa kết nối</div>
-                                                        <span class="badge muted statusBadge" id="statusBadge"
-                                                            style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;">Chưa
-                                                            KÍCH HOẠT</span>
+                                            <div class="update-card">
+                                                <div class="license-card">
+                                                    <div class="license-header">
+                                                        <div class="mac-info">
+                                                            <div id="title" class="mac-title">MAC: Chưa kết nối</div>
+                                                            <span class="badge muted statusBadge" id="statusBadge"
+                                                                style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Chưa
+                                                                KÍCH HOẠT</span>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="stepper">
-                                                    <div class="step-item active">
-                                                        <div class="step-num">1</div>
-                                                        <div class="step-label">Nạp FW</div>
+                                                    <div class="stepper">
+                                                        <div class="step-item active">
+                                                            <div class="step-num">1</div>
+                                                            <div class="step-label">Nạp FW</div>
+                                                        </div>
+                                                        <div class="step-item">
+                                                            <div class="step-num">2</div>
+                                                            <div class="step-label">Kết nối</div>
+                                                        </div>
+                                                        <div class="step-item">
+                                                            <div class="step-num">3</div>
+                                                            <div class="step-label">Lấy MAC</div>
+                                                        </div>
+                                                        <div class="step-item">
+                                                            <div class="step-num">4</div>
+                                                            <div class="step-label">Nhập Key</div>
+                                                        </div>
+                                                        <div class="step-item">
+                                                            <div class="step-num">5</div>
+                                                            <div class="step-label">Kích hoạt</div>
+                                                        </div>
                                                     </div>
-                                                    <div class="step-item">
-                                                        <div class="step-num">2</div>
-                                                        <div class="step-label">Kết nối</div>
-                                                    </div>
-                                                    <div class="step-item">
-                                                        <div class="step-num">3</div>
-                                                        <div class="step-label">Lấy MAC</div>
-                                                    </div>
-                                                    <div class="step-item">
-                                                        <div class="step-num">4</div>
-                                                        <div class="step-label">Nhập Key</div>
-                                                    </div>
-                                                    <div class="step-item">
-                                                        <div class="step-num">5</div>
-                                                        <div class="step-label">Kích hoạt</div>
-                                                    </div>
-                                                </div>
 
-                                                <div class="activation-form">
-                                                    <div class="form-group">
-                                                        <button id="btnConnect"
-                                                            class="btnConnect btn-premium btn-primary-p"
-                                                            style="flex: 2;">⚡ Kết nối ESP32</button>
-                                                        <button id="btnGetDid"
-                                                            class="btnGetDid btn-premium btn-secondary-p"
-                                                            style="flex: 1;" disabled>🔍 Lấy MAC</button>
-                                                        <button id="btnReboot"
-                                                            class="btnReboot btn-premium btn-secondary-p"
-                                                            style="flex: 1;" disabled>🔄 Reboot</button>
+                                                    <div class="activation-form">
+                                                        <div class="form-group">
+                                                            <button id="btnConnect"
+                                                                class="btnConnect btn-premium btn-primary-p"
+                                                                style="flex: 2;">⚡ Kết nối ESP32</button>
+                                                            <button id="btnGetDid"
+                                                                class="btnGetDid btn-premium btn-secondary-p"
+                                                                style="flex: 1;" disabled>🔍 Lấy MAC</button>
+                                                            <button id="btnReboot"
+                                                                class="btnReboot btn-premium btn-secondary-p"
+                                                                style="flex: 1;" disabled>🔄 Reboot</button>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="inpKey" class="inpKey input-premium"
+                                                                placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button id="btnActivate"
+                                                                class="btnActivate btn-premium btn-primary-p"
+                                                                style="flex: 1;" disabled>🚀 Kích hoạt ngay</button>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <input id="inpKey" class="inpKey input-premium"
-                                                            placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button id="btnActivate"
-                                                            class="btnActivate btn-premium btn-primary-p"
-                                                            style="flex: 1;" disabled>🚀 Kích hoạt ngay</button>
-                                                    </div>
-                                                </div>
 
-                                                <div class="log-container" style="margin-top: 25px;">
-                                                    <div id="log" class="log-window"></div>
+                                                    <div class="log-container" style="margin-top: 25px;">
+                                                        <div id="log" class="log-window"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1334,7 +1337,9 @@
 
                                             <div class="purchase-section">
                                                 <h4>🛒 Mua Key Ngay</h4>
-                                                <p>Liên hệ qua Zalo để được hỗ trợ mua key và tư vấn:</p>
+                                                <p class="muted">Liên hệ qua Zalo để được hỗ trợ mua key và tư
+                                                    vấn <br> Sử dụng điện thoại nhấn Mua Key để được điều hướng tới Zalo
+                                                </p>
                                                 <div class="centered-button">
                                                     <a href="http://zaloapp.com/qr/p/19gqc9ythn3ih"
                                                         class="btn btn-primary" target="_blank">
@@ -1514,60 +1519,63 @@
 
                                 <!-- Tab: Kích hoạt (MochiNav) -->
                                 <div class="tab-pane" id="tab-license">
-                                    <div class="license-card">
-                                        <div class="license-header">
-                                            <div class="mac-info">
-                                                <div class="mac-title">MAC: Chưa kết nối</div>
-                                                <span class="badge muted statusBadge"
-                                                    style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;">Chưa
-                                                    KÍCH HOẠT</span>
+                                    <div class="update-card">
+                                        <div class="license-card">
+                                            <div class="license-header">
+                                                <div class="mac-info">
+                                                    <div class="mac-title">MAC: Chưa kết nối</div>
+                                                    <span class="badge muted statusBadge"
+                                                        style="padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Chưa
+                                                        KÍCH HOẠT</span>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="stepper">
-                                            <div class="step-item active">
-                                                <div class="step-num">1</div>
-                                                <div class="step-label">Nạp FW</div>
+                                            <div class="stepper">
+                                                <div class="step-item active">
+                                                    <div class="step-num">1</div>
+                                                    <div class="step-label">Nạp FW</div>
+                                                </div>
+                                                <div class="step-item">
+                                                    <div class="step-num">2</div>
+                                                    <div class="step-label">Kết nối</div>
+                                                </div>
+                                                <div class="step-item">
+                                                    <div class="step-num">3</div>
+                                                    <div class="step-label">Lấy MAC</div>
+                                                </div>
+                                                <div class="step-item">
+                                                    <div class="step-num">4</div>
+                                                    <div class="step-label">Nhập Key</div>
+                                                </div>
+                                                <div class="step-item">
+                                                    <div class="step-num">5</div>
+                                                    <div class="step-label">Kích hoạt</div>
+                                                </div>
                                             </div>
-                                            <div class="step-item">
-                                                <div class="step-num">2</div>
-                                                <div class="step-label">Kết nối</div>
-                                            </div>
-                                            <div class="step-item">
-                                                <div class="step-num">3</div>
-                                                <div class="step-label">Lấy MAC</div>
-                                            </div>
-                                            <div class="step-item">
-                                                <div class="step-num">4</div>
-                                                <div class="step-label">Nhập Key</div>
-                                            </div>
-                                            <div class="step-item">
-                                                <div class="step-num">5</div>
-                                                <div class="step-label">Kích hoạt</div>
-                                            </div>
-                                        </div>
 
-                                        <div class="activation-form">
-                                            <div class="form-group">
-                                                <button class="btnConnect btn-premium btn-primary-p" style="flex: 2;">⚡
-                                                    Kết nối ESP32</button>
-                                                <button class="btnGetDid btn-premium btn-secondary-p" style="flex: 1;"
-                                                    disabled>🔍 Lấy MAC</button>
-                                                <button class="btnReboot btn-premium btn-secondary-p" style="flex: 1;"
-                                                    disabled>🔄 Reboot</button>
+                                            <div class="activation-form">
+                                                <div class="form-group">
+                                                    <button class="btnConnect btn-premium btn-primary-p"
+                                                        style="flex: 2;">⚡
+                                                        Kết nối ESP32</button>
+                                                    <button class="btnGetDid btn-premium btn-secondary-p"
+                                                        style="flex: 1;" disabled>🔍 Lấy MAC</button>
+                                                    <button class="btnReboot btn-premium btn-secondary-p"
+                                                        style="flex: 1;" disabled>🔄 Reboot</button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input class="inpKey input-premium"
+                                                        placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
+                                                </div>
+                                                <div class="form-group">
+                                                    <button class="btnActivate btn-premium btn-primary-p"
+                                                        style="flex: 1;" disabled>🚀 Kích hoạt ngay</button>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <input class="inpKey input-premium"
-                                                    placeholder="Nhập mã kích hoạt (KEY)" style="flex: 1;">
-                                            </div>
-                                            <div class="form-group">
-                                                <button class="btnActivate btn-premium btn-primary-p" style="flex: 1;"
-                                                    disabled>🚀 Kích hoạt ngay</button>
-                                            </div>
-                                        </div>
 
-                                        <div class="log-container" style="margin-top: 25px;">
-                                            <div class="log-window"></div>
+                                            <div class="log-container" style="margin-top: 25px;">
+                                                <div class="log-window"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

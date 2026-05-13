@@ -1,0 +1,16 @@
+{
+  "name": "Xiaozhi ESP32 Bluetooth",
+  "version": "1.0.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        {
+          "path": "xiaozhi_esp32_bluetooth.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

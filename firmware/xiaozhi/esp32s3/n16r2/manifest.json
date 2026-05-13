@@ -1,7 +1,7 @@
 {
   "name": "Xiaozhi 2.2.6 - ESP32-S3 N16R2",
   "version": "2.2.6",
-  "new_install_prompt_erase": false,
+  "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32-S3",

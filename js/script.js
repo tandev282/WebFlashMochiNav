@@ -27,7 +27,7 @@ const chipOptions = {
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
     { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
-    { chip: "esp32_bt", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
+    { chip: "esp32", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
 };
@@ -37,7 +37,7 @@ const chipOptions = {
 const XIAOZHI_CHIP_MAP = {
   esp32s3: { dir: "esp32s3", filePrefix: "xiaozhi_esp32s3" },
   esp32s3_n4r2: { dir: "esp32s3n4r2", filePrefix: "xiaozhi_esp32s3n4r2" },
-  esp32_bt: { dir: "esp32bt", filePrefix: "xiaozhi_esp32bt" }, // NEW
+  esp32: { dir: "esp32", filePrefix: "xiaozhi_esp32" }, // NEW
   custom: { dir: "custom", filePrefix: "xiaozhi_custom" }, // NEW
 };
 
@@ -53,8 +53,8 @@ const CHIP_OPTIONS_MAP = {
   esp32s3_n4r2: [
     { value: "n4r2", label: "N4R2" }
   ],
-  esp32_bt: [
-    { value: "bt", label: "ESP32 WROOM" },
+  esp32: [
+    { value: "bluetooth", label: "ESP32 WROOM" },
   ],
   custom: [
     { value: "custom", label: "Nhắn tin để build riêng (có phí)" }
@@ -629,43 +629,48 @@ function showError(message) {
 }
 
 function showNotification(message, type = "info") {
-  const notification = document.createElement("div")
-  notification.className = `notification notification-${type}`
-  notification.textContent = message
+  // Xóa thông báo cũ nếu đang hiển thị
+  const existing = document.querySelector(".notification-overlay");
+  if (existing) existing.remove();
 
-  const colors = {
-    info: "#0ea5e9",
-    success: "#22c55e",
-    warning: "#f59e0b",
-    error: "#ef4444",
-  }
+  const overlay = document.createElement("div");
+  overlay.className = "notification-overlay";
 
-  Object.assign(notification.style, {
-    position: "fixed",
-    top: "20px",
-    right: "20px",
-    padding: "1rem 1.5rem",
-    borderRadius: "8px",
-    color: "white",
-    fontWeight: "600",
-    zIndex: "1000",
-    backgroundColor: colors[type] || colors.info,
-    transform: "translateX(100%)",
-    transition: "transform 0.3s ease",
-  })
+  const modal = document.createElement("div");
+  modal.className = "notification-modal";
 
-  document.body.appendChild(notification)
+  const iconCircle = document.createElement("div");
+  iconCircle.className = `notification-icon-circle ${type}`;
 
-  setTimeout(() => (notification.style.transform = "translateX(0)"), 100)
+  let icon = "ℹ️";
+  if (type === "success") icon = "✓";
+  else if (type === "error") icon = "✕";
+  else if (type === "warning") icon = "!";
 
-  setTimeout(() => {
-    notification.style.transform = "translateX(100%)"
+  iconCircle.innerHTML = `<span class="icon">${icon}</span>`;
+
+  const msgEl = document.createElement("div");
+  msgEl.className = "notification-message";
+  msgEl.textContent = message;
+
+  modal.appendChild(iconCircle);
+  modal.appendChild(msgEl);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  const close = () => {
+    overlay.style.opacity = "0";
+    modal.style.transform = "scale(0.8)";
     setTimeout(() => {
-      if (document.body.contains(notification)) {
-        document.body.removeChild(notification)
-      }
-    }, 300)
-  }, 3000)
+      if (document.body.contains(overlay)) overlay.remove();
+    }, 300);
+  };
+
+  // Đóng khi click vào lớp phủ
+  overlay.onclick = close;
+
+  // Tự động đóng sau 3 giây
+  setTimeout(close, 3000);
 }
 
 // Popup management
@@ -717,6 +722,7 @@ const WORKER_URL = "https://license-signer.tandev.workers.dev/sign";
 let port, reader, writer;
 let currentMac = ""; // Lưu MAC đã đọc để dùng khi ký
 let stepErrors = [false, false, false, false, false]; // Theo dõi lỗi từng bước [0,1,2,3,4]
+let lastSuccessNotify = 0; // Tránh spam thông báo thành công
 
 // --- tiện ích UI ---
 const $ = s => document.querySelector(s);
@@ -724,6 +730,32 @@ const $$ = s => document.querySelectorAll(s);
 const escapeHtml = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const log = (m, status = "info") => {
+  // 1. Ẩn các log kỹ thuật theo yêu cầu
+  if (m.includes("Payload:") || m.includes(">> LIC:")) {
+    return;
+  }
+
+  // 2. Popup thông báo cho các trường hợp đặc biệt
+  if (m.includes("STATUS: UNSIGNED (no-license)")) {
+    showNotification("Thiết bị chưa được kích hoạt", "warning");
+  } else if (m.includes("Sign lỗi: invalid key")) {
+    showNotification("Key không hợp lệ", "error");
+  } else if (m.includes("Sign lỗi: device is blocked")) {
+    showNotification("Thiết bị đã bị block do spam, liên hệ admin để mở block", "error");
+  } else if (m.includes("Sign lỗi: key already used by another device")) {
+    showNotification("Key đã kích hoạt trên thiết bị khác", "error");
+  } else if (m.includes("Lỗi Server/Mạng: Failed to fetch")) {
+    showNotification("Lỗi kết nối Server. Vui lòng thử lại", "error");
+  } else if (m.includes("Lỗi kết nối: Failed to execute 'open' on 'SerialPort': The port is already open.")) {
+    showNotification("Cổng COM đang được sử dụng. Vui lòng ngắt kết nối và thử lại", "error");
+  } else if (m.includes("<< [OK]") || m.includes("<< SIGNED") || m.includes("ESP32 xác nhận license.")) {
+    const now = Date.now();
+    if (now - lastSuccessNotify > 3000) {
+      showNotification("Kích hoạt thành công", "success");
+      lastSuccessNotify = now;
+    }
+  }
+
   const logs = $$(".log-window");
   if (!logs.length) return;
 
