@@ -1,0 +1,16 @@
+{
+  "name": "XiaoZhi OSTB-3ST 2.2.6 - ESP32-S3",
+  "version": "2.2.6",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        {
+          "path": "xiaozhi_ostb_3st.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

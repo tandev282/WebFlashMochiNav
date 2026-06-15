@@ -27,6 +27,7 @@ const chipOptions = {
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
     { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
+    { chip: "ostb_3st", label: "OSTB-3ST", img: "/img/chips/ostb_3st.png" },
     { chip: "esp32", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
@@ -37,6 +38,7 @@ const chipOptions = {
 const XIAOZHI_CHIP_MAP = {
   esp32s3: { dir: "esp32s3", filePrefix: "xiaozhi_esp32s3" },
   esp32s3_n4r2: { dir: "esp32s3n4r2", filePrefix: "xiaozhi_esp32s3n4r2" },
+  ostb_3st: { dir: "ostb_3st", filePrefix: "xiaozhi_ostb_3st" },
   esp32: { dir: "esp32", filePrefix: "xiaozhi_esp32" }, // NEW
   custom: { dir: "custom", filePrefix: "xiaozhi_custom" }, // NEW
 };
@@ -52,6 +54,9 @@ const CHIP_OPTIONS_MAP = {
   ],
   esp32s3_n4r2: [
     { value: "n4r2", label: "N4R2" }
+  ],
+  ostb_3st: [
+    { value: "ostb_3st", label: "OSTB-3ST" }
   ],
   esp32: [
     { value: "bluetooth", label: "ESP32 WROOM" },
@@ -89,10 +94,15 @@ function generateFirmwarePath(fw, chip, option = null) {
     const map = XIAOZHI_CHIP_MAP[chip];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chip}`);
 
-    // Tên file theo chip cụ thể
-    binaryFileName = `${map.filePrefix}_${option}.bin`;
-    // Đường dẫn có ngôn ngữ + thư mục chip riêng
-    folderPath = `/firmware/${fw}/${map.dir}/${option}`;
+    if (chip === "ostb_3st") {
+      binaryFileName = `${map.filePrefix}.bin`;
+      folderPath = `/firmware/${fw}/${map.dir}`;
+    } else {
+      // Tên file theo chip cụ thể
+      binaryFileName = `${map.filePrefix}_${option}.bin`;
+      // Đường dẫn có ngôn ngữ + thư mục chip riêng
+      folderPath = `/firmware/${fw}/${map.dir}/${option}`;
+    }
   }
 
   return {
@@ -278,7 +288,12 @@ function setupEspWebToolsWithManifest(chipType) {
   } else if (selectedFw === "xiaozhi") {
     const map = XIAOZHI_CHIP_MAP[chipType];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chipType}`);
-    manifestPath = `/firmware/${selectedFw}/${map.dir}/${selectedOption}/manifest.json`;
+    
+    if (chipType === "ostb_3st") {
+      manifestPath = `/firmware/${selectedFw}/${map.dir}/manifest.json`;
+    } else {
+      manifestPath = `/firmware/${selectedFw}/${map.dir}/${selectedOption}/manifest.json`;
+    }
   }
 
   // Reset container với nút Kết nối + nút Tải FW
