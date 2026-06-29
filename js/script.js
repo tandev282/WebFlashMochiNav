@@ -27,7 +27,7 @@ const chipOptions = {
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
     { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
-    { chip: "ostb_3st", label: "OSTB-3ST", img: "/img/chips/ostb_3st.png" },
+    // { chip: "ostb_3st", label: "OSTB-3ST", img: "/img/chips/ostb_3st.png" },
     { chip: "esp32", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
