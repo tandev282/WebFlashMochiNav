@@ -312,6 +312,13 @@
                 </div>
             </li>
             <li class="notice-item">
+                <div class="notice-icon" aria-hidden="true">🎮</div>
+                <div class="notice-content">
+                    <div class="notice-title">Đã thêm firmware Retro-Go</div>
+                    <div class="notice-desc">Bạn có thể chọn Retro-Go để nạp firmware ESP32-S3 Retro-Go và xem phần giới thiệu, sơ đồ trong tab hướng dẫn.</div>
+                </div>
+            </li>
+            <li class="notice-item">
                 <div class="notice-icon" aria-hidden="true">⚠️</div>
                 <div class="notice-content">
                     <div class="notice-title">Lưu ý v2.2.6</div>
@@ -354,6 +361,7 @@
                         <div class="fw-grid-horizontal">
                             <button class="fw-button" data-fw="mochi_nav">MochiNav - No ChatBot (Có phí)</button>
                             <button class="fw-button" data-fw="xiaozhi">ChatBot AI (Miễn phí)</button>
+                            <button class="fw-button" data-fw="retro_go">Retro-Go</button>
                         </div>
                     </section>
                     <!-- Chip Selection after FW -->
@@ -414,6 +422,7 @@
                         <div class="main-guide-tabs">
                             <button class="main-guide-tab-btn active" data-main-tab="xiaozhi-tab">ChatBot AI (Miễn
                                 Phí)</button>
+                            <button class="main-guide-tab-btn" data-main-tab="retrogo-tab">Retro-Go</button>
                             <button class="main-guide-tab-btn" data-main-tab="mochinav-tab">MochiNav (Có
                                 Phí) - No ChatBot</button>
                             <button class="main-guide-tab-btn" data-main-tab="update-tab">Khách Hàng Update Tại
@@ -875,6 +884,160 @@
                                     </div>
                                 </div>
 
+                            </div>
+                        </div>
+
+                        <!-- Tab Content for Retro-Go -->
+                        <div class="main-guide-tab-content" id="retrogo-tab">
+                            <!-- Tab Navigation -->
+                            <div class="tab-navigation">
+                                <button class="tab-btn active" data-tab="retrogo-intro">Giới thiệu</button>
+                                <button class="tab-btn" data-tab="retrogo-wiring">Sơ đồ</button>
+                            </div>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content">
+                                <!-- retrogo-intro: Giới thiệu -->
+                                <div class="tab-pane active" id="retrogo-intro">
+                                    <div class="update-section">
+                                        <div class="update-card">
+                                            <h3>Retro-Go - ESP32-S3</h3>
+                                            <img src="/img/chips/esp32s3_retrogo.png" alt="ESP32-S3 Retro-Go"
+                                                class="update-image"
+                                                style="display:block;margin:16px auto;max-width:260px;width:100%;height:auto;">
+                                            <p>Retro-Go là firmware chơi game retro dành cho thiết bị ESP32-S3 Retro-Go,
+                                                sử dụng màn hình, nút điều khiển và loa tích hợp trên board.</p>
+                                            <br>
+                                            <ul>
+                                                <li><strong>Thiết bị hỗ trợ:</strong> ESP32-S3 Retro-Go</li>
+                                                <li><strong>Firmware:</strong> esp32s3-retro-go.img</li>
+                                                <li><strong>Thư mục firmware:</strong> firmware/retro-go</li>
+                                                <li><strong>Ghi chú:</strong> Khi nạp firmware, hãy chọn đúng thiết bị
+                                                    Retro-Go trong mục cài đặt.</li>
+                                            </ul>
+                                            <br>
+                                            <div class="connection-table" style="max-width: 860px; margin: 0 auto;">
+                                                <h5>Chương trình hỗ trợ</h5>
+                                                <table style="font-size: 0.9rem;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Chương trình</th>
+                                                            <th>Mục</th>
+                                                            <th>Định dạng file</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Nintendo Entertainment System</td>
+                                                            <td>nes</td>
+                                                            <td>nes, fc, fds, nsf, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Super Nintendo</td>
+                                                            <td>snes</td>
+                                                            <td>smc, sfc, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Nintendo Gameboy</td>
+                                                            <td>gb</td>
+                                                            <td>gb, gbc, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Nintendo Gameboy Color</td>
+                                                            <td>gbc</td>
+                                                            <td>gbc, gb, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Nintendo Gameboy Advance</td>
+                                                            <td>gba</td>
+                                                            <td>gba, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Nintendo Game &amp; Watch</td>
+                                                            <td>gw</td>
+                                                            <td>gw</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Sega Master System</td>
+                                                            <td>sms</td>
+                                                            <td>sms, sg, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Sega Game Gear</td>
+                                                            <td>gg</td>
+                                                            <td>gg, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Sega Mega Drive</td>
+                                                            <td>md</td>
+                                                            <td>md, gen, bin, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Coleco ColecoVision</td>
+                                                            <td>col</td>
+                                                            <td>col, rom, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>NEC PC Engine</td>
+                                                            <td>pce</td>
+                                                            <td>pce, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Atari Lynx</td>
+                                                            <td>lnx</td>
+                                                            <td>lnx, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>DOOM</td>
+                                                            <td>doom</td>
+                                                            <td>wad, zip</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>MSX</td>
+                                                            <td>msx</td>
+                                                            <td>rom, mx1, mx2, dsk</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>YouTube</td>
+                                                            <td>youtube</td>
+                                                            <td>mp3, m3u</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Video Player</td>
+                                                            <td>video</td>
+                                                            <td>mp4</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Xiaozhi</td>
+                                                            <td>xiaozhi</td>
+                                                            <td>bin</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- retrogo-wiring: Sơ đồ -->
+                                <div class="tab-pane" id="retrogo-wiring">
+                                    <div class="wiring-section">
+                                        <div class="wiring-card">
+                                            <h3>Sơ Đồ ESP32-S3 Retro-Go</h3>
+                                            <div class="diagram-container">
+                                                <img src="/img/esp32s3-retro-go.png" alt="Sơ đồ ESP32-S3 Retro-Go"
+                                                    class="wiring-diagram">
+                                            </div>
+                                            <div class="important-notes">
+                                                <h4>⚠️ Ghi chú</h4>
+                                                <ul>
+                                                    <li>Kiểm tra đúng chiều cắm và nguồn cấp trước khi nạp firmware.</li>
+                                                    <li>Sử dụng đúng file firmware Retro-Go cho ESP32-S3 Retro-Go.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

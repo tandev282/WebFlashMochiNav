@@ -24,6 +24,9 @@ const chipOptions = {
   mochi_nav: [
     { chip: "esp32c3", label: "ESP32-C3", img: "/img/chips/esp32c3.png" },
   ],
+  retro_go: [
+    { chip: "esp32s3", label: "ESP32-S3 Retro-Go", img: "/img/chips/esp32s3_retrogo.png" },
+  ],
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
     { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
@@ -90,6 +93,9 @@ function generateFirmwarePath(fw, chip, option = null) {
     // MochiNav: mochi_nav_esp32.bin, mochi_nav_esp32c3.bin
     binaryFileName = `mochi_nav_${chip}.bin`
     folderPath = `/firmware/${fw}/${chip}`
+  } else if (fw === "retro_go") {
+    binaryFileName = "esp32s3-retro-go.img"
+    folderPath = "/firmware/retro-go"
   } else if (fw === "xiaozhi") {
     const map = XIAOZHI_CHIP_MAP[chip];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chip}`);
@@ -137,7 +143,9 @@ async function checkFirmwareExists(fw, chip, option = null) {
 
 async function updateFlashButtonVisibility() {
   const shouldShow =
-    (selectedFw === "mochi_nav" && selectedChip) || (selectedFw === "xiaozhi" && selectedChip && selectedOption)
+    (selectedFw === "mochi_nav" && selectedChip) ||
+    (selectedFw === "retro_go" && selectedChip) ||
+    (selectedFw === "xiaozhi" && selectedChip && selectedOption)
 
   if (!shouldShow) {
     flashSection.style.display = "none"
@@ -175,7 +183,7 @@ function showFirmwareNotAvailableMessage() {
   const espWebToolsContainer = document.getElementById("espWebToolsContainer")
 
   // Create firmware name for display
-  const firmwareName = selectedFw === "mochi_nav" ? "MochiNav" : "Xiaozhi"
+  const firmwareName = selectedFw === "mochi_nav" ? "MochiNav" : selectedFw === "retro_go" ? "Retro-Go" : "Xiaozhi"
   const chipName = selectedChip.toUpperCase().replace("_", "-")
   const optionInfo = selectedOption ? ` với tùy chọn ${selectedOption}` : ""
   const { binaryFileName, folderPath } = generateFirmwarePath(selectedFw, selectedChip, selectedOption)
@@ -189,7 +197,7 @@ function showFirmwareNotAvailableMessage() {
   `
 }
 
-// === DOWNLOAD FW: dùng manifest; fallback file .bin cùng folder ===
+// === DOWNLOAD FW: dùng manifest; fallback file firmware cùng folder ===
 async function downloadSelectedFirmware(manifestPath, chipType) {
   // Resolve URL tuyệt đối từ manifestPath (dù bạn dùng đường dẫn tương đối)
   const manifestUrl = new URL(manifestPath, document.baseURI).href;
@@ -258,7 +266,7 @@ async function downloadSelectedFirmware(manifestPath, chipType) {
     }
 
     // 3) Fallback: thử những tên file phổ biến trong cùng thư mục manifest
-    const guesses = ["xiaozhi.bin", "firmware.bin", "application.bin", "app.bin", "factory.bin"];
+    const guesses = ["xiaozhi.bin", "firmware.bin", "application.bin", "app.bin", "factory.bin", "esp32s3-retro-go.img"];
     for (const name of guesses) {
       const url = sameDir(name);
       // Có thể bỏ exists() để click luôn; nhưng check trước cho sạch
@@ -273,7 +281,7 @@ async function downloadSelectedFirmware(manifestPath, chipType) {
       }
     }
 
-    throw new Error("Không tìm thấy file .bin cạnh manifest.");
+    throw new Error("Không tìm thấy file firmware cạnh manifest.");
   } catch (err) {
     console.error("[FW] Download failed:", err);
     alert("Không thể tải FW từ manifest.\n" + err.message);
@@ -285,6 +293,8 @@ function setupEspWebToolsWithManifest(chipType) {
 
   if (selectedFw === "mochi_nav") {
     manifestPath = `/firmware/${selectedFw}/${chipType}/manifest.json`;
+  } else if (selectedFw === "retro_go") {
+    manifestPath = "/firmware/retro-go/manifest.json";
   } else if (selectedFw === "xiaozhi") {
     const map = XIAOZHI_CHIP_MAP[chipType];
     if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chipType}`);
@@ -311,7 +321,7 @@ function setupEspWebToolsWithManifest(chipType) {
 
     <!-- đổi btn-outline -> btn-primary để giống hệt -->
     <button id="downloadFwBtn" class="btn btn-primary" style="justify-self:end;">
-      Tải Firmware (.bin)
+      Tải Firmware
     </button>
 
     <small id="fwUpdateStamp"
