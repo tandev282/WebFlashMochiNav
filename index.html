@@ -910,13 +910,58 @@
                                             <br>
                                             <ul>
                                                 <li><strong>Thiết bị hỗ trợ:</strong> ESP32-S3 Retro-Go</li>
-                                                <li><strong>Firmware:</strong> esp32s3-retro-go.img</li>
-                                                <li><strong>Thư mục firmware:</strong> firmware/retro-go</li>
-                                                <li><strong>Ghi chú:</strong> Khi nạp firmware, hãy chọn đúng thiết bị
-                                                    Retro-Go trong mục cài đặt.</li>
+                                                <li><strong>Ghi chú:</strong> Vui lòng tải fw về và dùng Flash Download
+                                                    Tool nạp ở địa chỉ <strong>0x0</strong>, nạp online sẽ bị treo web.
+                                                </li>
                                             </ul>
                                             <br>
-                                            <div class="connection-table" style="max-width: 860px; margin: 0 auto;">
+                                            <div style="width: 100%; margin: 0 0 18px; padding: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-tertiary);">
+                                                <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Hướng dẫn Retro</h4>
+                                                <ul style="margin: 0; padding-left: 1.25rem;">
+                                                    <li>
+                                                        <strong>Hướng dẫn Video:</strong> Tải video về máy, sau đó dùng
+                                                        ffmpeg để chuyển đổi sang định dạng ESP32-S3 Retro-Go có thể xem
+                                                        được. Copy file video đã convert vào thẻ nhớ theo thư mục
+                                                        <strong>roms/video</strong>.
+                                                        <div class="code-block" style="margin-top: 10px;">ffmpeg -i input.mp4 -vf "scale=320:-2,fps=12" -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p -preset veryslow -tune fastdecode -b:v 180k -maxrate 220k -bufsize 440k -c:a aac -ar 44100 -ac 1 -b:a 64k output.mp4</div>
+                                                        <ul class="muted" style="margin-top: 8px; padding-left: 1.25rem;">
+                                                            <li>Nếu chưa cài <strong>ffmpeg</strong>, có thể cài bằng lệnh:
+                                                                <div class="code-block" style="margin-top: 8px;">winget install Gyan.FFmpeg</div>
+                                                            </li>
+                                                            <li><strong>input.mp4:</strong> file video gốc.</li>
+                                                            <li><strong>output.mp4:</strong> file sau khi chuyển đổi.</li>
+                                                            <li><strong>fps=12:</strong> tốc độ khung hình tốt nhất để ESP32-S3 phát mượt, bạn cũng có thể thử các fps khác nhau.</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li style="margin-top: 14px;">
+                                                        <strong>Hướng dẫn Xiaozhi:</strong>
+                                                        <ul class="muted" style="margin-top: 8px; padding-left: 1.25rem;">
+                                                            <li>Lần đầu vào Xiaozhi có thể bị đơ ở màn hình icon loading.
+                                                                Hãy bắt WiFi do thiết bị phát ra, mở web
+                                                                <strong>192.168.4.1</strong>, vào cấu hình thiết bị, chọn
+                                                                cấu hình nhanh là <strong>Retro-Go</strong> rồi lưu cấu
+                                                                hình. Sau đó mới config WiFi. Khi config WiFi thành công,
+                                                                tắt thiết bị và khởi động lại để dùng Xiaozhi bình thường.
+                                                            </li>
+                                                            <li>Lần đầu dùng sẽ chưa có custom Xiaozhi. Vào
+                                                                <strong>xiaozhi.me</strong> để custom lại giao diện Xiaozhi.
+                                                            </li>
+                                                            <li>Để chuyển đổi giữa Retro-Go và Xiaozhi: khi bật nguồn, giữ
+                                                                phím <strong>A</strong> khoảng 5-10 giây để mở giao diện chọn
+                                                                ROM rồi chuyển đổi.</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li style="margin-top: 14px;">
+                                                        <strong>Hướng dẫn YouTube:</strong>
+                                                        <ul class="muted" style="margin-top: 8px; padding-left: 1.25rem;">
+                                                            <li>Phải có key và kết nối WiFi mới sử dụng được.</li>
+                                                            <li>Spam key 5 lần sẽ bị khóa thiết bị.</li>
+                                                            <li>Key giá 30 cá, 1 key dùng vĩnh viễn trên 1 ESP32 duy nhất.</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="connection-table" style="width: 100%; margin: 0;">
                                                 <h5>Chương trình hỗ trợ</h5>
                                                 <table style="font-size: 0.9rem;">
                                                     <thead>
