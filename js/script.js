@@ -30,7 +30,7 @@ const chipOptions = {
   xiaozhi: [
     { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
     { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
-    // { chip: "ostb_3st", label: "OSTB-3ST", img: "/img/chips/ostb_3st.png" },
+    { chip: "ostb_3st", label: "OSTB-3ST", img: "/img/chips/ostb_3st.png" },
     { chip: "esp32", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
   ],
@@ -52,8 +52,7 @@ const DEFAULT_OPTIONS = []
 // Các chip có layout màn hình riêng
 const CHIP_OPTIONS_MAP = {
   esp32s3: [
-    { value: "n16r8", label: "N16R8" },
-    { value: "n16r2", label: "N16R2" }
+    { value: "n16r8", label: "N16R8" }
   ],
   esp32s3_n4r2: [
     { value: "n4r2", label: "N4R2" }
@@ -338,7 +337,7 @@ function setupEspWebToolsWithManifest(chipType) {
   newInstallButton.classList.remove("invisible");
 
   // Thời gian bạn tự điền
-  const fwUpdatedAt = "21:00 - 04-05-2026";
+  const fwUpdatedAt = "20:00 - 31-07-2026";
   document.getElementById("fwUpdateStamp").textContent =
     `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
 
