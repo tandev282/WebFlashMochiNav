@@ -653,6 +653,12 @@
   font-weight: bold;
 }
 
+.flash-guide-details {
+  flex: 0 0 auto;
+  overflow: visible;
+  display: block;
+}
+
 /* Image Placeholder */
 .image-placeholder {
   background: var(--bg-card);

@@ -28,8 +28,8 @@ const chipOptions = {
     { chip: "esp32s3", label: "ESP32-S3 Retro-Go", img: "/img/chips/esp32s3_retrogo.png" },
   ],
   xiaozhi: [
-    { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím", img: "/img/chips/esp32s3_devkit.png" },
-    { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero", img: "/img/chips/esp32s3_n4r2.png" },
+    { chip: "esp32s3", label: "ESP32-S3 N16R8 / Mạch Tím - Đa màn hình", img: "/img/chips/esp32s3_devkit.png" },
+    { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero - Đa màn hình", img: "/img/chips/esp32s3_n4r2.png" },
     { chip: "ostb_3st", label: "OSTB-3ST", img: "/img/chips/ostb_3st.png" },
     { chip: "esp32", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
     { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
@@ -307,6 +307,41 @@ function setupEspWebToolsWithManifest(chipType) {
 
   // Reset container với nút Kết nối + nút Tải FW
   const espWebToolsContainer = document.getElementById("espWebToolsContainer");
+
+  if (selectedFw === "retro_go") {
+    espWebToolsContainer.innerHTML = `
+  <div style="
+    display:grid;
+    grid-template-columns: 1fr;
+    align-items:center;
+    gap:12px;
+  ">
+    <div class="firmware-not-available" style="text-align:left;">
+      <div class="not-available-icon">⚠️</div>
+      <h4>Retro-Go cần nạp bằng <a href="https://dl.espressif.com/public/flash_download_tool.zip" target="_blank" rel="noopener noreferrer">ESP Download Tool</a></h4>
+      <p>Firmware Retro-Go khoảng 16MB nên nạp online dễ bị treo web. Hãy tải firmware về và dùng <a href="https://dl.espressif.com/public/flash_download_tool.zip" target="_blank" rel="noopener noreferrer">ESP Download Tool</a> để cài đặt firmware ở địa chỉ <strong>0x0</strong>.</p>
+    </div>
+
+    <button id="downloadFwBtn" class="btn btn-primary" style="justify-self:center;">
+      Tải Firmware
+    </button>
+
+    <small id="fwUpdateStamp"
+      style="text-align:center; margin-top:4px; font-size:14px; color: #d1d5db;">
+    </small>
+  </div>
+`;
+
+    const fwUpdatedAt = "20:00 - 31-07-2026";
+    document.getElementById("fwUpdateStamp").textContent =
+      `Chương trình được cập nhật lúc ${fwUpdatedAt}`;
+
+    document.getElementById("downloadFwBtn").onclick =
+      () => downloadSelectedFirmware(manifestPath, chipType);
+
+    return;
+  }
+
   espWebToolsContainer.innerHTML = `
   <div style="
     display:grid;
@@ -326,6 +361,12 @@ function setupEspWebToolsWithManifest(chipType) {
     <small id="fwUpdateStamp"
       style="grid-column:1 / -1; text-align:center; margin-top:4px; font-size:14px; color: #d1d5db;">
     </small>
+
+    <div class="firmware-not-available" style="grid-column:1 / -1; text-align:left; margin-top:8px;">
+      <div class="not-available-icon">⚠️</div>
+      <h4>Nếu web bị treo hoặc không cài được</h4>
+      <p>Hãy tải firmware về và dùng <a href="https://dl.espressif.com/public/flash_download_tool.zip" target="_blank" rel="noopener noreferrer">ESP Download Tool</a> để cài đặt firmware ở địa chỉ <strong>0x0</strong></p>
+    </div>
   </div>
 `;
 
