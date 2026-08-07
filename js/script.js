@@ -16,6 +16,7 @@ const optionSelection = document.getElementById("optionSelection")
 const optionGrid = document.getElementById("optionGrid")
 const flashSectionHome = flashSection.parentElement
 const flashSectionNextSibling = flashSection.nextSibling
+const ZALO_CONTACT_URL = "https://zalo.me/0356846601"
 
 
 let selectedChip = null
@@ -34,7 +35,7 @@ const chipOptions = {
     { chip: "esp32s3_n4r2", label: "ESP32-S3 Super Mini / Zero - Đa màn hình", img: "/img/chips/esp32s3_n4r2.png" },
     { chip: "ostb_3st", label: "OSTB-3ST", img: "/img/chips/ostb_3st.png" },
     { chip: "esp32", label: "Bluetooth Xiaozhi (Có Phí)", img: "/img/chips/esp32_bluetooth.png" },
-    { chip: "custom", label: "Custom theo yêu cầu", img: "/img/chips/tien.png" },
+    { chip: "custom", label: "Custom theo yêu cầu (Có phí)", img: "/img/chips/tien.png" },
   ],
 };
 
@@ -614,6 +615,13 @@ function renderOptionsForChip(chip, hostPanel = optionGrid) {
       btn.classList.add("active")
 
       selectedOption = opt.value
+
+      if (chip === "custom" || opt.value === "custom") {
+        hideInlineFlash()
+        window.open(ZALO_CONTACT_URL, "_blank", "noopener,noreferrer")
+        return
+      }
+
       await updateFlashButtonVisibility()
       if (flashSection.style.display !== "none") {
         hostPanel.appendChild(flashSection)
