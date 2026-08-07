@@ -14,6 +14,8 @@ const chipGrid = document.getElementById("chipGrid")
 const chipSelection = document.getElementById("chipSelection")
 const optionSelection = document.getElementById("optionSelection")
 const optionGrid = document.getElementById("optionGrid")
+const flashSectionHome = flashSection.parentElement
+const flashSectionNextSibling = flashSection.nextSibling
 
 
 let selectedChip = null
@@ -343,30 +345,25 @@ function setupEspWebToolsWithManifest(chipType) {
   }
 
   espWebToolsContainer.innerHTML = `
-  <div style="
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    align-items:center;
-    gap:12px;
-  ">
-    <esp-web-install-button class="invisible" id="installButton" style="justify-self:start;">
-      <button slot="activate" class="btn btn-primary">Cài Đặt Ngay</button>
-    </esp-web-install-button>
+  <div class="flash-action-layout">
+    <div class="flash-button-stack">
+      <esp-web-install-button class="invisible" id="installButton">
+        <button slot="activate" class="btn btn-primary" style="width:100%;">Cài Đặt Ngay</button>
+      </esp-web-install-button>
 
-    <!-- đổi btn-outline -> btn-primary để giống hệt -->
-    <button id="downloadFwBtn" class="btn btn-primary" style="justify-self:end;">
-      Tải Firmware
-    </button>
+      <button id="downloadFwBtn" class="btn btn-primary" style="width:100%;">
+        Tải Firmware
+      </button>
+    </div>
+
+    <div class="firmware-not-available flash-warning-note">
+      <h4 style="display:flex; align-items:center; gap:0.4rem; font-size:0.95rem; margin-bottom:0.35rem;"><span aria-hidden="true">⚠️</span>Nếu web bị treo hoặc không cài được</h4>
+      <p style="font-size:0.82rem; line-height:1.45;">Hãy tải firmware về và dùng <a href="https://dl.espressif.com/public/flash_download_tool.zip" target="_blank" rel="noopener noreferrer">ESP Download Tool</a> để cài đặt firmware ở địa chỉ <strong>0x0</strong></p>
+    </div>
 
     <small id="fwUpdateStamp"
       style="grid-column:1 / -1; text-align:center; margin-top:4px; font-size:14px; color: #d1d5db;">
     </small>
-
-    <div class="firmware-not-available" style="grid-column:1 / -1; text-align:left; margin-top:8px;">
-      <div class="not-available-icon">⚠️</div>
-      <h4>Nếu web bị treo hoặc không cài được</h4>
-      <p>Hãy tải firmware về và dùng <a href="https://dl.espressif.com/public/flash_download_tool.zip" target="_blank" rel="noopener noreferrer">ESP Download Tool</a> để cài đặt firmware ở địa chỉ <strong>0x0</strong></p>
-    </div>
   </div>
 `;
 
@@ -547,8 +544,21 @@ function switchMainTab(tabId) {
 }
 
 
+function restoreFlashSection() {
+  if (flashSection.parentElement !== flashSectionHome) {
+    flashSectionHome.insertBefore(flashSection, flashSectionNextSibling)
+  }
+}
+
+function hideInlineFlash() {
+  restoreFlashSection()
+  flashSection.style.display = "none"
+  statusSection.style.display = "none"
+}
+
 function resetSelections() {
   chipSelection.style.display = "block"
+  restoreFlashSection()
   chipGrid.innerHTML = ""
   optionSelection.style.display = "none"
   flashSection.style.display = "none"
@@ -557,12 +567,12 @@ function resetSelections() {
   selectedOption = null
 }
 
-function renderOptionsForChip(chip) {
+function renderOptionsForChip(chip, hostPanel = optionGrid) {
   // Nếu chip chỉ có 1 loại màn → auto chọn + ẩn UI
   const fixed = CHIP_FIXED_OPTION[chip]
   if (fixed) {
     optionSelection.style.display = "none"
-    optionGrid.innerHTML = ""
+    hostPanel.innerHTML = ""
     selectedOption = fixed
     // Chip này đủ thông tin để flash luôn
     updateFlashButtonVisibility()
@@ -572,9 +582,18 @@ function renderOptionsForChip(chip) {
   // Xác định danh sách màn hình cho chip này
   const options = CHIP_OPTIONS_MAP[chip] || DEFAULT_OPTIONS
 
-  optionSelection.style.display = "block"
-  optionGrid.innerHTML = ""
+  optionSelection.style.display = "none"
+  hostPanel.innerHTML = ""
   selectedOption = null
+
+  const title = document.createElement("div")
+  title.className = "inline-option-title"
+  title.textContent = "Chọn Dung Lượng / Phiên Bản"
+  hostPanel.appendChild(title)
+
+  const buttons = document.createElement("div")
+  buttons.className = "inline-option-grid"
+  hostPanel.appendChild(buttons)
 
   options.forEach((opt) => {
     const btn = document.createElement("button")
@@ -583,20 +602,34 @@ function renderOptionsForChip(chip) {
     btn.textContent = opt.label
 
     btn.addEventListener("click", async () => {
+      if (btn.classList.contains("active") && selectedOption === opt.value) {
+        btn.classList.remove("active")
+        selectedOption = null
+        hideInlineFlash()
+        return
+      }
+
       // clear active cũ
-      optionGrid.querySelectorAll(".oled-button").forEach((b) => b.classList.remove("active"))
+      hostPanel.querySelectorAll(".oled-button").forEach((b) => b.classList.remove("active"))
       btn.classList.add("active")
 
       selectedOption = opt.value
       await updateFlashButtonVisibility()
+      if (flashSection.style.display !== "none") {
+        hostPanel.appendChild(flashSection)
+      }
     })
 
-    optionGrid.appendChild(btn)
+    buttons.appendChild(btn)
   })
 }
 
 function createChipButton(opt) {
+  const item = document.createElement("div");
+  item.className = "chip-list-item";
+
   const btn = document.createElement("button");
+  btn.type = "button";
   btn.className = "chip-button";
   btn.dataset.chip = opt.chip;
 
@@ -607,26 +640,60 @@ function createChipButton(opt) {
       <img src="${imgSrc}" alt="${opt.label}">
     </div>
     <div class="chip-label">${opt.label}</div>
+    ${selectedFw === "xiaozhi" ? `<span class="material-symbols-rounded chip-arrow" aria-hidden="true">expand_more</span>` : ""}
   `;
 
+  const optionPanel = document.createElement("div");
+  optionPanel.className = "chip-options-panel";
+
   btn.addEventListener("click", async () => {
+    if (item.classList.contains("expanded") && selectedChip === opt.chip) {
+      btn.classList.remove("active");
+      item.classList.remove("expanded");
+      const arrow = btn.querySelector(".chip-arrow");
+      if (arrow) arrow.textContent = "expand_more";
+      optionPanel.innerHTML = "";
+      selectedChip = null;
+      selectedOption = null;
+      optionSelection.style.display = "none";
+      optionGrid.innerHTML = "";
+      hideInlineFlash();
+      return;
+    }
+
+    restoreFlashSection();
     document.querySelectorAll(".chip-button").forEach((b) => b.classList.remove("active"));
+    document.querySelectorAll(".chip-list-item").forEach((el) => el.classList.remove("expanded"));
+    document.querySelectorAll(".chip-arrow").forEach((arrow) => {
+      arrow.textContent = "expand_more";
+    });
+    document.querySelectorAll(".chip-options-panel").forEach((panel) => {
+      if (panel !== optionPanel) panel.innerHTML = "";
+    });
+
     btn.classList.add("active");
+    item.classList.add("expanded");
+    const arrow = btn.querySelector(".chip-arrow");
+    if (arrow) arrow.textContent = "expand_less";
 
     selectedChip = opt.chip;
 
     if (selectedFw === "xiaozhi") {
-      renderOptionsForChip(selectedChip);
+      renderOptionsForChip(selectedChip, optionPanel);
     } else {
       optionSelection.style.display = "none";
       optionGrid.innerHTML = "";
+      optionPanel.innerHTML = "";
       selectedOption = null;
     }
 
     await updateFlashButtonVisibility();
   });
 
-  return btn;
+  item.appendChild(btn);
+  item.appendChild(optionPanel);
+
+  return item;
 }
 
 
