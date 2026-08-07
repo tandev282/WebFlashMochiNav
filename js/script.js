@@ -120,15 +120,78 @@ function generateFirmwarePath(fw, chip, option = null) {
   }
 }
 
+function getManifestPath(fw, chip, option = null) {
+  if (fw === "mochi_nav") {
+    return `/firmware/${fw}/${chip}/manifest.json`
+  }
+
+  if (fw === "retro_go") {
+    return "/firmware/retro-go/manifest.json"
+  }
+
+  if (fw === "xiaozhi") {
+    const map = XIAOZHI_CHIP_MAP[chip]
+    if (!map) throw new Error(`Chip chưa được hỗ trợ: ${chip}`)
+
+    if (chip === "ostb_3st") {
+      return `/firmware/${fw}/${map.dir}/manifest.json`
+    }
+
+    return `/firmware/${fw}/${map.dir}/${option}/manifest.json`
+  }
+
+  return ""
+}
+
+async function urlExists(url) {
+  try {
+    let response = await fetch(url, { method: "HEAD", cache: "no-cache" })
+    if (response.ok) return true
+
+    response = await fetch(url, { method: "GET", cache: "no-cache" })
+    return response.ok
+  } catch {
+    return false
+  }
+}
+
+async function checkManifestPartsExist(manifestPath) {
+  const manifestUrl = new URL(manifestPath, document.baseURI).href
+  const response = await fetch(manifestUrl, { cache: "no-cache" })
+  if (!response.ok) return false
+
+  const manifest = await response.json()
+  const build = Array.isArray(manifest.builds) ? manifest.builds[0] : null
+  const parts = build && Array.isArray(build.parts) ? build.parts : []
+  const baseDir = manifestUrl.substring(0, manifestUrl.lastIndexOf("/") + 1)
+
+  if (!parts.length) return false
+
+  for (const part of parts) {
+    if (!part.path) return false
+
+    const partUrl = new URL(String(part.path).replace(/^\.\//, ""), baseDir).href
+    if (!(await urlExists(partUrl))) return false
+  }
+
+  return true
+}
+
 // Function to check if firmware binary file exists
 async function checkFirmwareExists(fw, chip, option = null) {
   try {
+    if (fw === "xiaozhi") {
+      const manifestPath = getManifestPath(fw, chip, option)
+      const exists = await checkManifestPartsExist(manifestPath)
+      console.log(`${exists ? "Firmware manifest ready" : "Firmware manifest missing parts"}: ${manifestPath}`)
+      return exists
+    }
+
     const { fullPath } = generateFirmwarePath(fw, chip, option)
 
     console.log(`Checking firmware: ${fullPath}`)
 
-    const response = await fetch(fullPath, { method: "HEAD" })
-    const exists = response.ok
+    const exists = await urlExists(fullPath)
 
     if (exists) {
       console.log(`✅ Firmware found: ${fullPath}`)
@@ -222,6 +285,23 @@ async function downloadSelectedFirmware(manifestPath, chipType) {
   };
 
   try {
+    if (selectedFw === "xiaozhi") {
+      const mergedName = "xiaozhi_merged.bin";
+      const mergedUrl = sameDir(mergedName);
+
+      if (await exists(mergedUrl)) {
+        const a = document.createElement("a");
+        a.href = mergedUrl;
+        a.download = mergedName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        return;
+      }
+
+      throw new Error(`Không tìm thấy ${mergedName} trong thư mục firmware này.`);
+    }
+
     // 1) Cố đọc manifest
     let manifest = null;
     try {
